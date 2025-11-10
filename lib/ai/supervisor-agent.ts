@@ -1,6 +1,5 @@
 import { createChatCompletion } from './anthropic-client'
 import { createClient } from '@/lib/supabase/server'
-import type { AnalysisHistory } from '@/types'
 
 export async function reviewAndPrioritizeSuggestions(projectId: string): Promise<void> {
   try {

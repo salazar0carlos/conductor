@@ -96,6 +96,60 @@ export type AnalysisType = 'task_completion' | 'pattern_detection' | 'improvemen
 
 export type AnalysisStatus = 'pending' | 'reviewed' | 'approved' | 'rejected' | 'implemented'
 
+// Admin & Settings Types
+export interface UserProfile {
+  id: string
+  user_id: string | null
+  email: string
+  full_name: string | null
+  role: UserRole
+  is_active: boolean
+  last_login_at: string | null
+  created_at: string
+  updated_at: string
+}
+
+export type UserRole = 'admin' | 'operator' | 'viewer'
+
+export interface SystemSetting {
+  id: string
+  key: string
+  value: unknown
+  category: SettingCategory
+  description: string | null
+  data_type: SettingDataType
+  is_public: boolean
+  is_editable: boolean
+  updated_by: string | null
+  created_at: string
+  updated_at: string
+}
+
+export type SettingCategory = 'general' | 'agents' | 'tasks' | 'notifications' | 'integrations' | 'security'
+
+export type SettingDataType = 'string' | 'number' | 'boolean' | 'json' | 'array'
+
+export interface AuditLog {
+  id: string
+  user_id: string | null
+  action: string
+  resource_type: string
+  resource_id: string | null
+  old_value: Record<string, unknown> | null
+  new_value: Record<string, unknown> | null
+  ip_address: string | null
+  user_agent: string | null
+  created_at: string
+}
+
+export interface AdminStatistics {
+  active_users: number
+  admin_count: number
+  active_agents: number
+  active_tasks: number
+  settings_count: number
+}
+
 // API Request/Response Types
 export interface CreateProjectRequest {
   name: string
@@ -206,6 +260,48 @@ export interface UpdateAnalysisRequest {
   metadata?: Record<string, unknown>
 }
 
+// Admin Request/Response Types
+export interface CreateUserProfileRequest {
+  email: string
+  full_name?: string
+  role: UserRole
+  is_active?: boolean
+}
+
+export interface UpdateUserProfileRequest {
+  full_name?: string
+  role?: UserRole
+  is_active?: boolean
+}
+
+export interface CreateSystemSettingRequest {
+  key: string
+  value: unknown
+  category: SettingCategory
+  description?: string
+  data_type: SettingDataType
+  is_public?: boolean
+  is_editable?: boolean
+}
+
+export interface UpdateSystemSettingRequest {
+  value?: unknown
+  description?: string
+  is_public?: boolean
+  is_editable?: boolean
+}
+
+export interface CreateAuditLogRequest {
+  user_id?: string
+  action: string
+  resource_type: string
+  resource_id?: string
+  old_value?: Record<string, unknown>
+  new_value?: Record<string, unknown>
+  ip_address?: string
+  user_agent?: string
+}
+
 // Dashboard Stats Types
 export interface DashboardStats {
   projects: {
@@ -265,6 +361,21 @@ export interface Database {
         Row: AnalysisHistory
         Insert: Omit<AnalysisHistory, 'id' | 'created_at' | 'updated_at'>
         Update: Partial<Omit<AnalysisHistory, 'id' | 'created_at' | 'updated_at'>>
+      }
+      user_profiles: {
+        Row: UserProfile
+        Insert: Omit<UserProfile, 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Omit<UserProfile, 'id' | 'created_at' | 'updated_at'>>
+      }
+      system_settings: {
+        Row: SystemSetting
+        Insert: Omit<SystemSetting, 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Omit<SystemSetting, 'id' | 'created_at' | 'updated_at'>>
+      }
+      audit_logs: {
+        Row: AuditLog
+        Insert: Omit<AuditLog, 'id' | 'created_at'>
+        Update: never
       }
     }
   }

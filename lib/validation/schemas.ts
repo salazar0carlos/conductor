@@ -115,3 +115,45 @@ export const createApiKeySchema = z.object({
   scopes: z.array(z.string()).optional(),
   expires_at: z.string().datetime().optional()
 })
+
+// Admin Schemas
+export const createUserProfileSchema = z.object({
+  email: z.string().email(),
+  full_name: z.string().min(1).max(255).optional(),
+  role: z.enum(['admin', 'operator', 'viewer']),
+  is_active: z.boolean().optional()
+})
+
+export const updateUserProfileSchema = z.object({
+  full_name: z.string().min(1).max(255).optional(),
+  role: z.enum(['admin', 'operator', 'viewer']).optional(),
+  is_active: z.boolean().optional()
+})
+
+export const createSystemSettingSchema = z.object({
+  key: z.string().min(1).max(255),
+  value: z.unknown(),
+  category: z.enum(['general', 'agents', 'tasks', 'notifications', 'integrations', 'security']),
+  description: z.string().optional(),
+  data_type: z.enum(['string', 'number', 'boolean', 'json', 'array']),
+  is_public: z.boolean().optional(),
+  is_editable: z.boolean().optional()
+})
+
+export const updateSystemSettingSchema = z.object({
+  value: z.unknown().optional(),
+  description: z.string().optional(),
+  is_public: z.boolean().optional(),
+  is_editable: z.boolean().optional()
+})
+
+export const createAuditLogSchema = z.object({
+  user_id: z.string().uuid().optional(),
+  action: z.string().min(1),
+  resource_type: z.string().min(1),
+  resource_id: z.string().uuid().optional(),
+  old_value: z.record(z.string(), z.unknown()).optional(),
+  new_value: z.record(z.string(), z.unknown()).optional(),
+  ip_address: z.string().optional(),
+  user_agent: z.string().optional()
+})
