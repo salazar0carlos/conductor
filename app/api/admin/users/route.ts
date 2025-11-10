@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
     const { data: adminProfile } = await supabase
       .from('user_profiles')
       .select('id')
-      .eq('email', auth.user.email)
+      .eq('email', auth.user?.email || '')
       .single()
 
     // Insert the user profile

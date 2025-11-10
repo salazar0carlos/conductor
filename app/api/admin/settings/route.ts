@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { apiSuccess, apiError, handleApiError } from '@/lib/utils/api-helpers'
 import { requireAdmin, createAuditLog } from '@/lib/auth/admin-middleware'
 import { createSystemSettingSchema } from '@/lib/validation/schemas'
-import type { CreateSystemSettingRequest, SystemSetting } from '@/types'
+import type { CreateSystemSettingRequest } from '@/types'
 
 /**
  * GET /api/admin/settings
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
     const { data: profile } = await supabase
       .from('user_profiles')
       .select('id')
-      .eq('email', auth.user.email)
+      .eq('email', auth.user?.email || '')
       .single()
 
     // Insert the setting

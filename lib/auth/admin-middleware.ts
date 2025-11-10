@@ -6,7 +6,7 @@ import { apiError } from '@/lib/utils/api-helpers'
  * Admin authorization middleware for API routes
  * Checks if the authenticated user has admin role
  */
-export async function requireAdmin(request: NextRequest) {
+export async function requireAdmin(_request: NextRequest) {
   try {
     const supabase = await createClient()
 
@@ -70,7 +70,7 @@ export async function requireAdmin(request: NextRequest) {
 /**
  * Check if user has operator or admin role (for read-only access)
  */
-export async function requireOperator(request: NextRequest) {
+export async function requireOperator(_request: NextRequest) {
   try {
     const supabase = await createClient()
 

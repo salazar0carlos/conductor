@@ -83,7 +83,7 @@ export async function PATCH(
     const { data: profile } = await supabase
       .from('user_profiles')
       .select('id')
-      .eq('email', auth.user.email)
+      .eq('email', auth.user?.email || '')
       .single()
 
     // Update the setting
@@ -161,7 +161,7 @@ export async function DELETE(
     const { data: profile } = await supabase
       .from('user_profiles')
       .select('id')
-      .eq('email', auth.user.email)
+      .eq('email', auth.user?.email || '')
       .single()
 
     // Delete the setting
