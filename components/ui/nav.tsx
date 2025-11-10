@@ -8,7 +8,8 @@ const navItems = [
   { href: '/projects', label: 'Projects' },
   { href: '/tasks', label: 'Tasks' },
   { href: '/agents', label: 'Agents' },
-  { href: '/intelligence', label: 'Intelligence' }
+  { href: '/intelligence', label: 'Intelligence' },
+  { href: '/admin/settings', label: 'Admin', adminOnly: true }
 ]
 
 export function Nav() {
