@@ -1,7 +1,8 @@
 import { NextRequest } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { apiSuccess, apiError, handleApiError } from '@/lib/utils/api-helpers'
-import type { CompleteTaskRequest } from '@/types'
+import { completeTaskSchema } from '@/lib/validation/schemas'
+import { onTaskComplete } from '@/lib/jobs/background-jobs'
 
 export async function POST(
   request: NextRequest,
@@ -10,15 +11,15 @@ export async function POST(
   try {
     const supabase = await createClient()
     const { id } = await params
-    const body: CompleteTaskRequest = await request.json()
+    const body = await request.json()
 
-    if (!body.agent_id) {
-      return apiError('agent_id is required')
+    // Validate input
+    const validation = completeTaskSchema.safeParse(body)
+    if (!validation.success) {
+      return apiError(validation.error.issues[0].message, 400)
     }
 
-    if (!body.output_data) {
-      return apiError('output_data is required')
-    }
+    const { agent_id, output_data } = validation.data
 
     // Verify task is assigned to this agent
     const { data: task, error: fetchError } = await supabase
@@ -30,7 +31,7 @@ export async function POST(
     if (fetchError) throw fetchError
     if (!task) return apiError('Task not found', 404)
 
-    if (task.assigned_agent_id !== body.agent_id) {
+    if (task.assigned_agent_id !== agent_id) {
       return apiError('Task is not assigned to this agent', 403)
     }
 
@@ -43,7 +44,7 @@ export async function POST(
       .from('tasks')
       .update({
         status: 'completed',
-        output_data: body.output_data,
+        output_data,
         completed_at: new Date().toISOString()
       })
       .eq('id', id)
@@ -51,6 +52,9 @@ export async function POST(
       .single()
 
     if (updateError) throw updateError
+
+    // Trigger intelligence layer analysis (async)
+    onTaskComplete(id).catch(err => console.error('Failed to trigger analysis:', err))
 
     return apiSuccess(updatedTask)
   } catch (error) {
