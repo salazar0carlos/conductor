@@ -62,7 +62,7 @@ export function RegisterAgentModal({ isOpen, onClose }: RegisterAgentModalProps)
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80">
       <div className="bg-neutral-900 rounded-lg border border-neutral-800 w-full max-w-lg">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-neutral-800">
