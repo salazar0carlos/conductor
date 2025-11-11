@@ -3,9 +3,11 @@
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { useAuth } from '@/lib/auth/auth-context'
 import type { SystemSetting, AdminStatistics, SettingCategory } from '@/types'
 
 export function AdminSettings() {
+  const { user } = useAuth()
   const [settings, setSettings] = useState<SystemSetting[]>([])
   const [filteredSettings, setFilteredSettings] = useState<SystemSetting[]>([])
   const [stats, setStats] = useState<AdminStatistics | null>(null)
@@ -201,6 +203,28 @@ export function AdminSettings() {
 
   return (
     <div className="space-y-6">
+      {/* Account Information */}
+      {user && (
+        <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-6">
+          <h2 className="text-lg font-semibold text-white mb-4">Account Information</h2>
+          <div className="flex items-center gap-4">
+            <img
+              src={user.user_metadata?.avatar_url || `https://avatar.vercel.sh/${user.email}`}
+              alt="User avatar"
+              className="w-16 h-16 rounded-full border border-neutral-700"
+            />
+            <div className="flex-1">
+              <p className="text-white font-medium">{user.user_metadata?.user_name || user.user_metadata?.full_name || 'User'}</p>
+              <p className="text-sm text-neutral-400">{user.email}</p>
+              <div className="flex gap-2 mt-2">
+                <Badge variant="success">GitHub Connected</Badge>
+                <Badge variant="primary">Admin</Badge>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Stats Cards */}
       {stats && (
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
