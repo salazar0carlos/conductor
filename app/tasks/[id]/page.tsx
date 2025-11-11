@@ -53,7 +53,7 @@ async function getTaskDetails(taskId: string) {
     .from('analysis_history')
     .select('*')
     .eq('task_id', taskId)
-    .order('created_at', { descending: true })
+    .order('created_at', { ascending: false })
 
   return {
     task: task as Task & { projects: { id: string; name: string } },

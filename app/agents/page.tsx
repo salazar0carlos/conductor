@@ -17,7 +17,7 @@ export default function AgentsPage() {
           </div>
           <div className="flex gap-3">
             <Link href="/agents/templates">
-              <Button variant="outline" className="flex items-center gap-2">
+              <Button variant="secondary" className="flex items-center gap-2">
                 <Sparkles className="w-4 h-4" />
                 Browse Templates
               </Button>

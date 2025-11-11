@@ -3,12 +3,12 @@
 import { Nav } from '@/components/ui/nav'
 import { Button } from '@/components/ui/button'
 import { getAgentTemplate } from '@/lib/agents/templates'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Bot, Loader2, CheckCircle, AlertCircle } from 'lucide-react'
 
-export default function DeployAgentPage() {
+function DeployAgentForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const templateId = searchParams.get('template')
@@ -247,7 +247,7 @@ export default function DeployAgentPage() {
             <div className="flex gap-3">
               <Button
                 type="button"
-                variant="outline"
+                variant="secondary"
                 onClick={() => router.back()}
                 className="flex-1"
                 disabled={deploying}
@@ -273,5 +273,20 @@ export default function DeployAgentPage() {
         </div>
       </main>
     </div>
+  )
+}
+
+export default function DeployAgentPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-neutral-950">
+        <Nav />
+        <div className="flex items-center justify-center h-screen">
+          <Loader2 className="w-8 h-8 text-neutral-400 animate-spin" />
+        </div>
+      </div>
+    }>
+      <DeployAgentForm />
+    </Suspense>
   )
 }

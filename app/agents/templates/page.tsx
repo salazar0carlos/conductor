@@ -51,7 +51,7 @@ export default function AgentTemplatesPage() {
                 <h1 className="text-3xl font-bold text-white">Agent Templates</h1>
               </div>
               <p className="text-neutral-400">
-                Pre-configured AI agents based on Edmund's specialized agents. Deploy instantly with one click.
+                Pre-configured AI agents based on Edmund&apos;s specialized agents. Deploy instantly with one click.
               </p>
             </div>
           </div>
@@ -152,7 +152,7 @@ export default function AgentTemplatesPage() {
               {/* Actions */}
               <div className="flex gap-2">
                 <Link href={`/agents/templates/${template.id}`} className="flex-1">
-                  <Button variant="outline" className="w-full">
+                  <Button variant="secondary" className="w-full">
                     View Details
                   </Button>
                 </Link>

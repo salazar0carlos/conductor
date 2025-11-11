@@ -52,21 +52,21 @@ export function ActivityFeed() {
       const { data: tasks } = await supabase
         .from('tasks')
         .select('*')
-        .order('updated_at', { descending: true })
+        .order('updated_at', { ascending: false })
         .limit(10)
 
       // Fetch recent agents
       const { data: agents } = await supabase
         .from('agents')
         .select('*')
-        .order('created_at', { descending: true })
+        .order('created_at', { ascending: false })
         .limit(5)
 
       // Fetch recent analyses
       const { data: analyses } = await supabase
         .from('analysis_history')
         .select('*')
-        .order('created_at', { descending: true })
+        .order('created_at', { ascending: false })
         .limit(5)
 
       const activityItems: Activity[] = []
