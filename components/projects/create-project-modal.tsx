@@ -22,16 +22,52 @@ export function CreateProjectModal({ isOpen, onClose }: CreateProjectModalProps)
     github_branch: 'main',
   })
 
+  const [createNewRepo, setCreateNewRepo] = useState(false)
+  const [repoSettings, setRepoSettings] = useState({
+    repoName: '',
+    isPrivate: true,
+  })
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError(null)
 
     try {
+      const projectData = { ...formData }
+
+      // Step 1: Create GitHub repo if requested
+      if (createNewRepo) {
+        const repoName = repoSettings.repoName || formData.name.toLowerCase().replace(/\s+/g, '-')
+
+        const repoResponse = await fetch('/api/github/repos/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: repoName,
+            description: formData.description,
+            private: repoSettings.isPrivate,
+          }),
+        })
+
+        const repoData = await repoResponse.json()
+
+        if (!repoData.success) {
+          setError(repoData.error || 'Failed to create GitHub repository')
+          setLoading(false)
+          return
+        }
+
+        // Update project data with new repo info
+        projectData.github_repo = repoData.data.repo.full_name
+        projectData.github_branch = repoData.data.repo.default_branch
+      }
+
+      // Step 2: Create project
       const response = await fetch('/api/projects', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(projectData),
       })
 
       const data = await response.json()
@@ -40,6 +76,8 @@ export function CreateProjectModal({ isOpen, onClose }: CreateProjectModalProps)
         onClose()
         router.refresh()
         setFormData({ name: '', description: '', github_repo: '', github_branch: 'main' })
+        setCreateNewRepo(false)
+        setRepoSettings({ repoName: '', isPrivate: true })
       } else {
         setError(data.error || 'Failed to create project')
       }
@@ -103,33 +141,92 @@ export function CreateProjectModal({ isOpen, onClose }: CreateProjectModalProps)
             />
           </div>
 
-          <div>
-            <label htmlFor="github_repo" className="block text-sm font-medium text-white mb-2">
-              GitHub Repository
-            </label>
-            <input
-              type="text"
-              id="github_repo"
-              value={formData.github_repo}
-              onChange={(e) => setFormData({ ...formData, github_repo: e.target.value })}
-              className="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-lg text-white focus:outline-none focus:border-neutral-600"
-              placeholder="username/repository"
-            />
-            <p className="text-xs text-neutral-500 mt-1">Format: username/repository</p>
-          </div>
+          {/* GitHub Integration */}
+          <div className="border border-neutral-700 rounded-lg p-4 space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <label className="block text-sm font-medium text-white mb-1">
+                  GitHub Integration
+                </label>
+                <p className="text-xs text-neutral-500">
+                  Create a new repository or connect to an existing one
+                </p>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={createNewRepo}
+                  onChange={(e) => setCreateNewRepo(e.target.checked)}
+                  className="sr-only peer"
+                />
+                <div className="w-11 h-6 bg-neutral-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+              </label>
+            </div>
 
-          <div>
-            <label htmlFor="github_branch" className="block text-sm font-medium text-white mb-2">
-              GitHub Branch
-            </label>
-            <input
-              type="text"
-              id="github_branch"
-              value={formData.github_branch}
-              onChange={(e) => setFormData({ ...formData, github_branch: e.target.value })}
-              className="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-lg text-white focus:outline-none focus:border-neutral-600"
-              placeholder="main"
-            />
+            {createNewRepo ? (
+              <>
+                <div>
+                  <label htmlFor="repo_name" className="block text-sm font-medium text-white mb-2">
+                    Repository Name
+                  </label>
+                  <input
+                    type="text"
+                    id="repo_name"
+                    value={repoSettings.repoName}
+                    onChange={(e) => setRepoSettings({ ...repoSettings, repoName: e.target.value })}
+                    className="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-lg text-white focus:outline-none focus:border-neutral-600"
+                    placeholder={formData.name ? formData.name.toLowerCase().replace(/\s+/g, '-') : 'my-project'}
+                  />
+                  <p className="text-xs text-neutral-500 mt-1">
+                    Leave blank to use project name. Letters, numbers, hyphens, and underscores only.
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    id="is_private"
+                    checked={repoSettings.isPrivate}
+                    onChange={(e) => setRepoSettings({ ...repoSettings, isPrivate: e.target.checked })}
+                    className="w-4 h-4 rounded bg-neutral-800 border-neutral-700 text-blue-600 focus:ring-blue-600 focus:ring-offset-neutral-900"
+                  />
+                  <label htmlFor="is_private" className="text-sm text-neutral-300">
+                    Make repository private
+                  </label>
+                </div>
+              </>
+            ) : (
+              <>
+                <div>
+                  <label htmlFor="github_repo" className="block text-sm font-medium text-white mb-2">
+                    GitHub Repository
+                  </label>
+                  <input
+                    type="text"
+                    id="github_repo"
+                    value={formData.github_repo}
+                    onChange={(e) => setFormData({ ...formData, github_repo: e.target.value })}
+                    className="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-lg text-white focus:outline-none focus:border-neutral-600"
+                    placeholder="username/repository"
+                  />
+                  <p className="text-xs text-neutral-500 mt-1">Format: username/repository</p>
+                </div>
+
+                <div>
+                  <label htmlFor="github_branch" className="block text-sm font-medium text-white mb-2">
+                    GitHub Branch
+                  </label>
+                  <input
+                    type="text"
+                    id="github_branch"
+                    value={formData.github_branch}
+                    onChange={(e) => setFormData({ ...formData, github_branch: e.target.value })}
+                    className="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-lg text-white focus:outline-none focus:border-neutral-600"
+                    placeholder="main"
+                  />
+                </div>
+              </>
+            )}
           </div>
 
           <div className="flex gap-3 pt-4">
