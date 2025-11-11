@@ -1,10 +1,16 @@
+'use client'
+
+import { useState } from 'react'
 import { Nav } from '@/components/ui/nav'
 import { Button } from '@/components/ui/button'
 import { AgentList } from '@/components/agents/agent-list'
+import { RegisterAgentModal } from '@/components/agents/register-agent-modal'
 import Link from 'next/link'
 import { Sparkles } from 'lucide-react'
 
 export default function AgentsPage() {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
   return (
     <div className="min-h-screen bg-neutral-950">
       <Nav />
@@ -22,12 +28,17 @@ export default function AgentsPage() {
                 Browse Templates
               </Button>
             </Link>
-            <Button>Register Agent</Button>
+            <Button onClick={() => setIsModalOpen(true)}>Register Agent</Button>
           </div>
         </div>
 
         <AgentList />
       </main>
+
+      <RegisterAgentModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </div>
   )
 }
