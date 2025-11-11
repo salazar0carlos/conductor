@@ -15,6 +15,33 @@ export function CreateProjectModal({ isOpen, onClose }: CreateProjectModalProps)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  // Fetch Supabase organizations when modal opens and Supabase integration is enabled
+  const fetchSupabaseOrgs = async () => {
+    if (supabaseOrgs.length > 0) return // Already fetched
+
+    setLoadingOrgs(true)
+    setOrgsError(null)
+
+    try {
+      const response = await fetch('/api/supabase/organizations')
+      const data = await response.json()
+
+      if (data.success) {
+        setSupabaseOrgs(data.data.organizations)
+        // Auto-select first org if available
+        if (data.data.organizations.length > 0) {
+          setSupabaseSettings({ ...supabaseSettings, organizationId: data.data.organizations[0].id })
+        }
+      } else {
+        setOrgsError(data.error || 'Failed to fetch organizations')
+      }
+    } catch (err) {
+      setOrgsError('Failed to fetch Supabase organizations')
+    } finally {
+      setLoadingOrgs(false)
+    }
+  }
+
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -34,6 +61,10 @@ export function CreateProjectModal({ isOpen, onClose }: CreateProjectModalProps)
     region: 'us-east-1',
     applyMigrations: true,
   })
+
+  const [supabaseOrgs, setSupabaseOrgs] = useState<Array<{ id: string; name: string }>>([])
+  const [loadingOrgs, setLoadingOrgs] = useState(false)
+  const [orgsError, setOrgsError] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -316,7 +347,12 @@ export function CreateProjectModal({ isOpen, onClose }: CreateProjectModalProps)
                 <input
                   type="checkbox"
                   checked={createSupabaseProject}
-                  onChange={(e) => setCreateSupabaseProject(e.target.checked)}
+                  onChange={(e) => {
+                    setCreateSupabaseProject(e.target.checked)
+                    if (e.target.checked) {
+                      fetchSupabaseOrgs()
+                    }
+                  }}
                   className="sr-only peer"
                 />
                 <div className="w-11 h-6 bg-neutral-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
@@ -325,21 +361,42 @@ export function CreateProjectModal({ isOpen, onClose }: CreateProjectModalProps)
 
             {createSupabaseProject && (
               <>
+                {orgsError && (
+                  <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-sm text-red-400">
+                    {orgsError}
+                  </div>
+                )}
+
                 <div>
                   <label htmlFor="supabase_org_id" className="block text-sm font-medium text-white mb-2">
-                    Supabase Organization ID *
+                    Supabase Organization *
                   </label>
-                  <input
-                    type="text"
-                    id="supabase_org_id"
-                    value={supabaseSettings.organizationId}
-                    onChange={(e) => setSupabaseSettings({ ...supabaseSettings, organizationId: e.target.value })}
-                    className="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-lg text-white focus:outline-none focus:border-neutral-600"
-                    placeholder="your-org-id"
-                    required={createSupabaseProject}
-                  />
+                  {loadingOrgs ? (
+                    <div className="flex items-center gap-2 px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-lg text-neutral-400">
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>Loading organizations...</span>
+                    </div>
+                  ) : supabaseOrgs.length > 0 ? (
+                    <select
+                      id="supabase_org_id"
+                      value={supabaseSettings.organizationId}
+                      onChange={(e) => setSupabaseSettings({ ...supabaseSettings, organizationId: e.target.value })}
+                      className="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-lg text-white focus:outline-none focus:border-neutral-600"
+                      required={createSupabaseProject}
+                    >
+                      {supabaseOrgs.map((org) => (
+                        <option key={org.id} value={org.id}>
+                          {org.name}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <div className="p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/30 text-sm text-yellow-400">
+                      No organizations found. Make sure SUPABASE_MANAGEMENT_TOKEN is set correctly.
+                    </div>
+                  )}
                   <p className="text-xs text-neutral-500 mt-1">
-                    Find this in your Supabase Dashboard → Organization Settings
+                    Your Supabase organization will be auto-selected
                   </p>
                 </div>
 
