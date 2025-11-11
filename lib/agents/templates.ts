@@ -1,6 +1,6 @@
 /**
- * Agent Templates based on Edmund's Claude Code agents
- * These pre-configured agents map to specific skills and capabilities
+ * Agent Templates - Pre-configured specialist agents
+ * These agents map to specific skills and capabilities
  */
 
 import { AgentType, AgentConfig } from '@/types'

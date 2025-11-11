@@ -51,7 +51,7 @@ export default function AgentTemplatesPage() {
                 <h1 className="text-3xl font-bold text-white">Agent Templates</h1>
               </div>
               <p className="text-neutral-400">
-                Pre-configured AI agents based on Edmund&apos;s specialized agents. Deploy instantly with one click.
+                Pre-configured specialist AI agents. Deploy instantly with one click.
               </p>
             </div>
           </div>
