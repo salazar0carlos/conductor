@@ -22,7 +22,7 @@ export default function ProjectsPage() {
           <Button onClick={() => setIsModalOpen(true)}>New Project</Button>
         </div>
 
-        <ProjectList />
+        <ProjectList onCreateClick={() => setIsModalOpen(true)} />
       </main>
 
       <CreateProjectModal

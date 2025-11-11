@@ -5,7 +5,11 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import type { Project } from '@/types'
 
-export function ProjectList() {
+interface ProjectListProps {
+  onCreateClick?: () => void
+}
+
+export function ProjectList({ onCreateClick }: ProjectListProps) {
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -45,7 +49,7 @@ export function ProjectList() {
       {projects.length === 0 ? (
         <div className="text-center py-12 border border-neutral-800 rounded-lg">
           <p className="text-neutral-400 mb-4">No projects yet</p>
-          <Button>Create Your First Project</Button>
+          <Button onClick={onCreateClick}>Create Your First Project</Button>
         </div>
       ) : (
         projects.map((project) => (
