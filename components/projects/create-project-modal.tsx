@@ -110,11 +110,22 @@ export function CreateProjectModal({ isOpen, onClose }: CreateProjectModalProps)
           return
         }
 
+        // Use the same name as GitHub repo if one was created, otherwise use project name
+        let supabaseProjectName = formData.name.toLowerCase().replace(/\s+/g, '-')
+        if (createNewRepo && projectData.github_repo) {
+          // Extract repo name from full_name (e.g., "username/repo-name" -> "repo-name")
+          const repoName = projectData.github_repo.split('/')[1]
+          supabaseProjectName = repoName
+        } else if (createNewRepo) {
+          // Use the custom repo name if provided
+          supabaseProjectName = repoSettings.repoName || supabaseProjectName
+        }
+
         const supabaseResponse = await fetch('/api/supabase/projects/create', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            name: formData.name.toLowerCase().replace(/\s+/g, '-'),
+            name: supabaseProjectName,
             organization_id: supabaseSettings.organizationId,
             region: supabaseSettings.region,
           }),
