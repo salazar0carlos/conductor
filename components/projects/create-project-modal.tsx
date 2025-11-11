@@ -28,6 +28,13 @@ export function CreateProjectModal({ isOpen, onClose }: CreateProjectModalProps)
     isPrivate: true,
   })
 
+  const [createSupabaseProject, setCreateSupabaseProject] = useState(false)
+  const [supabaseSettings, setSupabaseSettings] = useState({
+    organizationId: '',
+    region: 'us-east-1',
+    applyMigrations: true,
+  })
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
@@ -63,11 +70,74 @@ export function CreateProjectModal({ isOpen, onClose }: CreateProjectModalProps)
         projectData.github_branch = repoData.data.repo.default_branch
       }
 
-      // Step 2: Create project
+      // Step 2: Create Supabase project if requested
+      let supabaseProjectData: any = null
+      if (createSupabaseProject) {
+        if (!supabaseSettings.organizationId) {
+          setError('Supabase Organization ID is required. Find it in your Supabase dashboard.')
+          setLoading(false)
+          return
+        }
+
+        const supabaseResponse = await fetch('/api/supabase/projects/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: formData.name.toLowerCase().replace(/\s+/g, '-'),
+            organization_id: supabaseSettings.organizationId,
+            region: supabaseSettings.region,
+          }),
+        })
+
+        const supabaseData = await supabaseResponse.json()
+
+        if (!supabaseData.success) {
+          setError(supabaseData.error || 'Failed to create Supabase project')
+          setLoading(false)
+          return
+        }
+
+        supabaseProjectData = supabaseData.data.project
+
+        // Step 2b: Apply migrations if requested
+        if (supabaseSettings.applyMigrations && projectData.github_repo) {
+          const migrationsResponse = await fetch('/api/supabase/migrations/apply', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              project_ref: supabaseProjectData.id,
+              db_password: supabaseProjectData.db_password,
+              github_repo: projectData.github_repo,
+              github_branch: projectData.github_branch,
+            }),
+          })
+
+          const migrationsData = await migrationsResponse.json()
+          // Continue even if migrations partially fail
+          if (migrationsData.success) {
+            console.log('Migrations applied:', migrationsData.data)
+          }
+        }
+      }
+
+      // Step 3: Create project in Conductor with all integration data
+      const finalProjectData = {
+        ...projectData,
+        ...(supabaseProjectData && {
+          supabase_project_id: supabaseProjectData.id,
+          supabase_project_ref: supabaseProjectData.id,
+          supabase_region: supabaseProjectData.region,
+          supabase_endpoint: supabaseProjectData.endpoint,
+          supabase_anon_key: supabaseProjectData.anon_key,
+          supabase_db_password: supabaseProjectData.db_password,
+          supabase_migrations_applied: supabaseSettings.applyMigrations,
+        })
+      }
+
       const response = await fetch('/api/projects', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(projectData),
+        body: JSON.stringify(finalProjectData),
       })
 
       const data = await response.json()
@@ -78,6 +148,8 @@ export function CreateProjectModal({ isOpen, onClose }: CreateProjectModalProps)
         setFormData({ name: '', description: '', github_repo: '', github_branch: 'main' })
         setCreateNewRepo(false)
         setRepoSettings({ repoName: '', isPrivate: true })
+        setCreateSupabaseProject(false)
+        setSupabaseSettings({ organizationId: '', region: 'us-east-1', applyMigrations: true })
       } else {
         setError(data.error || 'Failed to create project')
       }
@@ -224,6 +296,92 @@ export function CreateProjectModal({ isOpen, onClose }: CreateProjectModalProps)
                     className="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-lg text-white focus:outline-none focus:border-neutral-600"
                     placeholder="main"
                   />
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* Supabase Integration */}
+          <div className="border border-neutral-700 rounded-lg p-4 space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <label className="block text-sm font-medium text-white mb-1">
+                  Supabase Integration
+                </label>
+                <p className="text-xs text-neutral-500">
+                  Create a new Supabase project and apply migrations
+                </p>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={createSupabaseProject}
+                  onChange={(e) => setCreateSupabaseProject(e.target.checked)}
+                  className="sr-only peer"
+                />
+                <div className="w-11 h-6 bg-neutral-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+              </label>
+            </div>
+
+            {createSupabaseProject && (
+              <>
+                <div>
+                  <label htmlFor="supabase_org_id" className="block text-sm font-medium text-white mb-2">
+                    Supabase Organization ID *
+                  </label>
+                  <input
+                    type="text"
+                    id="supabase_org_id"
+                    value={supabaseSettings.organizationId}
+                    onChange={(e) => setSupabaseSettings({ ...supabaseSettings, organizationId: e.target.value })}
+                    className="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-lg text-white focus:outline-none focus:border-neutral-600"
+                    placeholder="your-org-id"
+                    required={createSupabaseProject}
+                  />
+                  <p className="text-xs text-neutral-500 mt-1">
+                    Find this in your Supabase Dashboard → Organization Settings
+                  </p>
+                </div>
+
+                <div>
+                  <label htmlFor="supabase_region" className="block text-sm font-medium text-white mb-2">
+                    Region
+                  </label>
+                  <select
+                    id="supabase_region"
+                    value={supabaseSettings.region}
+                    onChange={(e) => setSupabaseSettings({ ...supabaseSettings, region: e.target.value })}
+                    className="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-lg text-white focus:outline-none focus:border-neutral-600"
+                  >
+                    <option value="us-east-1">US East (N. Virginia)</option>
+                    <option value="us-west-1">US West (N. California)</option>
+                    <option value="eu-west-1">EU West (Ireland)</option>
+                    <option value="eu-central-1">EU Central (Frankfurt)</option>
+                    <option value="ap-southeast-1">Asia Pacific (Singapore)</option>
+                    <option value="ap-northeast-1">Asia Pacific (Tokyo)</option>
+                    <option value="ap-southeast-2">Asia Pacific (Sydney)</option>
+                  </select>
+                </div>
+
+                {(createNewRepo || formData.github_repo) && (
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="checkbox"
+                      id="apply_migrations"
+                      checked={supabaseSettings.applyMigrations}
+                      onChange={(e) => setSupabaseSettings({ ...supabaseSettings, applyMigrations: e.target.checked })}
+                      className="w-4 h-4 rounded bg-neutral-800 border-neutral-700 text-green-600 focus:ring-green-600 focus:ring-offset-neutral-900"
+                    />
+                    <label htmlFor="apply_migrations" className="text-sm text-neutral-300">
+                      Apply migrations from GitHub repo (supabase/migrations folder)
+                    </label>
+                  </div>
+                )}
+
+                <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3">
+                  <p className="text-xs text-blue-300">
+                    💡 <strong>Note:</strong> You need a Supabase Management API token. Set SUPABASE_MANAGEMENT_TOKEN in your environment variables.
+                  </p>
                 </div>
               </>
             )}
