@@ -1,8 +1,9 @@
 import { createClient } from '@/lib/supabase/server'
 import { analyzeTaskCompletion, detectPatterns } from '@/lib/ai/product-improvement-agent'
 import { reviewAndPrioritizeSuggestions } from '@/lib/ai/supervisor-agent'
+import { processPendingApprovedSuggestions } from '@/lib/ai/feedback-loop'
 
-export type JobType = 'analyze_task' | 'detect_patterns' | 'review_suggestions' | 'github_webhook'
+export type JobType = 'analyze_task' | 'detect_patterns' | 'review_suggestions' | 'process_approved_suggestions' | 'github_webhook'
 
 export interface JobPayload {
   task_id?: string
@@ -85,6 +86,11 @@ export async function processJob(jobId: string): Promise<boolean> {
           await reviewAndPrioritizeSuggestions(job.payload.project_id as string)
           result = { success: true }
         }
+        break
+      }
+
+      case 'process_approved_suggestions': {
+        result = await processPendingApprovedSuggestions()
         break
       }
 
@@ -199,5 +205,16 @@ export async function onTaskComplete(taskId: string): Promise<void> {
 
   if (analysisCount && analysisCount >= 10) {
     await createJob('review_suggestions', { project_id: task.project_id })
+  }
+
+  // Check if we should process approved suggestions (after every 5 completed analyses)
+  const { count: approvedCount } = await supabase
+    .from('analysis_history')
+    .select('*', { count: 'exact', head: true })
+    .eq('project_id', task.project_id)
+    .eq('status', 'approved')
+
+  if (approvedCount && approvedCount % 5 === 0 && approvedCount > 0) {
+    await createJob('process_approved_suggestions', {})
   }
 }
