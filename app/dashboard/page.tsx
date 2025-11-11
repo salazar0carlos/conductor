@@ -1,5 +1,6 @@
 import { Nav } from '@/components/ui/nav'
 import { StatsOverview } from '@/components/dashboard/stats-overview'
+import { ActivityFeed } from '@/components/dashboard/activity-feed'
 
 export default function DashboardPage() {
   return (
@@ -12,7 +13,19 @@ export default function DashboardPage() {
           <p className="text-neutral-400">Monitor your AI agent orchestration system</p>
         </div>
 
-        <StatsOverview />
+        <div className="space-y-8">
+          <StatsOverview />
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2">
+              <ActivityFeed />
+            </div>
+
+            <div className="space-y-6">
+              {/* Additional widgets can go here */}
+            </div>
+          </div>
+        </div>
       </main>
     </div>
   )

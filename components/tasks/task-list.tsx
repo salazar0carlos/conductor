@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { Badge } from '@/components/ui/badge'
+import Link from 'next/link'
 import type { Task } from '@/types'
 
 export function TaskList() {
@@ -62,9 +63,10 @@ export function TaskList() {
         </div>
       ) : (
         tasks.map((task) => (
-          <div
+          <Link
             key={task.id}
-            className="border border-neutral-800 rounded-lg p-4 hover:border-neutral-700 transition-colors"
+            href={`/tasks/${task.id}`}
+            className="block border border-neutral-800 rounded-lg p-4 hover:border-neutral-700 hover:bg-neutral-900/50 transition-all cursor-pointer"
           >
             <div className="flex items-start justify-between mb-2">
               <div className="flex items-start gap-3 flex-1">
@@ -90,7 +92,7 @@ export function TaskList() {
                 </>
               )}
             </div>
-          </div>
+          </Link>
         ))
       )}
     </div>
