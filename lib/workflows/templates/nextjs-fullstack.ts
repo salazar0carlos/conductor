@@ -7,8 +7,6 @@
 
 import {
   WorkflowTemplate,
-  WorkflowPhaseDefinition,
-  QualityGate,
   STANDARD_QUALITY_GATES,
   PHASE_REDUNDANCY_REQUIREMENTS,
 } from '../types';

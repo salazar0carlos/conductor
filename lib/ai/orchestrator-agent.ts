@@ -9,12 +9,6 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { createClient } from '@/lib/supabase/server';
 import { NEXTJS_FULLSTACK_TEMPLATE } from '../workflows/templates/nextjs-fullstack';
-import type {
-  WorkflowInstance,
-  TaskTemplate,
-  WorkflowPhaseDefinition,
-  QualityGate,
-} from '../workflows/types';
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!,
@@ -69,7 +63,7 @@ export async function decomposeTaskIntoWorkflow(
   const supabase = await createClient();
 
   // Get the appropriate workflow template
-  let template = NEXTJS_FULLSTACK_TEMPLATE;
+  const template = NEXTJS_FULLSTACK_TEMPLATE;
   // TODO: Add more templates for other app types
 
   // Create workflow instance
