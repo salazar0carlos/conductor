@@ -10,7 +10,9 @@ const navItems = [
   { href: '/projects', label: 'Projects' },
   { href: '/tasks', label: 'Tasks' },
   { href: '/agents', label: 'Agents' },
-  { href: '/intelligence', label: 'Intelligence' }
+  { href: '/intelligence', label: 'Intelligence' },
+  { href: '/design-templates', label: 'Design' },
+  { href: '/settings', label: 'Settings' }
 ]
 
 export function Nav() {

@@ -11,6 +11,7 @@ export default function NewProjectPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [currentStep, setCurrentStep] = useState(1)
+  const [showTemplatePreview, setShowTemplatePreview] = useState(false)
 
   const templates = getAllTemplates()
 
@@ -225,8 +226,8 @@ export default function NewProjectPage() {
           {/* Step Indicator */}
           <div className="flex items-center gap-2">
             {[
-              { num: 1, label: 'Basic Info', icon: CheckCircle2 },
-              { num: 2, label: 'Design', icon: Palette },
+              { num: 1, label: 'Design', icon: Palette },
+              { num: 2, label: 'Basic Info', icon: CheckCircle2 },
               { num: 3, label: 'GitHub', icon: Github },
               { num: 4, label: 'Supabase', icon: Database },
             ].map((step, i) => (
@@ -246,7 +247,200 @@ export default function NewProjectPage() {
             ))}
           </div>
 
-          {/* Section 1: Basic Info */}
+          {/* Section 1: Design Template */}
+          <section className="bg-neutral-900 border border-neutral-800 rounded-lg p-6 space-y-4">
+            <div className="flex items-center gap-3 pb-2 border-b border-neutral-800">
+              <div className="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center">
+                <Palette className="w-4 h-4 text-purple-400" />
+              </div>
+              <div>
+                <h2 className="text-lg font-semibold text-white">Design System</h2>
+                <p className="text-sm text-neutral-400">Choose a design template for your project</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {templates.map((template) => {
+                const isSelected = formData.design_template === template.id
+                return (
+                  <button
+                    key={template.id}
+                    type="button"
+                    onClick={() => {
+                      setFormData({ ...formData, design_template: template.id })
+                      if (currentStep < 1) setCurrentStep(1)
+                    }}
+                    className={`relative group text-left p-4 rounded-lg border-2 transition-all ${
+                      isSelected
+                        ? 'border-purple-500 bg-purple-500/10'
+                        : 'border-neutral-700 bg-neutral-800 hover:border-neutral-600'
+                    }`}
+                  >
+                    {isSelected && (
+                      <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-purple-500 flex items-center justify-center">
+                        <CheckCircle2 className="w-3 h-3 text-white" />
+                      </div>
+                    )}
+
+                    {/* Color Preview Swatches */}
+                    <div className="flex gap-1 mb-3">
+                      <div
+                        className="w-6 h-6 rounded border border-neutral-600"
+                        style={{ background: `hsl(${template.theme.light.primary})` }}
+                        title="Primary"
+                      />
+                      <div
+                        className="w-6 h-6 rounded border border-neutral-600"
+                        style={{ background: `hsl(${template.theme.light.secondary})` }}
+                        title="Secondary"
+                      />
+                      <div
+                        className="w-6 h-6 rounded border border-neutral-600"
+                        style={{ background: `hsl(${template.theme.light.accent})` }}
+                        title="Accent"
+                      />
+                    </div>
+
+                    <div className="mb-3">
+                      <h3 className="font-semibold text-white mb-1">{template.name}</h3>
+                      <p className="text-xs text-neutral-400 line-clamp-2">{template.description}</p>
+                    </div>
+                    <div className="flex flex-wrap gap-1">
+                      {template.metadata.tags.slice(0, 3).map((tag) => (
+                        <span
+                          key={tag}
+                          className="px-2 py-0.5 text-xs rounded bg-neutral-700 text-neutral-300"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </button>
+                )
+              })}
+            </div>
+
+            {selectedTemplate && (
+              <div className="p-6 rounded-lg bg-gradient-to-br from-neutral-800 to-neutral-900 border border-neutral-700 space-y-4">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-start gap-3">
+                    <Palette className="w-5 h-5 text-purple-400 mt-0.5" />
+                    <div className="flex-1">
+                      <h4 className="font-medium text-white mb-1">{selectedTemplate.name} Template</h4>
+                      <p className="text-sm text-neutral-400 mb-3">{selectedTemplate.description}</p>
+                    </div>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => setShowTemplatePreview(!showTemplatePreview)}
+                    className="text-xs"
+                  >
+                    {showTemplatePreview ? 'Hide' : 'Preview'}
+                  </Button>
+                </div>
+
+                {showTemplatePreview && (
+                  <div className="grid md:grid-cols-2 gap-4 pt-4 border-t border-neutral-700">
+                    {/* Light Mode Preview */}
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 text-xs font-medium text-neutral-300 mb-2">
+                        <div className="w-3 h-3 rounded-full bg-yellow-400" />
+                        Light Mode
+                      </div>
+                      <div className="p-4 rounded-lg border" style={{ background: `hsl(${selectedTemplate.theme.light.background})` }}>
+                        <div className="space-y-2">
+                          <div
+                            className="px-3 py-1.5 rounded font-medium text-sm"
+                            style={{
+                              background: `hsl(${selectedTemplate.theme.light.primary})`,
+                              color: `hsl(${selectedTemplate.theme.light.primaryForeground})`
+                            }}
+                          >
+                            Primary Button
+                          </div>
+                          <div
+                            className="px-3 py-1.5 rounded text-sm border"
+                            style={{
+                              background: `hsl(${selectedTemplate.theme.light.card})`,
+                              color: `hsl(${selectedTemplate.theme.light.cardForeground})`,
+                              borderColor: `hsl(${selectedTemplate.theme.light.border})`
+                            }}
+                          >
+                            Card Component
+                          </div>
+                        </div>
+                      </div>
+                      {/* Color Swatches */}
+                      <div className="flex gap-1">
+                        {['primary', 'secondary', 'accent', 'muted'].map((color) => (
+                          <div key={color} className="flex-1 text-center">
+                            <div
+                              className="w-full h-8 rounded border border-neutral-600 mb-1"
+                              style={{ background: `hsl(${selectedTemplate.theme.light[color as keyof typeof selectedTemplate.theme.light]})` }}
+                            />
+                            <span className="text-[10px] text-neutral-500 capitalize">{color}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Dark Mode Preview */}
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 text-xs font-medium text-neutral-300 mb-2">
+                        <div className="w-3 h-3 rounded-full bg-indigo-400" />
+                        Dark Mode
+                      </div>
+                      <div className="p-4 rounded-lg border" style={{ background: `hsl(${selectedTemplate.theme.dark.background})` }}>
+                        <div className="space-y-2">
+                          <div
+                            className="px-3 py-1.5 rounded font-medium text-sm"
+                            style={{
+                              background: `hsl(${selectedTemplate.theme.dark.primary})`,
+                              color: `hsl(${selectedTemplate.theme.dark.primaryForeground})`
+                            }}
+                          >
+                            Primary Button
+                          </div>
+                          <div
+                            className="px-3 py-1.5 rounded text-sm border"
+                            style={{
+                              background: `hsl(${selectedTemplate.theme.dark.card})`,
+                              color: `hsl(${selectedTemplate.theme.dark.cardForeground})`,
+                              borderColor: `hsl(${selectedTemplate.theme.dark.border})`
+                            }}
+                          >
+                            Card Component
+                          </div>
+                        </div>
+                      </div>
+                      {/* Color Swatches */}
+                      <div className="flex gap-1">
+                        {['primary', 'secondary', 'accent', 'muted'].map((color) => (
+                          <div key={color} className="flex-1 text-center">
+                            <div
+                              className="w-full h-8 rounded border border-neutral-600 mb-1"
+                              style={{ background: `hsl(${selectedTemplate.theme.dark[color as keyof typeof selectedTemplate.theme.dark]})` }}
+                            />
+                            <span className="text-[10px] text-neutral-500 capitalize">{color}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex items-center gap-4 text-xs text-neutral-500">
+                  <span>✓ Light & Dark Mode</span>
+                  <span>✓ {selectedTemplate.category === 'enterprise' ? 'WCAG AAA' : 'WCAG AA'}</span>
+                  <span>✓ shadcn/ui Ready</span>
+                </div>
+              </div>
+            )}
+          </section>
+
+          {/* Section 2: Basic Info */}
           <section className="bg-neutral-900 border border-neutral-800 rounded-lg p-6 space-y-4">
             <div className="flex items-center gap-3 pb-2 border-b border-neutral-800">
               <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
@@ -268,7 +462,7 @@ export default function NewProjectPage() {
                 value={formData.name}
                 onChange={(e) => {
                   setFormData({ ...formData, name: e.target.value })
-                  if (currentStep < 1) setCurrentStep(1)
+                  if (currentStep < 2) setCurrentStep(2)
                 }}
                 className="w-full px-4 py-2 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder-neutral-500 focus:outline-none focus:border-blue-500 transition-colors"
                 placeholder="My Awesome Project"
@@ -289,74 +483,6 @@ export default function NewProjectPage() {
                 rows={3}
               />
             </div>
-          </section>
-
-          {/* Section 2: Design Template */}
-          <section className="bg-neutral-900 border border-neutral-800 rounded-lg p-6 space-y-4">
-            <div className="flex items-center gap-3 pb-2 border-b border-neutral-800">
-              <div className="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center">
-                <Palette className="w-4 h-4 text-purple-400" />
-              </div>
-              <div>
-                <h2 className="text-lg font-semibold text-white">Design System</h2>
-                <p className="text-sm text-neutral-400">Choose a design template for your project</p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {templates.map((template) => (
-                <button
-                  key={template.id}
-                  type="button"
-                  onClick={() => {
-                    setFormData({ ...formData, design_template: template.id })
-                    if (currentStep < 2) setCurrentStep(2)
-                  }}
-                  className={`relative group text-left p-4 rounded-lg border-2 transition-all ${
-                    formData.design_template === template.id
-                      ? 'border-blue-500 bg-blue-500/10'
-                      : 'border-neutral-700 bg-neutral-800 hover:border-neutral-600'
-                  }`}
-                >
-                  {formData.design_template === template.id && (
-                    <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center">
-                      <CheckCircle2 className="w-3 h-3 text-white" />
-                    </div>
-                  )}
-                  <div className="mb-3">
-                    <h3 className="font-semibold text-white mb-1">{template.name}</h3>
-                    <p className="text-xs text-neutral-400 line-clamp-2">{template.description}</p>
-                  </div>
-                  <div className="flex flex-wrap gap-1">
-                    {template.metadata.tags.slice(0, 3).map((tag) => (
-                      <span
-                        key={tag}
-                        className="px-2 py-0.5 text-xs rounded bg-neutral-700 text-neutral-300"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </button>
-              ))}
-            </div>
-
-            {selectedTemplate && (
-              <div className="p-4 rounded-lg bg-neutral-800 border border-neutral-700">
-                <div className="flex items-start gap-3">
-                  <Palette className="w-5 h-5 text-purple-400 mt-0.5" />
-                  <div className="flex-1">
-                    <h4 className="font-medium text-white mb-1">{selectedTemplate.name} Template</h4>
-                    <p className="text-sm text-neutral-400 mb-3">{selectedTemplate.description}</p>
-                    <div className="flex items-center gap-4 text-xs text-neutral-500">
-                      <span>✓ Light & Dark Mode</span>
-                      <span>✓ {selectedTemplate.category === 'enterprise' ? 'WCAG AAA' : 'WCAG AA'}</span>
-                      <span>✓ shadcn/ui Ready</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
           </section>
 
           {/* Section 3: GitHub Integration */}
