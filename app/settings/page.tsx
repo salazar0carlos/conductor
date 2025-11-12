@@ -3,9 +3,10 @@
 import { useState, useEffect } from 'react'
 import { Nav } from '@/components/ui/nav'
 import { Button } from '@/components/ui/button'
-import { Settings, User, Palette, Bell, Lock, Code, Loader2, Trash2, Plus } from 'lucide-react'
+import { Settings, User, Palette, Bell, Lock, Code, Loader2, Trash2, Plus, Paintbrush, RefreshCw } from 'lucide-react'
+import { PlatformTheme, defaultPlatformTheme, applyThemeToDocument } from '@/lib/platform-theme'
 
-type Tab = 'general' | 'integrations' | 'preferences' | 'privacy'
+type Tab = 'general' | 'integrations' | 'preferences' | 'privacy' | 'appearance'
 
 interface Integration {
   id: string
@@ -44,8 +45,12 @@ export default function SettingsPage() {
   const [integrations, setIntegrations] = useState<Integration[]>([])
   const [loadingIntegrations, setLoadingIntegrations] = useState(false)
 
+  const [platformTheme, setPlatformTheme] = useState<PlatformTheme>(defaultPlatformTheme)
+  const [themeLoading, setThemeLoading] = useState(false)
+
   useEffect(() => {
     fetchSettings()
+    fetchPlatformTheme()
   }, [])
 
   useEffect(() => {
@@ -130,8 +135,79 @@ export default function SettingsPage() {
     }
   }
 
+  const fetchPlatformTheme = async () => {
+    try {
+      const response = await fetch('/api/platform-theme')
+      const data = await response.json()
+      if (data.success) {
+        setPlatformTheme(data.data)
+        applyThemeToDocument(data.data)
+      }
+    } catch {
+      // Use default theme
+    }
+  }
+
+  const handleSavePlatformTheme = async () => {
+    setThemeLoading(true)
+    setError(null)
+    setSuccess(null)
+
+    try {
+      const response = await fetch('/api/platform-theme', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(platformTheme),
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        applyThemeToDocument(data.data)
+        setSuccess('Platform appearance saved successfully')
+        setTimeout(() => setSuccess(null), 3000)
+      } else {
+        setError(data.error || 'Failed to save platform appearance')
+      }
+    } catch {
+      setError('Failed to save platform appearance')
+    } finally {
+      setThemeLoading(false)
+    }
+  }
+
+  const handleResetPlatformTheme = async () => {
+    if (!confirm('Are you sure you want to reset to default appearance?')) return
+
+    setThemeLoading(true)
+    setError(null)
+    setSuccess(null)
+
+    try {
+      const response = await fetch('/api/platform-theme', {
+        method: 'DELETE',
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        setPlatformTheme(data.data)
+        applyThemeToDocument(data.data)
+        setSuccess('Platform appearance reset to default')
+        setTimeout(() => setSuccess(null), 3000)
+      } else {
+        setError(data.error || 'Failed to reset platform appearance')
+      }
+    } catch {
+      setError('Failed to reset platform appearance')
+    } finally {
+      setThemeLoading(false)
+    }
+  }
+
   const tabs = [
     { id: 'general' as Tab, label: 'General', icon: Settings },
+    { id: 'appearance' as Tab, label: 'Platform Appearance', icon: Paintbrush },
     { id: 'integrations' as Tab, label: 'Integrations', icon: Code },
     { id: 'preferences' as Tab, label: 'Preferences', icon: Palette },
     { id: 'privacy' as Tab, label: 'Privacy', icon: Lock },
@@ -259,6 +335,299 @@ export default function SettingsPage() {
                       </>
                     ) : (
                       'Save Changes'
+                    )}
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {/* Platform Appearance Tab */}
+            {activeTab === 'appearance' && (
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-xl font-semibold text-white mb-1">Platform Appearance</h2>
+                    <p className="text-sm text-neutral-400">Customize Conductor&apos;s look and feel</p>
+                  </div>
+                  <Button
+                    variant="secondary"
+                    onClick={handleResetPlatformTheme}
+                    disabled={themeLoading}
+                    className="gap-2"
+                  >
+                    <RefreshCw className="w-4 h-4" />
+                    Reset to Default
+                  </Button>
+                </div>
+
+                {/* Typography Section */}
+                <div className="space-y-4 p-4 rounded-lg bg-neutral-800 border border-neutral-700">
+                  <h3 className="text-sm font-medium text-white flex items-center gap-2">
+                    <User className="w-4 h-4" />
+                    Typography
+                  </h3>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-white mb-2">
+                        Title Font
+                      </label>
+                      <input
+                        type="text"
+                        value={platformTheme.typography.titleFont}
+                        onChange={(e) =>
+                          setPlatformTheme({
+                            ...platformTheme,
+                            typography: { ...platformTheme.typography, titleFont: e.target.value },
+                          })
+                        }
+                        className="w-full px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
+                        placeholder="system-ui, sans-serif"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-white mb-2">
+                        Title Size
+                      </label>
+                      <input
+                        type="text"
+                        value={platformTheme.typography.titleSize}
+                        onChange={(e) =>
+                          setPlatformTheme({
+                            ...platformTheme,
+                            typography: { ...platformTheme.typography, titleSize: e.target.value },
+                          })
+                        }
+                        className="w-full px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
+                        placeholder="1.875rem"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-white mb-2">
+                        Title Color
+                      </label>
+                      <div className="flex gap-2">
+                        <input
+                          type="color"
+                          value={platformTheme.typography.titleColor}
+                          onChange={(e) =>
+                            setPlatformTheme({
+                              ...platformTheme,
+                              typography: { ...platformTheme.typography, titleColor: e.target.value },
+                            })
+                          }
+                          className="w-12 h-10 rounded border border-neutral-600"
+                        />
+                        <input
+                          type="text"
+                          value={platformTheme.typography.titleColor}
+                          onChange={(e) =>
+                            setPlatformTheme({
+                              ...platformTheme,
+                              typography: { ...platformTheme.typography, titleColor: e.target.value },
+                            })
+                          }
+                          className="flex-1 px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-white mb-2">
+                        Body Color
+                      </label>
+                      <div className="flex gap-2">
+                        <input
+                          type="color"
+                          value={platformTheme.typography.bodyColor}
+                          onChange={(e) =>
+                            setPlatformTheme({
+                              ...platformTheme,
+                              typography: { ...platformTheme.typography, bodyColor: e.target.value },
+                            })
+                          }
+                          className="w-12 h-10 rounded border border-neutral-600"
+                        />
+                        <input
+                          type="text"
+                          value={platformTheme.typography.bodyColor}
+                          onChange={(e) =>
+                            setPlatformTheme({
+                              ...platformTheme,
+                              typography: { ...platformTheme.typography, bodyColor: e.target.value },
+                            })
+                          }
+                          className="flex-1 px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Colors Section */}
+                <div className="space-y-4 p-4 rounded-lg bg-neutral-800 border border-neutral-700">
+                  <h3 className="text-sm font-medium text-white flex items-center gap-2">
+                    <Palette className="w-4 h-4" />
+                    Colors
+                  </h3>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    {Object.entries(platformTheme.colors).map(([key, value]) => (
+                      <div key={key}>
+                        <label className="block text-sm font-medium text-white mb-2 capitalize">
+                          {key.replace(/([A-Z])/g, ' $1')}
+                        </label>
+                        <div className="flex gap-2">
+                          <input
+                            type="color"
+                            value={value}
+                            onChange={(e) =>
+                              setPlatformTheme({
+                                ...platformTheme,
+                                colors: { ...platformTheme.colors, [key]: e.target.value },
+                              })
+                            }
+                            className="w-12 h-10 rounded border border-neutral-600"
+                          />
+                          <input
+                            type="text"
+                            value={value}
+                            onChange={(e) =>
+                              setPlatformTheme({
+                                ...platformTheme,
+                                colors: { ...platformTheme.colors, [key]: e.target.value },
+                              })
+                            }
+                            className="flex-1 px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Buttons Section */}
+                <div className="space-y-4 p-4 rounded-lg bg-neutral-800 border border-neutral-700">
+                  <h3 className="text-sm font-medium text-white flex items-center gap-2">
+                    <Paintbrush className="w-4 h-4" />
+                    Buttons
+                  </h3>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-white mb-2">
+                        Border Radius
+                      </label>
+                      <input
+                        type="text"
+                        value={platformTheme.buttons.borderRadius}
+                        onChange={(e) =>
+                          setPlatformTheme({
+                            ...platformTheme,
+                            buttons: { ...platformTheme.buttons, borderRadius: e.target.value },
+                          })
+                        }
+                        className="w-full px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
+                        placeholder="0.5rem"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-white mb-2">
+                        Primary Background
+                      </label>
+                      <div className="flex gap-2">
+                        <input
+                          type="color"
+                          value={platformTheme.buttons.primaryBg}
+                          onChange={(e) =>
+                            setPlatformTheme({
+                              ...platformTheme,
+                              buttons: { ...platformTheme.buttons, primaryBg: e.target.value },
+                            })
+                          }
+                          className="w-12 h-10 rounded border border-neutral-600"
+                        />
+                        <input
+                          type="text"
+                          value={platformTheme.buttons.primaryBg}
+                          onChange={(e) =>
+                            setPlatformTheme({
+                              ...platformTheme,
+                              buttons: { ...platformTheme.buttons, primaryBg: e.target.value },
+                            })
+                          }
+                          className="flex-1 px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Cards Section */}
+                <div className="space-y-4 p-4 rounded-lg bg-neutral-800 border border-neutral-700">
+                  <h3 className="text-sm font-medium text-white flex items-center gap-2">
+                    <Code className="w-4 h-4" />
+                    Cards
+                  </h3>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    {Object.entries(platformTheme.cards).map(([key, value]) => (
+                      <div key={key}>
+                        <label className="block text-sm font-medium text-white mb-2 capitalize">
+                          {key.replace(/([A-Z])/g, ' $1')}
+                        </label>
+                        {key.includes('Color') || key === 'background' || key === 'border' ? (
+                          <div className="flex gap-2">
+                            <input
+                              type="color"
+                              value={value}
+                              onChange={(e) =>
+                                setPlatformTheme({
+                                  ...platformTheme,
+                                  cards: { ...platformTheme.cards, [key]: e.target.value },
+                                })
+                              }
+                              className="w-12 h-10 rounded border border-neutral-600"
+                            />
+                            <input
+                              type="text"
+                              value={value}
+                              onChange={(e) =>
+                                setPlatformTheme({
+                                  ...platformTheme,
+                                  cards: { ...platformTheme.cards, [key]: e.target.value },
+                                })
+                              }
+                              className="flex-1 px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
+                            />
+                          </div>
+                        ) : (
+                          <input
+                            type="text"
+                            value={value}
+                            onChange={(e) =>
+                              setPlatformTheme({
+                                ...platformTheme,
+                                cards: { ...platformTheme.cards, [key]: e.target.value },
+                              })
+                            }
+                            className="w-full px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
+                          />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Save Button */}
+                <div className="pt-4 border-t border-neutral-800">
+                  <Button
+                    onClick={handleSavePlatformTheme}
+                    disabled={themeLoading}
+                    className="w-full"
+                  >
+                    {themeLoading ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Saving...
+                      </>
+                    ) : (
+                      'Save Platform Appearance'
                     )}
                   </Button>
                 </div>
