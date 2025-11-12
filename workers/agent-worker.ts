@@ -165,6 +165,25 @@ export class AgentWorker {
       // Update task status to in_progress
       await this.updateTaskStatus(task.id, 'in_progress');
 
+      // Get project owner for subscription checking
+      const projectOwner = await this.getProjectOwner();
+
+      if (!projectOwner) {
+        throw new Error('Could not determine project owner for subscription check');
+      }
+
+      // Estimate token usage (8k max tokens + typical input)
+      const estimatedTokens = 8192 + 2000; // max_tokens + estimated input
+
+      // Check if user has tokens available
+      const canExecute = await this.checkTokensAvailable(projectOwner, estimatedTokens);
+
+      if (!canExecute) {
+        throw new Error(
+          'Monthly token limit reached. Please upgrade your subscription plan or enable auto top-up in settings.'
+        );
+      }
+
       // Get context from GitHub (existing code)
       const codeContext = await this.getCodeContext();
 
@@ -194,6 +213,9 @@ export class AgentWorker {
 
       console.log(`✅ [${this.config.agentName}] Task completed`);
 
+      // Calculate actual token usage
+      const totalTokens = message.usage.input_tokens + message.usage.output_tokens;
+
       // Commit code to GitHub if applicable
       if (this.github && this.config.githubRepo) {
         await this.commitToGitHub(task, result);
@@ -202,8 +224,11 @@ export class AgentWorker {
       // Mark task as completed
       await this.completeTask(task.id, result);
 
-      // Track token usage
-      await this.trackApiUsage(message.usage.input_tokens + message.usage.output_tokens);
+      // Track token usage for project resources
+      await this.trackApiUsage(totalTokens);
+
+      // Record token usage for subscription billing
+      await this.recordSubscriptionUsage(projectOwner, totalTokens, task.id);
     } catch (error: any) {
       console.error(`❌ [${this.config.agentName}] Task failed:`, error.message);
 
@@ -409,6 +434,97 @@ Format your response as:
       p_tokens: tokens,
       p_cost: cost,
     });
+  }
+
+  /**
+   * Get project owner user_id
+   */
+  private async getProjectOwner(): Promise<string | null> {
+    try {
+      const { data, error } = await this.supabase
+        .from('projects')
+        .select('user_id')
+        .eq('id', this.config.projectId)
+        .single();
+
+      if (error || !data) {
+        console.error('Error fetching project owner:', error);
+        return null;
+      }
+
+      return data.user_id;
+    } catch (error) {
+      console.error('Error in getProjectOwner:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Check if user has tokens available in their subscription
+   */
+  private async checkTokensAvailable(userId: string, tokensNeeded: number): Promise<boolean> {
+    try {
+      const { data, error } = await this.supabase.rpc('has_tokens_available', {
+        p_user_id: userId,
+        p_tokens_needed: tokensNeeded,
+      });
+
+      if (error) {
+        console.error('Error checking token availability:', error);
+        // Default to allowing execution if check fails (fail open)
+        return true;
+      }
+
+      // If user is at/over limit, check for auto-pause
+      if (!data) {
+        console.warn(
+          `⚠️  [${this.config.agentName}] User ${userId} has reached token limit. Triggering auto-pause...`
+        );
+
+        // Trigger auto-pause for all projects
+        await this.supabase.rpc('auto_pause_on_limit', {
+          p_user_id: userId,
+          p_reason: 'Monthly token limit reached',
+        });
+      }
+
+      return data;
+    } catch (error) {
+      console.error('Error in checkTokensAvailable:', error);
+      // Default to allowing execution if check fails (fail open)
+      return true;
+    }
+  }
+
+  /**
+   * Record token usage to subscription system
+   */
+  private async recordSubscriptionUsage(
+    userId: string,
+    tokens: number,
+    taskId: string
+  ): Promise<void> {
+    try {
+      // Cost is calculated by the database function
+      await this.supabase.rpc('record_token_usage', {
+        p_user_id: userId,
+        p_project_id: this.config.projectId,
+        p_agent_id: this.config.agentId,
+        p_task_id: taskId,
+        p_tokens: tokens,
+        p_model: 'claude-sonnet-4-20250514',
+      });
+
+      const costPerToken = 3 / 1000000;
+      const cost = tokens * costPerToken;
+
+      console.log(
+        `💰 [${this.config.agentName}] Recorded ${tokens} tokens ($${cost.toFixed(4)}) for user ${userId}`
+      );
+    } catch (error) {
+      console.error('Error recording subscription usage:', error);
+      // Don't throw - this is tracking only, shouldn't fail the task
+    }
   }
 
   /**
