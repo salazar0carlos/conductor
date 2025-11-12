@@ -94,28 +94,95 @@ export default function DesignTemplatesPage() {
               key={template.id}
               className="group bg-neutral-900 border border-neutral-800 rounded-lg overflow-hidden hover:border-purple-500/50 transition-all"
             >
-              {/* Preview Area */}
-              <div className="relative h-48 bg-gradient-to-br from-neutral-800 to-neutral-900 p-6">
-                {/* Light Mode Preview */}
-                <div className="absolute inset-6 flex flex-col gap-2">
-                  <div
-                    className="h-10 rounded flex items-center justify-center font-medium text-sm"
-                    style={{
-                      background: `${template.theme.light.primary}`,
-                      color: `${template.theme.light.primaryForeground}`,
-                    }}
-                  >
-                    Primary Button
-                  </div>
-                  <div
-                    className="flex-1 rounded border p-3 text-xs"
-                    style={{
-                      background: `${template.theme.light.card}`,
-                      color: `${template.theme.light.cardForeground}`,
-                      borderColor: `${template.theme.light.border}`,
-                    }}
-                  >
-                    Card Component
+              {/* Preview Area - Mini Dashboard Mockup */}
+              <div className="relative h-48 overflow-hidden">
+                <div
+                  className="absolute inset-0 p-2"
+                  style={{ background: `${template.theme.light.background}` }}
+                >
+                  {/* Mini Dashboard Layout */}
+                  <div className="flex gap-2 h-full">
+                    {/* Sidebar */}
+                    <div
+                      className="w-12 rounded flex flex-col gap-1 p-1"
+                      style={{
+                        background: `${template.theme.light.card}`,
+                        borderColor: `${template.theme.light.border}`,
+                      }}
+                    >
+                      <div
+                        className="h-6 rounded"
+                        style={{ background: `${template.theme.light.primary}` }}
+                      />
+                      <div
+                        className="h-6 rounded"
+                        style={{ background: `${template.theme.light.muted}` }}
+                      />
+                      <div
+                        className="h-6 rounded"
+                        style={{ background: `${template.theme.light.muted}` }}
+                      />
+                    </div>
+
+                    {/* Main Content */}
+                    <div className="flex-1 flex flex-col gap-2">
+                      {/* Header with button */}
+                      <div className="flex gap-2">
+                        <div
+                          className="flex-1 h-6 rounded"
+                          style={{ background: `${template.theme.light.card}` }}
+                        />
+                        <div
+                          className="w-16 h-6 rounded"
+                          style={{ background: `${template.theme.light.primary}` }}
+                        />
+                      </div>
+
+                      {/* Stats Cards */}
+                      <div className="grid grid-cols-3 gap-2">
+                        {[1, 2, 3].map((i) => (
+                          <div
+                            key={i}
+                            className="h-12 rounded border p-1"
+                            style={{
+                              background: `${template.theme.light.card}`,
+                              borderColor: `${template.theme.light.border}`,
+                            }}
+                          >
+                            <div
+                              className="h-2 w-8 rounded mb-1"
+                              style={{ background: `${template.theme.light.muted}` }}
+                            />
+                            <div
+                              className="h-3 w-12 rounded"
+                              style={{ background: `${template.theme.light.foreground}`, opacity: 0.8 }}
+                            />
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Table/List */}
+                      <div
+                        className="flex-1 rounded border"
+                        style={{
+                          background: `${template.theme.light.card}`,
+                          borderColor: `${template.theme.light.border}`,
+                        }}
+                      >
+                        <div className="p-1 space-y-1">
+                          {[1, 2, 3].map((i) => (
+                            <div
+                              key={i}
+                              className="h-4 rounded"
+                              style={{
+                                background: `${template.theme.light.muted}`,
+                                opacity: 0.6,
+                              }}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
@@ -128,7 +195,7 @@ export default function DesignTemplatesPage() {
                     className="gap-2"
                   >
                     <Eye className="w-4 h-4" />
-                    Preview
+                    Full Preview
                   </Button>
                 </div>
               </div>
@@ -226,127 +293,353 @@ export default function DesignTemplatesPage() {
             {/* Modal Content */}
             <div className="p-6 space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
-                {/* Light Mode */}
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2 text-sm font-medium text-neutral-300">
+                {/* Light Mode - Full UI Preview */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2 text-sm font-medium text-neutral-300 mb-3">
                     <div className="w-3 h-3 rounded-full bg-yellow-400" />
-                    Light Mode
+                    Light Mode - Full UI
                   </div>
                   <div
-                    className="p-6 rounded-lg border"
+                    className="p-4 rounded-lg border space-y-4"
                     style={{ background: `${previewTemplate.theme.light.background}` }}
                   >
-                    <div className="space-y-3">
-                      <div
-                        className="px-4 py-2 rounded font-medium"
-                        style={{
-                          background: `${previewTemplate.theme.light.primary}`,
-                          color: `${previewTemplate.theme.light.primaryForeground}`,
-                        }}
-                      >
-                        Primary Button
-                      </div>
-                      <div
-                        className="px-4 py-2 rounded border"
-                        style={{
-                          background: `${previewTemplate.theme.light.secondary}`,
-                          color: `${previewTemplate.theme.light.secondaryForeground}`,
-                          borderColor: `${previewTemplate.theme.light.border}`,
-                        }}
-                      >
-                        Secondary Button
-                      </div>
-                      <div
-                        className="p-4 rounded border"
-                        style={{
-                          background: `${previewTemplate.theme.light.card}`,
-                          color: `${previewTemplate.theme.light.cardForeground}`,
-                          borderColor: `${previewTemplate.theme.light.border}`,
-                        }}
-                      >
-                        <div className="font-medium mb-1">Card Title</div>
-                        <div className="text-sm opacity-70">Card content goes here</div>
+                    {/* Buttons */}
+                    <div className="space-y-2">
+                      <div className="text-xs font-medium" style={{ color: `${previewTemplate.theme.light.foreground}` }}>Buttons</div>
+                      <div className="flex gap-2">
+                        <div
+                          className="px-3 py-1.5 rounded text-xs font-medium"
+                          style={{
+                            background: `${previewTemplate.theme.light.primary}`,
+                            color: `${previewTemplate.theme.light.primaryForeground}`,
+                          }}
+                        >
+                          Primary
+                        </div>
+                        <div
+                          className="px-3 py-1.5 rounded text-xs border"
+                          style={{
+                            background: `${previewTemplate.theme.light.secondary}`,
+                            color: `${previewTemplate.theme.light.secondaryForeground}`,
+                            borderColor: `${previewTemplate.theme.light.border}`,
+                          }}
+                        >
+                          Secondary
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  {/* Color Palette */}
-                  <div className="grid grid-cols-4 gap-2">
-                    {['primary', 'secondary', 'accent', 'muted'].map((color) => (
-                      <div key={color} className="text-center">
-                        <div
-                          className="w-full h-12 rounded border border-neutral-700 mb-1"
-                          style={{
-                            background: `${
-                              previewTemplate.theme.light[
-                                color as keyof typeof previewTemplate.theme.light
-                              ]
-                            }`,
-                          }}
-                        />
-                        <span className="text-xs text-neutral-500 capitalize">{color}</span>
+
+                    {/* Form Inputs */}
+                    <div className="space-y-2">
+                      <div className="text-xs font-medium" style={{ color: `${previewTemplate.theme.light.foreground}` }}>Form Elements</div>
+                      <div
+                        className="px-3 py-1.5 rounded text-xs border"
+                        style={{
+                          background: `${previewTemplate.theme.light.card}`,
+                          color: `${previewTemplate.theme.light.mutedForeground}`,
+                          borderColor: `${previewTemplate.theme.light.input}`,
+                        }}
+                      >
+                        Enter text...
                       </div>
-                    ))}
+                      <div
+                        className="px-3 py-2 rounded text-xs border"
+                        style={{
+                          background: `${previewTemplate.theme.light.card}`,
+                          borderColor: `${previewTemplate.theme.light.input}`,
+                        }}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span style={{ color: `${previewTemplate.theme.light.mutedForeground}` }}>Select option</span>
+                          <div style={{ color: `${previewTemplate.theme.light.mutedForeground}` }}>▼</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Badges */}
+                    <div className="space-y-2">
+                      <div className="text-xs font-medium" style={{ color: `${previewTemplate.theme.light.foreground}` }}>Badges</div>
+                      <div className="flex gap-2">
+                        <div
+                          className="px-2 py-0.5 rounded text-xs"
+                          style={{
+                            background: `${previewTemplate.theme.light.primary}`,
+                            color: `${previewTemplate.theme.light.primaryForeground}`,
+                          }}
+                        >
+                          Active
+                        </div>
+                        <div
+                          className="px-2 py-0.5 rounded text-xs"
+                          style={{
+                            background: `${previewTemplate.theme.light.muted}`,
+                            color: `${previewTemplate.theme.light.mutedForeground}`,
+                          }}
+                        >
+                          Inactive
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Mini Calendar */}
+                    <div className="space-y-2">
+                      <div className="text-xs font-medium" style={{ color: `${previewTemplate.theme.light.foreground}` }}>Calendar</div>
+                      <div
+                        className="rounded border p-2"
+                        style={{
+                          background: `${previewTemplate.theme.light.card}`,
+                          borderColor: `${previewTemplate.theme.light.border}`,
+                        }}
+                      >
+                        <div className="grid grid-cols-7 gap-1">
+                          {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, i) => (
+                            <div
+                              key={i}
+                              className="text-center text-xs"
+                              style={{ color: `${previewTemplate.theme.light.mutedForeground}` }}
+                            >
+                              {day}
+                            </div>
+                          ))}
+                          {[...Array(7)].map((_, i) => (
+                            <div
+                              key={i}
+                              className="aspect-square rounded flex items-center justify-center text-xs"
+                              style={{
+                                background: i === 3 ? `${previewTemplate.theme.light.primary}` : 'transparent',
+                                color: i === 3 ? `${previewTemplate.theme.light.primaryForeground}` : `${previewTemplate.theme.light.foreground}`,
+                              }}
+                            >
+                              {i + 1}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Data Table */}
+                    <div className="space-y-2">
+                      <div className="text-xs font-medium" style={{ color: `${previewTemplate.theme.light.foreground}` }}>Data Table</div>
+                      <div
+                        className="rounded border overflow-hidden"
+                        style={{
+                          background: `${previewTemplate.theme.light.card}`,
+                          borderColor: `${previewTemplate.theme.light.border}`,
+                        }}
+                      >
+                        <div
+                          className="px-2 py-1 text-xs font-medium border-b"
+                          style={{
+                            background: `${previewTemplate.theme.light.muted}`,
+                            borderColor: `${previewTemplate.theme.light.border}`,
+                            color: `${previewTemplate.theme.light.mutedForeground}`,
+                          }}
+                        >
+                          <div className="flex gap-4">
+                            <span className="flex-1">Name</span>
+                            <span className="w-16">Status</span>
+                          </div>
+                        </div>
+                        {[1, 2, 3].map((i) => (
+                          <div
+                            key={i}
+                            className="px-2 py-1 text-xs border-b last:border-b-0"
+                            style={{
+                              borderColor: `${previewTemplate.theme.light.border}`,
+                              color: `${previewTemplate.theme.light.foreground}`,
+                            }}
+                          >
+                            <div className="flex gap-4">
+                              <span className="flex-1">Item {i}</span>
+                              <span
+                                className="w-16 px-1 rounded text-center"
+                                style={{
+                                  background: `${previewTemplate.theme.light.primary}`,
+                                  color: `${previewTemplate.theme.light.primaryForeground}`,
+                                }}
+                              >
+                                Live
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                {/* Dark Mode */}
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2 text-sm font-medium text-neutral-300">
+                {/* Dark Mode - Full UI Preview */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2 text-sm font-medium text-neutral-300 mb-3">
                     <div className="w-3 h-3 rounded-full bg-indigo-400" />
-                    Dark Mode
+                    Dark Mode - Full UI
                   </div>
                   <div
-                    className="p-6 rounded-lg border"
+                    className="p-4 rounded-lg border space-y-4"
                     style={{ background: `${previewTemplate.theme.dark.background}` }}
                   >
-                    <div className="space-y-3">
-                      <div
-                        className="px-4 py-2 rounded font-medium"
-                        style={{
-                          background: `${previewTemplate.theme.dark.primary}`,
-                          color: `${previewTemplate.theme.dark.primaryForeground}`,
-                        }}
-                      >
-                        Primary Button
-                      </div>
-                      <div
-                        className="px-4 py-2 rounded border"
-                        style={{
-                          background: `${previewTemplate.theme.dark.secondary}`,
-                          color: `${previewTemplate.theme.dark.secondaryForeground}`,
-                          borderColor: `${previewTemplate.theme.dark.border}`,
-                        }}
-                      >
-                        Secondary Button
-                      </div>
-                      <div
-                        className="p-4 rounded border"
-                        style={{
-                          background: `${previewTemplate.theme.dark.card}`,
-                          color: `${previewTemplate.theme.dark.cardForeground}`,
-                          borderColor: `${previewTemplate.theme.dark.border}`,
-                        }}
-                      >
-                        <div className="font-medium mb-1">Card Title</div>
-                        <div className="text-sm opacity-70">Card content goes here</div>
+                    {/* Buttons */}
+                    <div className="space-y-2">
+                      <div className="text-xs font-medium" style={{ color: `${previewTemplate.theme.dark.foreground}` }}>Buttons</div>
+                      <div className="flex gap-2">
+                        <div
+                          className="px-3 py-1.5 rounded text-xs font-medium"
+                          style={{
+                            background: `${previewTemplate.theme.dark.primary}`,
+                            color: `${previewTemplate.theme.dark.primaryForeground}`,
+                          }}
+                        >
+                          Primary
+                        </div>
+                        <div
+                          className="px-3 py-1.5 rounded text-xs border"
+                          style={{
+                            background: `${previewTemplate.theme.dark.secondary}`,
+                            color: `${previewTemplate.theme.dark.secondaryForeground}`,
+                            borderColor: `${previewTemplate.theme.dark.border}`,
+                          }}
+                        >
+                          Secondary
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  {/* Color Palette */}
-                  <div className="grid grid-cols-4 gap-2">
-                    {['primary', 'secondary', 'accent', 'muted'].map((color) => (
-                      <div key={color} className="text-center">
-                        <div
-                          className="w-full h-12 rounded border border-neutral-700 mb-1"
-                          style={{
-                            background: `${
-                              previewTemplate.theme.dark[color as keyof typeof previewTemplate.theme.dark]
-                            }`,
-                          }}
-                        />
-                        <span className="text-xs text-neutral-500 capitalize">{color}</span>
+
+                    {/* Form Inputs */}
+                    <div className="space-y-2">
+                      <div className="text-xs font-medium" style={{ color: `${previewTemplate.theme.dark.foreground}` }}>Form Elements</div>
+                      <div
+                        className="px-3 py-1.5 rounded text-xs border"
+                        style={{
+                          background: `${previewTemplate.theme.dark.card}`,
+                          color: `${previewTemplate.theme.dark.mutedForeground}`,
+                          borderColor: `${previewTemplate.theme.dark.input}`,
+                        }}
+                      >
+                        Enter text...
                       </div>
-                    ))}
+                      <div
+                        className="px-3 py-2 rounded text-xs border"
+                        style={{
+                          background: `${previewTemplate.theme.dark.card}`,
+                          borderColor: `${previewTemplate.theme.dark.input}`,
+                        }}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span style={{ color: `${previewTemplate.theme.dark.mutedForeground}` }}>Select option</span>
+                          <div style={{ color: `${previewTemplate.theme.dark.mutedForeground}` }}>▼</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Badges */}
+                    <div className="space-y-2">
+                      <div className="text-xs font-medium" style={{ color: `${previewTemplate.theme.dark.foreground}` }}>Badges</div>
+                      <div className="flex gap-2">
+                        <div
+                          className="px-2 py-0.5 rounded text-xs"
+                          style={{
+                            background: `${previewTemplate.theme.dark.primary}`,
+                            color: `${previewTemplate.theme.dark.primaryForeground}`,
+                          }}
+                        >
+                          Active
+                        </div>
+                        <div
+                          className="px-2 py-0.5 rounded text-xs"
+                          style={{
+                            background: `${previewTemplate.theme.dark.muted}`,
+                            color: `${previewTemplate.theme.dark.mutedForeground}`,
+                          }}
+                        >
+                          Inactive
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Mini Calendar */}
+                    <div className="space-y-2">
+                      <div className="text-xs font-medium" style={{ color: `${previewTemplate.theme.dark.foreground}` }}>Calendar</div>
+                      <div
+                        className="rounded border p-2"
+                        style={{
+                          background: `${previewTemplate.theme.dark.card}`,
+                          borderColor: `${previewTemplate.theme.dark.border}`,
+                        }}
+                      >
+                        <div className="grid grid-cols-7 gap-1">
+                          {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, i) => (
+                            <div
+                              key={i}
+                              className="text-center text-xs"
+                              style={{ color: `${previewTemplate.theme.dark.mutedForeground}` }}
+                            >
+                              {day}
+                            </div>
+                          ))}
+                          {[...Array(7)].map((_, i) => (
+                            <div
+                              key={i}
+                              className="aspect-square rounded flex items-center justify-center text-xs"
+                              style={{
+                                background: i === 3 ? `${previewTemplate.theme.dark.primary}` : 'transparent',
+                                color: i === 3 ? `${previewTemplate.theme.dark.primaryForeground}` : `${previewTemplate.theme.dark.foreground}`,
+                              }}
+                            >
+                              {i + 1}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Data Table */}
+                    <div className="space-y-2">
+                      <div className="text-xs font-medium" style={{ color: `${previewTemplate.theme.dark.foreground}` }}>Data Table</div>
+                      <div
+                        className="rounded border overflow-hidden"
+                        style={{
+                          background: `${previewTemplate.theme.dark.card}`,
+                          borderColor: `${previewTemplate.theme.dark.border}`,
+                        }}
+                      >
+                        <div
+                          className="px-2 py-1 text-xs font-medium border-b"
+                          style={{
+                            background: `${previewTemplate.theme.dark.muted}`,
+                            borderColor: `${previewTemplate.theme.dark.border}`,
+                            color: `${previewTemplate.theme.dark.mutedForeground}`,
+                          }}
+                        >
+                          <div className="flex gap-4">
+                            <span className="flex-1">Name</span>
+                            <span className="w-16">Status</span>
+                          </div>
+                        </div>
+                        {[1, 2, 3].map((i) => (
+                          <div
+                            key={i}
+                            className="px-2 py-1 text-xs border-b last:border-b-0"
+                            style={{
+                              borderColor: `${previewTemplate.theme.dark.border}`,
+                              color: `${previewTemplate.theme.dark.foreground}`,
+                            }}
+                          >
+                            <div className="flex gap-4">
+                              <span className="flex-1">Item {i}</span>
+                              <span
+                                className="w-16 px-1 rounded text-center"
+                                style={{
+                                  background: `${previewTemplate.theme.dark.primary}`,
+                                  color: `${previewTemplate.theme.dark.primaryForeground}`,
+                                }}
+                              >
+                                Live
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
