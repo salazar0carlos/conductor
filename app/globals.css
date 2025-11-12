@@ -3,21 +3,159 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+  /* Legacy variables */
+  --background: #0a0a0a;
+  --foreground: #ededed;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Platform Theme Variables (defaults - will be overridden by ThemeProvider) */
+  /* Typography */
+  --conductor-title-font: system-ui, sans-serif;
+  --conductor-title-size: 1.875rem;
+  --conductor-title-weight: 700;
+  --conductor-title-color: #ffffff;
+  --conductor-body-font: system-ui, sans-serif;
+  --conductor-body-size: 0.875rem;
+  --conductor-body-weight: 400;
+  --conductor-body-color: #e5e5e5;
+  --conductor-muted-color: #a3a3a3;
+  --conductor-line-height: 1.5;
+
+  /* Colors */
+  --conductor-primary: #3b82f6;
+  --conductor-primary-hover: #2563eb;
+  --conductor-secondary: #6b7280;
+  --conductor-secondary-hover: #4b5563;
+  --conductor-accent: #8b5cf6;
+  --conductor-accent-hover: #7c3aed;
+  --conductor-danger: #ef4444;
+  --conductor-danger-hover: #dc2626;
+  --conductor-success: #10b981;
+  --conductor-success-hover: #059669;
+  --conductor-warning: #f59e0b;
+  --conductor-warning-hover: #d97706;
+  --conductor-info: #06b6d4;
+  --conductor-info-hover: #0891b2;
+
+  /* Buttons */
+  --conductor-button-radius: 0.5rem;
+  --conductor-button-border-width: 1px;
+  --conductor-button-primary-bg: #3b82f6;
+  --conductor-button-primary-text: #ffffff;
+  --conductor-button-primary-border: transparent;
+  --conductor-button-primary-hover-bg: #2563eb;
+  --conductor-button-secondary-bg: #27272a;
+  --conductor-button-secondary-text: #e5e5e5;
+  --conductor-button-secondary-border: #3f3f46;
+  --conductor-button-secondary-hover-bg: #3f3f46;
+  --conductor-button-font-size: 0.875rem;
+  --conductor-button-font-weight: 500;
+
+  /* Cards */
+  --conductor-card-background: #18181b;
+  --conductor-card-border: #27272a;
+  --conductor-card-radius: 0.75rem;
+  --conductor-card-border-width: 1px;
+  --conductor-card-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+  --conductor-card-hover-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --conductor-card-padding: 1.5rem;
+
+  /* Inputs */
+  --conductor-input-background: #18181b;
+  --conductor-input-border: #27272a;
+  --conductor-input-radius: 0.5rem;
+  --conductor-input-border-width: 1px;
+  --conductor-input-text: #e5e5e5;
+  --conductor-input-placeholder: #71717a;
+  --conductor-input-focus-border: #3b82f6;
+  --conductor-input-focus-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+
+  /* Badges */
+  --conductor-badge-radius: 0.375rem;
+  --conductor-badge-font-size: 0.75rem;
+  --conductor-badge-font-weight: 500;
+  --conductor-badge-padding: 0.25rem 0.5rem;
+
+  /* Navigation */
+  --conductor-nav-background: #18181b;
+  --conductor-nav-border: #27272a;
+  --conductor-nav-item-color: #a1a1aa;
+  --conductor-nav-item-hover-bg: #27272a;
+  --conductor-nav-item-active-bg: #3b82f6;
+  --conductor-nav-item-active-color: #ffffff;
+
+  /* Layout */
+  --conductor-page-background: #0a0a0a;
+  --conductor-container-max-width: 80rem;
+  --conductor-border-radius: 0.5rem;
+  --conductor-spacing: 1.5rem;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--conductor-body-color);
+  background: var(--conductor-page-background);
+  font-family: var(--conductor-body-font);
+  font-size: var(--conductor-body-size);
+  font-weight: var(--conductor-body-weight);
+  line-height: var(--conductor-line-height);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--conductor-title-font);
+  color: var(--conductor-title-color);
+  font-weight: var(--conductor-title-weight);
+}
+
+h1 {
+  font-size: var(--conductor-title-size);
+}
+
+h2 {
+  font-size: calc(var(--conductor-title-size) * 0.8);
+}
+
+h3 {
+  font-size: calc(var(--conductor-title-size) * 0.65);
+}
+
+/* Apply theme variables to common elements */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+input[type="url"],
+input[type="tel"],
+input[type="number"],
+textarea,
+select {
+  background-color: var(--conductor-input-background);
+  border: var(--conductor-input-border-width) solid var(--conductor-input-border);
+  border-radius: var(--conductor-input-radius);
+  color: var(--conductor-input-text);
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="search"]:focus,
+input[type="url"]:focus,
+input[type="tel"]:focus,
+input[type="number"]:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--conductor-input-focus-border);
+  box-shadow: var(--conductor-input-focus-shadow);
+  outline: none;
+}
+
+input[type="text"]::placeholder,
+input[type="email"]::placeholder,
+input[type="password"]::placeholder,
+input[type="search"]::placeholder,
+input[type="url"]::placeholder,
+input[type="tel"]::placeholder,
+input[type="number"]::placeholder,
+textarea::placeholder {
+  color: var(--conductor-input-placeholder);
 }
 
 @layer utilities {

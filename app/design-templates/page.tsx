@@ -55,7 +55,10 @@ export default function DesignTemplatesPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search templates by name, description, or tags..."
-              className="w-full pl-10 pr-4 py-2 bg-neutral-900 border border-neutral-800 rounded-lg text-white placeholder-neutral-500 focus:outline-none focus:border-purple-500 transition-colors"
+              className="w-full pl-10 pr-4 py-2 bg-neutral-900 border border-neutral-800 rounded-lg text-white placeholder-neutral-500 focus:outline-none transition-colors"
+              style={{ outlineColor: 'var(--conductor-primary)' }}
+              onFocus={(e) => e.currentTarget.style.borderColor = 'var(--conductor-primary)'}
+              onBlur={(e) => e.currentTarget.style.borderColor = '#27272a'}
             />
           </div>
           <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0">
@@ -65,9 +68,12 @@ export default function DesignTemplatesPage() {
                 onClick={() => setSelectedCategory(category)}
                 className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
                   selectedCategory === category
-                    ? 'bg-purple-500 text-white'
+                    ? 'text-white'
                     : 'bg-neutral-900 text-neutral-400 hover:text-white hover:bg-neutral-800'
                 }`}
+                style={selectedCategory === category ? {
+                  backgroundColor: 'var(--conductor-primary)',
+                } : {}}
               >
                 {category.charAt(0).toUpperCase() + category.slice(1)}
               </button>
@@ -87,7 +93,9 @@ export default function DesignTemplatesPage() {
           {filteredTemplates.map((template) => (
             <div
               key={template.id}
-              className="group bg-neutral-900 border border-neutral-800 rounded-lg overflow-hidden hover:border-purple-500/50 transition-all"
+              className="group bg-neutral-900 border border-neutral-800 rounded-lg overflow-hidden transition-all"
+              onMouseEnter={(e) => e.currentTarget.style.borderColor = 'var(--conductor-primary)'}
+              onMouseLeave={(e) => e.currentTarget.style.borderColor = '#27272a'}
             >
               {/* Preview Area - Mini Dashboard Mockup */}
               <div className="relative h-48 overflow-hidden">
