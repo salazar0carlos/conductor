@@ -7,10 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "seed": "tsx scripts/seed-test-data.ts"
+    "seed": "tsx scripts/seed-test-data.ts",
+    "worker": "tsx workers/start-worker.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.68.0",
+    "@octokit/rest": "^21.0.0",
     "@sentry/nextjs": "^10.23.0",
     "@supabase/ssr": "^0.7.0",
     "@supabase/supabase-js": "^2.80.0",
