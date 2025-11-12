@@ -35,12 +35,7 @@ export default function DesignTemplatesPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-                <Palette className="w-5 h-5 text-white" />
-              </div>
-              <h1 className="text-3xl font-bold text-white">Design Templates</h1>
-            </div>
+            <h1 className="text-3xl font-bold text-white mb-2">Design Templates</h1>
             <p className="text-neutral-400">
               Browse and customize design systems for your projects
             </p>
