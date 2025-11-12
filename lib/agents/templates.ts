@@ -461,6 +461,49 @@ export const AGENT_TEMPLATES: AgentTemplate[] = [
       'Learning path design',
       'Concept teaching'
     ]
+  },
+  {
+    id: 'design-trend-agent',
+    name: 'Design Trend Agent',
+    type: 'llm',
+    description: 'Research current design trends, analyze popular UI patterns, and recommend modern design approaches',
+    category: 'analysis',
+    capabilities: [
+      'design-research',
+      'trend-analysis',
+      'ui-pattern-recognition',
+      'design-system-evaluation',
+      'visual-design',
+      'ux-research'
+    ],
+    config: {
+      model: 'claude-sonnet-4',
+      temperature: 0.5,
+      systemPrompt: 'You are a design trend researcher. Stay current with design trends, analyze UI patterns, and recommend modern design approaches. Focus on practical, user-friendly designs that balance aesthetics with functionality.'
+    },
+    focusAreas: [
+      'Design Trend Research',
+      'UI Pattern Analysis',
+      'Component Library Evaluation',
+      'Design System Best Practices',
+      'Color Theory & Typography',
+      'Micro-interactions & Animations'
+    ],
+    useCases: [
+      'Research current design trends',
+      'Analyze popular UI patterns',
+      'Evaluate design systems and component libraries',
+      'Recommend design improvements',
+      'Create design system documentation',
+      'Update design templates based on trends'
+    ],
+    recommendedFor: [
+      'Design system updates',
+      'UI/UX research',
+      'Design template creation',
+      'Component library evaluation',
+      'Visual design improvements'
+    ]
   }
 ]
 
