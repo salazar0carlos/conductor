@@ -101,8 +101,8 @@ export default function DesignTemplatesPage() {
                   <div
                     className="h-10 rounded flex items-center justify-center font-medium text-sm"
                     style={{
-                      background: `hsl(${template.theme.light.primary})`,
-                      color: `hsl(${template.theme.light.primaryForeground})`,
+                      background: `${template.theme.light.primary}`,
+                      color: `${template.theme.light.primaryForeground}`,
                     }}
                   >
                     Primary Button
@@ -110,9 +110,9 @@ export default function DesignTemplatesPage() {
                   <div
                     className="flex-1 rounded border p-3 text-xs"
                     style={{
-                      background: `hsl(${template.theme.light.card})`,
-                      color: `hsl(${template.theme.light.cardForeground})`,
-                      borderColor: `hsl(${template.theme.light.border})`,
+                      background: `${template.theme.light.card}`,
+                      color: `${template.theme.light.cardForeground}`,
+                      borderColor: `${template.theme.light.border}`,
                     }}
                   >
                     Card Component
@@ -155,9 +155,9 @@ export default function DesignTemplatesPage() {
                       key={color}
                       className="w-8 h-8 rounded border border-neutral-700"
                       style={{
-                        background: `hsl(${
+                        background: `${
                           template.theme.light[color as keyof typeof template.theme.light]
-                        })`,
+                        }`,
                       }}
                       title={color}
                     />
@@ -234,14 +234,14 @@ export default function DesignTemplatesPage() {
                   </div>
                   <div
                     className="p-6 rounded-lg border"
-                    style={{ background: `hsl(${previewTemplate.theme.light.background})` }}
+                    style={{ background: `${previewTemplate.theme.light.background}` }}
                   >
                     <div className="space-y-3">
                       <div
                         className="px-4 py-2 rounded font-medium"
                         style={{
-                          background: `hsl(${previewTemplate.theme.light.primary})`,
-                          color: `hsl(${previewTemplate.theme.light.primaryForeground})`,
+                          background: `${previewTemplate.theme.light.primary}`,
+                          color: `${previewTemplate.theme.light.primaryForeground}`,
                         }}
                       >
                         Primary Button
@@ -249,9 +249,9 @@ export default function DesignTemplatesPage() {
                       <div
                         className="px-4 py-2 rounded border"
                         style={{
-                          background: `hsl(${previewTemplate.theme.light.secondary})`,
-                          color: `hsl(${previewTemplate.theme.light.secondaryForeground})`,
-                          borderColor: `hsl(${previewTemplate.theme.light.border})`,
+                          background: `${previewTemplate.theme.light.secondary}`,
+                          color: `${previewTemplate.theme.light.secondaryForeground}`,
+                          borderColor: `${previewTemplate.theme.light.border}`,
                         }}
                       >
                         Secondary Button
@@ -259,9 +259,9 @@ export default function DesignTemplatesPage() {
                       <div
                         className="p-4 rounded border"
                         style={{
-                          background: `hsl(${previewTemplate.theme.light.card})`,
-                          color: `hsl(${previewTemplate.theme.light.cardForeground})`,
-                          borderColor: `hsl(${previewTemplate.theme.light.border})`,
+                          background: `${previewTemplate.theme.light.card}`,
+                          color: `${previewTemplate.theme.light.cardForeground}`,
+                          borderColor: `${previewTemplate.theme.light.border}`,
                         }}
                       >
                         <div className="font-medium mb-1">Card Title</div>
@@ -276,11 +276,11 @@ export default function DesignTemplatesPage() {
                         <div
                           className="w-full h-12 rounded border border-neutral-700 mb-1"
                           style={{
-                            background: `hsl(${
+                            background: `${
                               previewTemplate.theme.light[
                                 color as keyof typeof previewTemplate.theme.light
                               ]
-                            })`,
+                            }`,
                           }}
                         />
                         <span className="text-xs text-neutral-500 capitalize">{color}</span>
@@ -297,14 +297,14 @@ export default function DesignTemplatesPage() {
                   </div>
                   <div
                     className="p-6 rounded-lg border"
-                    style={{ background: `hsl(${previewTemplate.theme.dark.background})` }}
+                    style={{ background: `${previewTemplate.theme.dark.background}` }}
                   >
                     <div className="space-y-3">
                       <div
                         className="px-4 py-2 rounded font-medium"
                         style={{
-                          background: `hsl(${previewTemplate.theme.dark.primary})`,
-                          color: `hsl(${previewTemplate.theme.dark.primaryForeground})`,
+                          background: `${previewTemplate.theme.dark.primary}`,
+                          color: `${previewTemplate.theme.dark.primaryForeground}`,
                         }}
                       >
                         Primary Button
@@ -312,9 +312,9 @@ export default function DesignTemplatesPage() {
                       <div
                         className="px-4 py-2 rounded border"
                         style={{
-                          background: `hsl(${previewTemplate.theme.dark.secondary})`,
-                          color: `hsl(${previewTemplate.theme.dark.secondaryForeground})`,
-                          borderColor: `hsl(${previewTemplate.theme.dark.border})`,
+                          background: `${previewTemplate.theme.dark.secondary}`,
+                          color: `${previewTemplate.theme.dark.secondaryForeground}`,
+                          borderColor: `${previewTemplate.theme.dark.border}`,
                         }}
                       >
                         Secondary Button
@@ -322,9 +322,9 @@ export default function DesignTemplatesPage() {
                       <div
                         className="p-4 rounded border"
                         style={{
-                          background: `hsl(${previewTemplate.theme.dark.card})`,
-                          color: `hsl(${previewTemplate.theme.dark.cardForeground})`,
-                          borderColor: `hsl(${previewTemplate.theme.dark.border})`,
+                          background: `${previewTemplate.theme.dark.card}`,
+                          color: `${previewTemplate.theme.dark.cardForeground}`,
+                          borderColor: `${previewTemplate.theme.dark.border}`,
                         }}
                       >
                         <div className="font-medium mb-1">Card Title</div>
@@ -339,9 +339,9 @@ export default function DesignTemplatesPage() {
                         <div
                           className="w-full h-12 rounded border border-neutral-700 mb-1"
                           style={{
-                            background: `hsl(${
+                            background: `${
                               previewTemplate.theme.dark[color as keyof typeof previewTemplate.theme.dark]
-                            })`,
+                            }`,
                           }}
                         />
                         <span className="text-xs text-neutral-500 capitalize">{color}</span>

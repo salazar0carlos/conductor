@@ -286,17 +286,17 @@ export default function NewProjectPage() {
                     <div className="flex gap-1 mb-3">
                       <div
                         className="w-6 h-6 rounded border border-neutral-600"
-                        style={{ background: `hsl(${template.theme.light.primary})` }}
+                        style={{ background: `${template.theme.light.primary}` }}
                         title="Primary"
                       />
                       <div
                         className="w-6 h-6 rounded border border-neutral-600"
-                        style={{ background: `hsl(${template.theme.light.secondary})` }}
+                        style={{ background: `${template.theme.light.secondary}` }}
                         title="Secondary"
                       />
                       <div
                         className="w-6 h-6 rounded border border-neutral-600"
-                        style={{ background: `hsl(${template.theme.light.accent})` }}
+                        style={{ background: `${template.theme.light.accent}` }}
                         title="Accent"
                       />
                     </div>
@@ -349,13 +349,13 @@ export default function NewProjectPage() {
                         <div className="w-3 h-3 rounded-full bg-yellow-400" />
                         Light Mode
                       </div>
-                      <div className="p-4 rounded-lg border" style={{ background: `hsl(${selectedTemplate.theme.light.background})` }}>
+                      <div className="p-4 rounded-lg border" style={{ background: `${selectedTemplate.theme.light.background}` }}>
                         <div className="space-y-2">
                           <div
                             className="px-3 py-1.5 rounded font-medium text-sm"
                             style={{
-                              background: `hsl(${selectedTemplate.theme.light.primary})`,
-                              color: `hsl(${selectedTemplate.theme.light.primaryForeground})`
+                              background: `${selectedTemplate.theme.light.primary}`,
+                              color: `${selectedTemplate.theme.light.primaryForeground}`
                             }}
                           >
                             Primary Button
@@ -363,9 +363,9 @@ export default function NewProjectPage() {
                           <div
                             className="px-3 py-1.5 rounded text-sm border"
                             style={{
-                              background: `hsl(${selectedTemplate.theme.light.card})`,
-                              color: `hsl(${selectedTemplate.theme.light.cardForeground})`,
-                              borderColor: `hsl(${selectedTemplate.theme.light.border})`
+                              background: `${selectedTemplate.theme.light.card}`,
+                              color: `${selectedTemplate.theme.light.cardForeground}`,
+                              borderColor: `${selectedTemplate.theme.light.border}`
                             }}
                           >
                             Card Component
@@ -378,7 +378,7 @@ export default function NewProjectPage() {
                           <div key={color} className="flex-1 text-center">
                             <div
                               className="w-full h-8 rounded border border-neutral-600 mb-1"
-                              style={{ background: `hsl(${selectedTemplate.theme.light[color as keyof typeof selectedTemplate.theme.light]})` }}
+                              style={{ background: `${selectedTemplate.theme.light[color as keyof typeof selectedTemplate.theme.light]}` }}
                             />
                             <span className="text-[10px] text-neutral-500 capitalize">{color}</span>
                           </div>
@@ -392,13 +392,13 @@ export default function NewProjectPage() {
                         <div className="w-3 h-3 rounded-full bg-indigo-400" />
                         Dark Mode
                       </div>
-                      <div className="p-4 rounded-lg border" style={{ background: `hsl(${selectedTemplate.theme.dark.background})` }}>
+                      <div className="p-4 rounded-lg border" style={{ background: `${selectedTemplate.theme.dark.background}` }}>
                         <div className="space-y-2">
                           <div
                             className="px-3 py-1.5 rounded font-medium text-sm"
                             style={{
-                              background: `hsl(${selectedTemplate.theme.dark.primary})`,
-                              color: `hsl(${selectedTemplate.theme.dark.primaryForeground})`
+                              background: `${selectedTemplate.theme.dark.primary}`,
+                              color: `${selectedTemplate.theme.dark.primaryForeground}`
                             }}
                           >
                             Primary Button
@@ -406,9 +406,9 @@ export default function NewProjectPage() {
                           <div
                             className="px-3 py-1.5 rounded text-sm border"
                             style={{
-                              background: `hsl(${selectedTemplate.theme.dark.card})`,
-                              color: `hsl(${selectedTemplate.theme.dark.cardForeground})`,
-                              borderColor: `hsl(${selectedTemplate.theme.dark.border})`
+                              background: `${selectedTemplate.theme.dark.card}`,
+                              color: `${selectedTemplate.theme.dark.cardForeground}`,
+                              borderColor: `${selectedTemplate.theme.dark.border}`
                             }}
                           >
                             Card Component
@@ -421,7 +421,7 @@ export default function NewProjectPage() {
                           <div key={color} className="flex-1 text-center">
                             <div
                               className="w-full h-8 rounded border border-neutral-600 mb-1"
-                              style={{ background: `hsl(${selectedTemplate.theme.dark[color as keyof typeof selectedTemplate.theme.dark]})` }}
+                              style={{ background: `${selectedTemplate.theme.dark[color as keyof typeof selectedTemplate.theme.dark]}` }}
                             />
                             <span className="text-[10px] text-neutral-500 capitalize">{color}</span>
                           </div>
