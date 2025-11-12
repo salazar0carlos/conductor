@@ -367,98 +367,51 @@ export default function SettingsPage() {
                     Typography
                   </h3>
                   <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-white mb-2">
-                        Title Font
-                      </label>
-                      <input
-                        type="text"
-                        value={platformTheme.typography.titleFont}
-                        onChange={(e) =>
-                          setPlatformTheme({
-                            ...platformTheme,
-                            typography: { ...platformTheme.typography, titleFont: e.target.value },
-                          })
-                        }
-                        className="w-full px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
-                        placeholder="system-ui, sans-serif"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-white mb-2">
-                        Title Size
-                      </label>
-                      <input
-                        type="text"
-                        value={platformTheme.typography.titleSize}
-                        onChange={(e) =>
-                          setPlatformTheme({
-                            ...platformTheme,
-                            typography: { ...platformTheme.typography, titleSize: e.target.value },
-                          })
-                        }
-                        className="w-full px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
-                        placeholder="1.875rem"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-white mb-2">
-                        Title Color
-                      </label>
-                      <div className="flex gap-2">
-                        <input
-                          type="color"
-                          value={platformTheme.typography.titleColor}
-                          onChange={(e) =>
-                            setPlatformTheme({
-                              ...platformTheme,
-                              typography: { ...platformTheme.typography, titleColor: e.target.value },
-                            })
-                          }
-                          className="w-12 h-10 rounded border border-neutral-600"
-                        />
-                        <input
-                          type="text"
-                          value={platformTheme.typography.titleColor}
-                          onChange={(e) =>
-                            setPlatformTheme({
-                              ...platformTheme,
-                              typography: { ...platformTheme.typography, titleColor: e.target.value },
-                            })
-                          }
-                          className="flex-1 px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
-                        />
+                    {Object.entries(platformTheme.typography).map(([key, value]) => (
+                      <div key={key}>
+                        <label className="block text-sm font-medium text-white mb-2 capitalize">
+                          {key.replace(/([A-Z])/g, ' $1')}
+                        </label>
+                        {key.includes('Color') ? (
+                          <div className="flex gap-2">
+                            <input
+                              type="color"
+                              value={value}
+                              onChange={(e) =>
+                                setPlatformTheme({
+                                  ...platformTheme,
+                                  typography: { ...platformTheme.typography, [key]: e.target.value },
+                                })
+                              }
+                              className="w-12 h-10 rounded border border-neutral-600"
+                            />
+                            <input
+                              type="text"
+                              value={value}
+                              onChange={(e) =>
+                                setPlatformTheme({
+                                  ...platformTheme,
+                                  typography: { ...platformTheme.typography, [key]: e.target.value },
+                                })
+                              }
+                              className="flex-1 px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
+                            />
+                          </div>
+                        ) : (
+                          <input
+                            type="text"
+                            value={value}
+                            onChange={(e) =>
+                              setPlatformTheme({
+                                ...platformTheme,
+                                typography: { ...platformTheme.typography, [key]: e.target.value },
+                              })
+                            }
+                            className="w-full px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
+                          />
+                        )}
                       </div>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-white mb-2">
-                        Body Color
-                      </label>
-                      <div className="flex gap-2">
-                        <input
-                          type="color"
-                          value={platformTheme.typography.bodyColor}
-                          onChange={(e) =>
-                            setPlatformTheme({
-                              ...platformTheme,
-                              typography: { ...platformTheme.typography, bodyColor: e.target.value },
-                            })
-                          }
-                          className="w-12 h-10 rounded border border-neutral-600"
-                        />
-                        <input
-                          type="text"
-                          value={platformTheme.typography.bodyColor}
-                          onChange={(e) =>
-                            setPlatformTheme({
-                              ...platformTheme,
-                              typography: { ...platformTheme.typography, bodyColor: e.target.value },
-                            })
-                          }
-                          className="flex-1 px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
-                        />
-                      </div>
-                    </div>
+                    ))}
                   </div>
                 </div>
 
@@ -510,52 +463,51 @@ export default function SettingsPage() {
                     Buttons
                   </h3>
                   <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-white mb-2">
-                        Border Radius
-                      </label>
-                      <input
-                        type="text"
-                        value={platformTheme.buttons.borderRadius}
-                        onChange={(e) =>
-                          setPlatformTheme({
-                            ...platformTheme,
-                            buttons: { ...platformTheme.buttons, borderRadius: e.target.value },
-                          })
-                        }
-                        className="w-full px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
-                        placeholder="0.5rem"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-white mb-2">
-                        Primary Background
-                      </label>
-                      <div className="flex gap-2">
-                        <input
-                          type="color"
-                          value={platformTheme.buttons.primaryBg}
-                          onChange={(e) =>
-                            setPlatformTheme({
-                              ...platformTheme,
-                              buttons: { ...platformTheme.buttons, primaryBg: e.target.value },
-                            })
-                          }
-                          className="w-12 h-10 rounded border border-neutral-600"
-                        />
-                        <input
-                          type="text"
-                          value={platformTheme.buttons.primaryBg}
-                          onChange={(e) =>
-                            setPlatformTheme({
-                              ...platformTheme,
-                              buttons: { ...platformTheme.buttons, primaryBg: e.target.value },
-                            })
-                          }
-                          className="flex-1 px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
-                        />
+                    {Object.entries(platformTheme.buttons).map(([key, value]) => (
+                      <div key={key}>
+                        <label className="block text-sm font-medium text-white mb-2 capitalize">
+                          {key.replace(/([A-Z])/g, ' $1')}
+                        </label>
+                        {key.includes('Bg') || key.includes('Text') || key.includes('Border') || key.includes('Color') ? (
+                          <div className="flex gap-2">
+                            <input
+                              type="color"
+                              value={value}
+                              onChange={(e) =>
+                                setPlatformTheme({
+                                  ...platformTheme,
+                                  buttons: { ...platformTheme.buttons, [key]: e.target.value },
+                                })
+                              }
+                              className="w-12 h-10 rounded border border-neutral-600"
+                            />
+                            <input
+                              type="text"
+                              value={value}
+                              onChange={(e) =>
+                                setPlatformTheme({
+                                  ...platformTheme,
+                                  buttons: { ...platformTheme.buttons, [key]: e.target.value },
+                                })
+                              }
+                              className="flex-1 px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
+                            />
+                          </div>
+                        ) : (
+                          <input
+                            type="text"
+                            value={value}
+                            onChange={(e) =>
+                              setPlatformTheme({
+                                ...platformTheme,
+                                buttons: { ...platformTheme.buttons, [key]: e.target.value },
+                              })
+                            }
+                            className="w-full px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
+                          />
+                        )}
                       </div>
-                    </div>
+                    ))}
                   </div>
                 </div>
 
@@ -604,6 +556,199 @@ export default function SettingsPage() {
                               setPlatformTheme({
                                 ...platformTheme,
                                 cards: { ...platformTheme.cards, [key]: e.target.value },
+                              })
+                            }
+                            className="w-full px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
+                          />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Inputs Section */}
+                <div className="space-y-4 p-4 rounded-lg bg-neutral-800 border border-neutral-700">
+                  <h3 className="text-sm font-medium text-white flex items-center gap-2">
+                    <Code className="w-4 h-4" />
+                    Input Fields
+                  </h3>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    {Object.entries(platformTheme.inputs).map(([key, value]) => (
+                      <div key={key}>
+                        <label className="block text-sm font-medium text-white mb-2 capitalize">
+                          {key.replace(/([A-Z])/g, ' $1')}
+                        </label>
+                        {key.includes('Color') || key === 'background' || key === 'border' || key === 'text' || key === 'placeholder' || key.includes('Border') ? (
+                          <div className="flex gap-2">
+                            <input
+                              type="color"
+                              value={value.startsWith('0 ') ? '#3b82f6' : value}
+                              onChange={(e) =>
+                                setPlatformTheme({
+                                  ...platformTheme,
+                                  inputs: { ...platformTheme.inputs, [key]: e.target.value },
+                                })
+                              }
+                              className="w-12 h-10 rounded border border-neutral-600"
+                            />
+                            <input
+                              type="text"
+                              value={value}
+                              onChange={(e) =>
+                                setPlatformTheme({
+                                  ...platformTheme,
+                                  inputs: { ...platformTheme.inputs, [key]: e.target.value },
+                                })
+                              }
+                              className="flex-1 px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
+                            />
+                          </div>
+                        ) : (
+                          <input
+                            type="text"
+                            value={value}
+                            onChange={(e) =>
+                              setPlatformTheme({
+                                ...platformTheme,
+                                inputs: { ...platformTheme.inputs, [key]: e.target.value },
+                              })
+                            }
+                            className="w-full px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
+                          />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Badges Section */}
+                <div className="space-y-4 p-4 rounded-lg bg-neutral-800 border border-neutral-700">
+                  <h3 className="text-sm font-medium text-white flex items-center gap-2">
+                    <Palette className="w-4 h-4" />
+                    Badges
+                  </h3>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    {Object.entries(platformTheme.badges).map(([key, value]) => (
+                      <div key={key}>
+                        <label className="block text-sm font-medium text-white mb-2 capitalize">
+                          {key.replace(/([A-Z])/g, ' $1')}
+                        </label>
+                        <input
+                          type="text"
+                          value={value}
+                          onChange={(e) =>
+                            setPlatformTheme({
+                              ...platformTheme,
+                              badges: { ...platformTheme.badges, [key]: e.target.value },
+                            })
+                          }
+                          className="w-full px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Navigation Section */}
+                <div className="space-y-4 p-4 rounded-lg bg-neutral-800 border border-neutral-700">
+                  <h3 className="text-sm font-medium text-white flex items-center gap-2">
+                    <User className="w-4 h-4" />
+                    Navigation
+                  </h3>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    {Object.entries(platformTheme.navigation).map(([key, value]) => (
+                      <div key={key}>
+                        <label className="block text-sm font-medium text-white mb-2 capitalize">
+                          {key.replace(/([A-Z])/g, ' $1')}
+                        </label>
+                        {key.includes('Color') || key === 'background' || key === 'border' || key.includes('Bg') ? (
+                          <div className="flex gap-2">
+                            <input
+                              type="color"
+                              value={value}
+                              onChange={(e) =>
+                                setPlatformTheme({
+                                  ...platformTheme,
+                                  navigation: { ...platformTheme.navigation, [key]: e.target.value },
+                                })
+                              }
+                              className="w-12 h-10 rounded border border-neutral-600"
+                            />
+                            <input
+                              type="text"
+                              value={value}
+                              onChange={(e) =>
+                                setPlatformTheme({
+                                  ...platformTheme,
+                                  navigation: { ...platformTheme.navigation, [key]: e.target.value },
+                                })
+                              }
+                              className="flex-1 px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
+                            />
+                          </div>
+                        ) : (
+                          <input
+                            type="text"
+                            value={value}
+                            onChange={(e) =>
+                              setPlatformTheme({
+                                ...platformTheme,
+                                navigation: { ...platformTheme.navigation, [key]: e.target.value },
+                              })
+                            }
+                            className="w-full px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
+                          />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Layout Section */}
+                <div className="space-y-4 p-4 rounded-lg bg-neutral-800 border border-neutral-700">
+                  <h3 className="text-sm font-medium text-white flex items-center gap-2">
+                    <Paintbrush className="w-4 h-4" />
+                    Layout
+                  </h3>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    {Object.entries(platformTheme.layout).map(([key, value]) => (
+                      <div key={key}>
+                        <label className="block text-sm font-medium text-white mb-2 capitalize">
+                          {key.replace(/([A-Z])/g, ' $1')}
+                        </label>
+                        {key.includes('Color') || key === 'pageBackground' ? (
+                          <div className="flex gap-2">
+                            <input
+                              type="color"
+                              value={value}
+                              onChange={(e) =>
+                                setPlatformTheme({
+                                  ...platformTheme,
+                                  layout: { ...platformTheme.layout, [key]: e.target.value },
+                                })
+                              }
+                              className="w-12 h-10 rounded border border-neutral-600"
+                            />
+                            <input
+                              type="text"
+                              value={value}
+                              onChange={(e) =>
+                                setPlatformTheme({
+                                  ...platformTheme,
+                                  layout: { ...platformTheme.layout, [key]: e.target.value },
+                                })
+                              }
+                              className="flex-1 px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
+                            />
+                          </div>
+                        ) : (
+                          <input
+                            type="text"
+                            value={value}
+                            onChange={(e) =>
+                              setPlatformTheme({
+                                ...platformTheme,
+                                layout: { ...platformTheme.layout, [key]: e.target.value },
                               })
                             }
                             className="w-full px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
