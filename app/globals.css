@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* FullCalendar Styles - Temporarily commented out due to export issues */
+/* @import '@fullcalendar/common/main.css'; */
+/* @import '@fullcalendar/daygrid/main.css'; */
+/* @import '@fullcalendar/timegrid/main.css'; */
+
 :root {
   /* Legacy variables */
   --background: #0a0a0a;

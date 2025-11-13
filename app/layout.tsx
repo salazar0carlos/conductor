@@ -32,6 +32,7 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        style={{ backgroundColor: 'var(--conductor-page-background)' }}
       >
         <ThemeProvider>
           <AuthProvider>{children}</AuthProvider>

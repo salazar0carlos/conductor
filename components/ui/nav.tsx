@@ -29,10 +29,23 @@ export function Nav() {
   }
 
   return (
-    <nav className="border-b border-neutral-800 bg-neutral-950">
+    <nav
+      style={{
+        backgroundColor: 'var(--conductor-nav-background)',
+        borderBottom: '1px solid var(--conductor-nav-border)'
+      }}
+    >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          <Link href="/dashboard" className="text-xl font-semibold text-white">
+          <Link
+            href="/dashboard"
+            style={{
+              fontFamily: 'var(--conductor-title-font)',
+              fontSize: '1.25rem',
+              fontWeight: 'var(--conductor-title-weight)',
+              color: 'var(--conductor-title-color)'
+            }}
+          >
             Conductor
           </Link>
 
@@ -43,11 +56,26 @@ export function Nav() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                    isActive
-                      ? 'bg-neutral-800 text-white'
-                      : 'text-neutral-400 hover:text-white hover:bg-neutral-900'
-                  }`}
+                  className="px-3 py-2 text-sm font-medium transition-colors"
+                  style={{
+                    backgroundColor: isActive
+                      ? 'var(--conductor-nav-item-active-bg)'
+                      : 'transparent',
+                    color: isActive
+                      ? 'var(--conductor-nav-item-active-color)'
+                      : 'var(--conductor-nav-item-color)',
+                    borderRadius: 'var(--conductor-button-radius)',
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.backgroundColor = 'var(--conductor-nav-item-hover-bg)'
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.backgroundColor = 'transparent'
+                    }
+                  }}
                 >
                   {item.label}
                 </Link>
@@ -55,14 +83,37 @@ export function Nav() {
             })}
 
             {/* Admin Settings Link - visually separated */}
-            <div className="ml-4 pl-4 border-l border-neutral-700">
+            <div
+              className="ml-4 pl-4"
+              style={{ borderLeft: '1px solid var(--conductor-nav-border)' }}
+            >
               <Link
                 href="/admin/settings"
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-1 ${
-                  pathname?.startsWith('/admin')
-                    ? 'bg-red-500/20 text-red-400 border border-red-500/30'
-                    : 'text-neutral-400 hover:text-red-400 hover:bg-red-500/10 border border-transparent'
-                }`}
+                className="px-3 py-2 text-sm font-medium transition-colors flex items-center gap-1"
+                style={{
+                  backgroundColor: pathname?.startsWith('/admin')
+                    ? 'rgba(239, 68, 68, 0.2)'
+                    : 'transparent',
+                  color: pathname?.startsWith('/admin')
+                    ? '#f87171'
+                    : 'var(--conductor-nav-item-color)',
+                  border: pathname?.startsWith('/admin')
+                    ? '1px solid rgba(239, 68, 68, 0.3)'
+                    : '1px solid transparent',
+                  borderRadius: 'var(--conductor-button-radius)',
+                }}
+                onMouseEnter={(e) => {
+                  if (!pathname?.startsWith('/admin')) {
+                    e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.1)'
+                    e.currentTarget.style.color = '#f87171'
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!pathname?.startsWith('/admin')) {
+                    e.currentTarget.style.backgroundColor = 'transparent'
+                    e.currentTarget.style.color = 'var(--conductor-nav-item-color)'
+                  }
+                }}
               >
                 <svg
                   className="w-4 h-4"
@@ -89,10 +140,23 @@ export function Nav() {
 
             {/* User Menu */}
             {user && (
-              <div className="ml-4 pl-4 border-l border-neutral-700 relative">
+              <div
+                className="ml-4 pl-4 relative"
+                style={{ borderLeft: '1px solid var(--conductor-nav-border)' }}
+              >
                 <button
                   onClick={() => setShowUserMenu(!showUserMenu)}
-                  className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-neutral-400 hover:text-white hover:bg-neutral-900 transition-colors"
+                  className="flex items-center gap-2 px-3 py-2 text-sm font-medium transition-colors"
+                  style={{
+                    color: 'var(--conductor-nav-item-color)',
+                    borderRadius: 'var(--conductor-button-radius)',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = 'var(--conductor-nav-item-hover-bg)'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'transparent'
+                  }}
                 >
                   <img
                     src={user.user_metadata?.avatar_url || `https://avatar.vercel.sh/${user.email}`}
@@ -106,14 +170,36 @@ export function Nav() {
                 </button>
 
                 {showUserMenu && (
-                  <div className="absolute right-0 mt-2 w-48 bg-neutral-900 border border-neutral-800 rounded-lg shadow-lg py-1 z-50">
-                    <div className="px-4 py-2 border-b border-neutral-800">
-                      <p className="text-xs text-neutral-400">Signed in as</p>
-                      <p className="text-sm text-white truncate">{user.email}</p>
+                  <div
+                    className="absolute right-0 mt-2 w-48 py-1 z-50"
+                    style={{
+                      backgroundColor: 'var(--conductor-card-background)',
+                      border: '1px solid var(--conductor-card-border)',
+                      borderRadius: 'var(--conductor-card-radius)',
+                      boxShadow: 'var(--conductor-card-hover-shadow)',
+                    }}
+                  >
+                    <div
+                      className="px-4 py-2"
+                      style={{ borderBottom: '1px solid var(--conductor-card-border)' }}
+                    >
+                      <p className="text-xs" style={{ color: 'var(--conductor-muted-color)' }}>
+                        Signed in as
+                      </p>
+                      <p className="text-sm truncate" style={{ color: 'var(--conductor-body-color)' }}>
+                        {user.email}
+                      </p>
                     </div>
                     <button
                       onClick={handleSignOut}
-                      className="w-full text-left px-4 py-2 text-sm text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors"
+                      className="w-full text-left px-4 py-2 text-sm transition-colors"
+                      style={{ color: 'var(--conductor-nav-item-color)' }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = 'var(--conductor-nav-item-hover-bg)'
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'transparent'
+                      }}
                     >
                       Sign Out
                     </button>
