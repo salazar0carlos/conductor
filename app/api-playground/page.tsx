@@ -72,7 +72,7 @@ export default function ApiPlaygroundPage() {
       setIsLoading(true);
 
       // Replace environment variables in URL
-      let processedUrl = replaceVariables(currentRequest.url, environments);
+      const processedUrl = replaceVariables(currentRequest.url, environments);
 
       // Replace variables in headers
       const processedHeaders = currentRequest.headers.map((header) => ({

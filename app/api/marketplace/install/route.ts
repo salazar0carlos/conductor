@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
 
     // Create the actual entity based on template type
     let entityId = null
-    let entityType = template.type
+    const entityType = template.type
 
     try {
       switch (template.type) {

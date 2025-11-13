@@ -4,7 +4,7 @@ import { parseExpression } from 'cron-parser'
 import { addMinutes, addHours, addDays } from 'date-fns'
 
 // Mock database - In production, use Supabase or your database
-let mockJobs: any[] = [
+const mockJobs: any[] = [
   {
     id: uuidv4(),
     name: 'Daily Database Backup',

@@ -294,7 +294,7 @@ export default function CollaborationDemo() {
             <div>
               <h2 className="text-3xl font-bold mb-2">Live Presence</h2>
               <p className="text-neutral-400">
-                See who's online, their status, and what they're working on in real-time.
+                See who&apos;s online, their status, and what they&apos;re working on in real-time.
               </p>
             </div>
 

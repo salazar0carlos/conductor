@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
     const { data: { user } } = await supabase.auth.getUser()
 
     // Fetch reviews
-    let query = supabase
+    const query = supabase
       .from('template_reviews')
       .select('*')
       .eq('template_id', templateId)
