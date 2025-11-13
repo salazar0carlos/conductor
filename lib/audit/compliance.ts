@@ -163,7 +163,7 @@ export class ComplianceManager {
       },
       summary: {
         compliant: failedLogins.length < 100 && criticalAlerts.length === 0,
-        recommendations: [],
+        recommendations: [] as string[],
       },
       generated_at: new Date().toISOString(),
     }

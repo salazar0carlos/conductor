@@ -24,12 +24,12 @@ export function subscribeToPresence(
   const channel = supabase
     .channel('user_presence_changes')
     .on(
-      'postgres_changes',
+      'postgres_changes' as any,
       {
         event,
         schema: 'public',
         table: 'user_presence'
-      },
+      } as any,
       callback
     )
     .subscribe()
@@ -46,13 +46,13 @@ export function subscribeToCursors(
   const channel = supabase
     .channel(`cursors:${page}`)
     .on(
-      'postgres_changes',
+      'postgres_changes' as any,
       {
         event: '*',
         schema: 'public',
         table: 'user_cursors',
         filter: `page=eq.${page}`
-      },
+      } as any,
       callback
     )
     .subscribe()
@@ -74,13 +74,13 @@ export function subscribeToComments(
   const channel = supabase
     .channel(`comments:${entityType}:${entityId}`)
     .on(
-      'postgres_changes',
+      'postgres_changes' as any,
       {
         event: '*',
         schema: 'public',
         table: 'comments',
         filter: `entity_type=eq.${entityType},entity_id=eq.${entityId}`
-      },
+      } as any,
       callback
     )
     .subscribe()
@@ -97,13 +97,13 @@ export function subscribeToCommentReactions(
   const channel = supabase
     .channel(`comment_reactions:${commentId}`)
     .on(
-      'postgres_changes',
+      'postgres_changes' as any,
       {
         event: '*',
         schema: 'public',
         table: 'comment_reactions',
         filter: `comment_id=eq.${commentId}`
-      },
+      } as any,
       callback
     )
     .subscribe()
@@ -124,13 +124,13 @@ export function subscribeToNotifications(
   const channel = supabase
     .channel(`notifications:${userId}`)
     .on(
-      'postgres_changes',
+      'postgres_changes' as any,
       {
         event: '*',
         schema: 'public',
         table: 'notifications',
         filter: `user_id=eq.${userId}`
-      },
+      } as any,
       callback
     )
     .subscribe()
@@ -151,23 +151,23 @@ export function subscribeToChatRoom(
   const channel = supabase
     .channel(`chat:${roomId}`)
     .on(
-      'postgres_changes',
+      'postgres_changes' as any,
       {
         event: 'INSERT',
         schema: 'public',
         table: 'chat_messages',
         filter: `room_id=eq.${roomId}`
-      },
+      } as any,
       callback
     )
     .on(
-      'postgres_changes',
+      'postgres_changes' as any,
       {
         event: 'UPDATE',
         schema: 'public',
         table: 'chat_messages',
         filter: `room_id=eq.${roomId}`
-      },
+      } as any,
       callback
     )
     .subscribe()
@@ -184,13 +184,13 @@ export function subscribeToChatMessageReactions(
   const channel = supabase
     .channel(`chat_reactions:${messageId}`)
     .on(
-      'postgres_changes',
+      'postgres_changes' as any,
       {
         event: '*',
         schema: 'public',
         table: 'chat_message_reactions',
         filter: `message_id=eq.${messageId}`
-      },
+      } as any,
       callback
     )
     .subscribe()
@@ -213,13 +213,13 @@ export function subscribeToActivities(
   const channel = supabase
     .channel('collaboration_activities')
     .on(
-      'postgres_changes',
+      'postgres_changes' as any,
       {
         event: 'INSERT',
         schema: 'public',
         table: 'collaboration_activities',
         ...(filterString && { filter: filterString })
-      },
+      } as any,
       callback
     )
     .subscribe()
@@ -241,13 +241,13 @@ export function subscribeToEditLocks(
   const channel = supabase
     .channel(`edit_locks:${entityType}:${entityId}`)
     .on(
-      'postgres_changes',
+      'postgres_changes' as any,
       {
         event: '*',
         schema: 'public',
         table: 'edit_locks',
         filter: `entity_type=eq.${entityType},entity_id=eq.${entityId}`
-      },
+      } as any,
       callback
     )
     .subscribe()

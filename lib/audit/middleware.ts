@@ -67,20 +67,18 @@ function sanitizeObject(obj: any): any {
  */
 async function getUserFromRequest(request: NextRequest) {
   try {
+    // Get the auth token from the Authorization header
+    const authHeader = request.headers.get('authorization')
+    if (!authHeader) {
+      return null
+    }
+
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          getAll() {
-            return request.cookies.getAll()
-          },
-          setAll() {},
-        },
-      }
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
     )
 
-    const { data: { user } } = await supabase.auth.getUser()
+    const { data: { user } } = await supabase.auth.getUser(authHeader.replace('Bearer ', ''))
     return user
   } catch {
     return null
@@ -179,7 +177,7 @@ export function withAuditLogging(
     const user = await getUserFromRequest(req)
     const requestId = crypto.randomUUID()
 
-    let response: NextResponse
+    let response: NextResponse | undefined = undefined
     let requestBody: any = null
     let responseBody: any = null
     let error: Error | null = null
@@ -211,8 +209,11 @@ export function withAuditLogging(
 
     } catch (err) {
       error = err as Error
-      // Re-throw the error after logging
-      throw err
+      // Create error response
+      response = NextResponse.json(
+        { error: error.message },
+        { status: 500 }
+      )
     } finally {
       const responseTime = Date.now() - startTime
       const status = response?.status || (error ? 500 : 200)

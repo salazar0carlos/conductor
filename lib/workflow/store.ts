@@ -159,7 +159,7 @@ export const useWorkflowStore = create<WorkflowStore>((set, get) => ({
     set((state) => ({
       nodes: state.nodes.map((node) =>
         node.id === nodeId
-          ? { ...node, data: { ...node.data, config: { ...node.data.config, ...config } } }
+          ? { ...node, data: { ...node.data, config: { ...(node.data.config || {}), ...config } } }
           : node
       ),
     }));
