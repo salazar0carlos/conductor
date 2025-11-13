@@ -10,7 +10,13 @@ const navItems = [
   { href: '/projects', label: 'Projects' },
   { href: '/tasks', label: 'Tasks' },
   { href: '/agents', label: 'Agents' },
+  { href: '/workflows', label: 'Workflows' },
   { href: '/intelligence', label: 'Intelligence' },
+  { href: '/database', label: 'Database' },
+  { href: '/files', label: 'Files' },
+  { href: '/scheduler', label: 'Scheduler' },
+  { href: '/marketplace', label: 'Marketplace' },
+  { href: '/tools', label: 'Tools' },
   { href: '/design-templates', label: 'Design' },
   { href: '/settings', label: 'Settings' }
 ]
