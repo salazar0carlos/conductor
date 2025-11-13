@@ -40,7 +40,7 @@ export function FileOperations({
           break
         case 'move':
         case 'copy':
-          data = { folder_id: selectedFolder }
+          data = { folder_id: selectedFolder as string | null }
           break
         case 'share':
           data = { expiry_days: parseInt(shareExpiry) }
@@ -53,7 +53,7 @@ export function FileOperations({
           break
       }
 
-      await onConfirm(operation, data)
+      await onConfirm(operation as string, data)
       onClose()
     } catch (error) {
       console.error('Operation failed:', error)

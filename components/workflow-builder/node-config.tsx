@@ -15,15 +15,15 @@ export function NodeConfigPanel() {
   const [isTestingNode, setIsTestingNode] = useState(false);
 
   const selectedNode = nodes.find((n) => n.id === selectedNodeId);
-  const nodeDefinition = selectedNode ? NODE_DEFINITIONS[selectedNode.data.nodeType] : null;
+  const nodeDefinition = selectedNode ? NODE_DEFINITIONS[(selectedNode.data as any).nodeType] : null;
 
   const { register, handleSubmit, watch, setValue, reset } = useForm({
-    defaultValues: selectedNode?.data.config || {},
+    defaultValues: (selectedNode?.data as any)?.config || {},
   });
 
   useEffect(() => {
     if (selectedNode) {
-      reset(selectedNode.data.config);
+      reset((selectedNode.data as any).config);
     }
   }, [selectedNode, reset]);
 
@@ -58,7 +58,7 @@ export function NodeConfigPanel() {
         success: true,
         output: {
           message: 'Node executed successfully',
-          data: selectedNode.data.config,
+          data: (selectedNode.data as any).config,
           timestamp: new Date().toISOString(),
         },
       });
@@ -296,7 +296,7 @@ export function NodeConfigPanel() {
                 height="400px"
                 language="json"
                 theme="vs-light"
-                value={JSON.stringify(selectedNode.data.config, null, 2)}
+                value={JSON.stringify((selectedNode.data as any).config, null, 2)}
                 onChange={handleJsonChange}
                 options={{
                   minimap: { enabled: false },

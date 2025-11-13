@@ -15,7 +15,6 @@ import type {
 } from '@/types'
 import {
   createProvider,
-  type BaseAIProvider,
 } from './providers/provider-factory'
 import {
   AIProviderError,
@@ -257,8 +256,8 @@ export class AIModelRouter {
     const providerInstance = createProvider(provider, config)
 
     // Prepare messages
-    const messages: AIProviderMessage[] = request.messages || [
-      { role: 'user', content: request.prompt },
+    const messages: AIProviderMessage[] = (request.messages as AIProviderMessage[]) || [
+      { role: 'user' as const, content: request.prompt },
     ]
 
     // Merge parameters
@@ -376,24 +375,30 @@ export class AIModelRouter {
         (model.pricing.output_tokens || 0)
 
     // Check daily budget
-    const { data: dailyBudget } = await supabase
+    let budgetQuery = supabase
       .from('ai_usage_budgets')
       .select('*')
-      .eq('user_id', request.user_id || null)
-      .eq('project_id', request.project_id || null)
       .eq('provider_id', provider.id)
       .eq('period', 'daily')
       .eq('period_start', new Date().toISOString().split('T')[0])
       .eq('is_active', true)
-      .single()
+
+    if (request.user_id) {
+      budgetQuery = budgetQuery.eq('user_id', request.user_id)
+    }
+    if (request.project_id) {
+      budgetQuery = budgetQuery.eq('project_id', request.project_id)
+    }
+
+    const { data: dailyBudget } = await budgetQuery.single()
 
     if (dailyBudget) {
-      const remaining = dailyBudget.budget_usd - dailyBudget.spent_usd
+      const remaining = (dailyBudget as any).budget_usd - (dailyBudget as any).spent_usd
       if (remaining < estimatedCost) {
         throw new AIBudgetExceededError(
           provider.name,
-          dailyBudget.spent_usd,
-          dailyBudget.budget_usd
+          (dailyBudget as any).spent_usd,
+          (dailyBudget as any).budget_usd
         )
       }
     }
@@ -412,7 +417,7 @@ export class AIModelRouter {
     monthStart.setDate(1)
 
     // Update daily budget
-    await supabase.rpc('update_ai_usage_budget', {
+    await (supabase.rpc as any)('update_ai_usage_budget', {
       p_user_id: request.user_id || null,
       p_project_id: request.project_id || null,
       p_provider_id: providerId,
@@ -450,7 +455,7 @@ export class AIModelRouter {
         status,
         error_message: errorMessage || null,
         metadata: request.metadata || {},
-      })
+      } as any)
     } catch (error) {
       console.error('Failed to log usage:', error)
     }
@@ -469,7 +474,7 @@ export class AIModelRouter {
     if (!data) return true
 
     // Consider unhealthy if error rate > 50% or not available
-    return data.is_available && (data.error_rate || 0) < 50
+    return (data as any).is_available && ((data as any).error_rate || 0) < 50
   }
 
   /**
@@ -487,12 +492,12 @@ export class AIModelRouter {
       .single()
 
     if (health) {
-      const successCount = health.success_count + (success ? 1 : 0)
-      const errorCount = health.error_count + (success ? 0 : 1)
+      const successCount = (health as any).success_count + (success ? 1 : 0)
+      const errorCount = (health as any).error_count + (success ? 0 : 1)
       const totalCount = successCount + errorCount
       const errorRate = (errorCount / totalCount) * 100
 
-      await supabase
+      await (supabase as any)
         .from('ai_provider_health')
         .update({
           is_available: success || errorRate < 75,
@@ -501,11 +506,11 @@ export class AIModelRouter {
           error_rate: errorRate,
           last_check_at: new Date().toISOString(),
           last_error: error?.message || null,
-          last_error_at: error ? new Date().toISOString() : health.last_error_at,
+          last_error_at: error ? new Date().toISOString() : (health as any).last_error_at,
         })
         .eq('provider_id', providerId)
     } else {
-      await supabase.from('ai_provider_health').insert({
+      await (supabase as any).from('ai_provider_health').insert({
         provider_id: providerId,
         is_available: success,
         success_count: success ? 1 : 0,
@@ -560,20 +565,26 @@ export class AIModelRouter {
     userId?: string,
     projectId?: string
   ): Promise<AIProviderConfig> {
-    const { data, error } = await supabase
+    let query = supabase
       .from('ai_provider_configs')
       .select('*')
       .eq('provider_id', providerId)
-      .eq('user_id', userId || null)
-      .eq('project_id', projectId || null)
       .eq('is_enabled', true)
-      .single()
+
+    if (userId) {
+      query = query.eq('user_id', userId)
+    }
+    if (projectId) {
+      query = query.eq('project_id', projectId)
+    }
+
+    const { data, error } = await query.single()
 
     if (error || !data) {
       throw new Error(`Provider config not found for provider: ${providerId}`)
     }
 
-    return data
+    return data as any
   }
 
   /**
@@ -584,16 +595,22 @@ export class AIModelRouter {
     userId?: string,
     projectId?: string
   ): Promise<AIModelPreference | null> {
-    const { data } = await supabase
+    let query = supabase
       .from('ai_model_preferences')
       .select('*')
       .eq('task_type', taskType)
-      .eq('user_id', userId || null)
-      .eq('project_id', projectId || null)
       .eq('is_active', true)
-      .single()
 
-    return data || null
+    if (userId) {
+      query = query.eq('user_id', userId)
+    }
+    if (projectId) {
+      query = query.eq('project_id', projectId)
+    }
+
+    const { data } = await query.single()
+
+    return data as any || null
   }
 
   /**

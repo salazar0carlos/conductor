@@ -27,7 +27,7 @@ import {
 } from 'lucide-react';
 
 const nodeTypes = {
-  custom: CustomNode,
+  custom: CustomNode as any,
 };
 
 const edgeOptions = {

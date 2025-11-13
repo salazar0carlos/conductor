@@ -172,14 +172,14 @@ export function TemplateBrowser({
         {/* View Mode */}
         <div className="flex gap-2">
           <Button
-            variant={viewMode === 'grid' ? 'default' : 'secondary'}
+            variant={viewMode === 'grid' ? 'primary' : 'secondary'}
             size="sm"
             onClick={() => setViewMode('grid')}
           >
             <Grid3x3 className="w-4 h-4" />
           </Button>
           <Button
-            variant={viewMode === 'list' ? 'default' : 'secondary'}
+            variant={viewMode === 'list' ? 'primary' : 'secondary'}
             size="sm"
             onClick={() => setViewMode('list')}
           >
@@ -189,7 +189,7 @@ export function TemplateBrowser({
 
         {/* Filters Toggle */}
         <Button
-          variant={showFilters ? 'default' : 'secondary'}
+          variant={showFilters ? 'primary' : 'secondary'}
           size="sm"
           onClick={() => setShowFilters(!showFilters)}
         >

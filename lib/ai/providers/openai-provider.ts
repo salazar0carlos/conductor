@@ -221,7 +221,7 @@ export class OpenAIProvider extends BaseAIProvider {
       // Create a File object from buffer if needed
       const file = typeof request.file === 'string'
         ? request.file
-        : new File([request.file], 'audio.mp3', { type: 'audio/mpeg' })
+        : new File([request.file as any], 'audio.mp3', { type: 'audio/mpeg' })
 
       const response = await client.audio.transcriptions.create({
         model: request.model,

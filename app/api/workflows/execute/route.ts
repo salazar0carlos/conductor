@@ -33,14 +33,14 @@ async function executeNode(
     case 'trigger-schedule':
       return {
         triggered: true,
-        cron: config.cron,
+        cron: (resolvedConfig as any).cron,
         nextRun: new Date(Date.now() + 86400000).toISOString(),
       };
 
     case 'trigger-webhook':
       return {
         triggered: true,
-        method: config.method,
+        method: (resolvedConfig as any).method,
         payload: {},
       };
 
@@ -89,7 +89,7 @@ async function executeNode(
     case 'action-ai-generation':
       await delay(1000);
       return {
-        model: config.model,
+        model: (resolvedConfig as any).model,
         prompt: resolvedConfig.prompt,
         response: `AI generated response for: ${resolvedConfig.prompt?.slice(0, 50)}...`,
         usage: {
@@ -111,10 +111,10 @@ async function executeNode(
     case 'action-file-operation':
       await delay(200);
       return {
-        operation: config.operation,
+        operation: (resolvedConfig as any).operation,
         path: resolvedConfig.path,
         success: true,
-        content: config.operation === 'read' ? 'File content here' : undefined,
+        content: (resolvedConfig as any).operation === 'read' ? 'File content here' : undefined,
       };
 
     // LOGIC
@@ -170,8 +170,8 @@ async function executeNode(
       };
 
     case 'logic-delay':
-      const duration = config.duration || 1000;
-      const unit = config.unit || 'milliseconds';
+      const duration = (resolvedConfig as any).duration || 1000;
+      const unit = (resolvedConfig as any).unit || 'milliseconds';
       let ms = duration;
       if (unit === 'seconds') ms = duration * 1000;
       if (unit === 'minutes') ms = duration * 60000;
@@ -185,7 +185,7 @@ async function executeNode(
     case 'logic-stop':
       return {
         stopped: true,
-        message: config.message || 'Workflow stopped',
+        message: (resolvedConfig as any).message || 'Workflow stopped',
       };
 
     // DATA
@@ -207,21 +207,21 @@ async function executeNode(
     case 'data-merge':
       return {
         merged: true,
-        strategy: config.strategy,
+        strategy: (resolvedConfig as any).strategy,
         result: { ...previousOutputs },
       };
 
     case 'data-split':
       return {
         split: true,
-        splitBy: config.splitBy,
+        splitBy: (resolvedConfig as any).splitBy,
         outputs: [{ part: 1 }, { part: 2 }],
       };
 
     case 'data-aggregate':
       return {
-        operation: config.operation,
-        field: config.field,
+        operation: (resolvedConfig as any).operation,
+        field: (resolvedConfig as any).field,
         result: 42,
       };
 
@@ -229,7 +229,7 @@ async function executeNode(
     case 'integration-github':
       await delay(500);
       return {
-        action: config.action,
+        action: (resolvedConfig as any).action,
         repository: resolvedConfig.repository,
         success: true,
         url: `https://github.com/${resolvedConfig.repository}`,
@@ -255,7 +255,7 @@ async function executeNode(
     case 'integration-stripe':
       await delay(600);
       return {
-        action: config.action,
+        action: (resolvedConfig as any).action,
         success: true,
         id: `obj_${Date.now()}`,
       };

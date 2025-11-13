@@ -5,7 +5,7 @@ import { Nav } from '@/components/ui/nav'
 import { Button } from '@/components/ui/button'
 import { AppearanceSettings } from '@/components/appearance-settings'
 import { AddIntegrationModal } from '@/components/integrations/add-integration-modal'
-import { Settings, User, Palette, Bell, Lock, Code, Loader2, Trash2, Plus } from 'lucide-react'
+import { Settings, User, Palette, Bell, Lock, Code, Loader2, Trash2, Plus, Paintbrush } from 'lucide-react'
 
 type Tab = 'general' | 'integrations' | 'preferences' | 'privacy' | 'appearance'
 
@@ -138,8 +138,8 @@ export default function SettingsPage() {
       const response = await fetch('/api/platform-theme')
       const data = await response.json()
       if (data.success) {
-        setPlatformTheme(data.data)
-        applyThemeToDocument(data.data)
+        // setPlatformTheme(data.data)
+        // applyThemeToDocument(data.data)
       }
     } catch {
       // Use default theme
@@ -147,59 +147,59 @@ export default function SettingsPage() {
   }
 
   const handleSavePlatformTheme = async () => {
-    setThemeLoading(true)
+    setLoading(true)
     setError(null)
     setSuccess(null)
 
     try {
-      const response = await fetch('/api/platform-theme', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(platformTheme),
-      })
+      // const response = await fetch('/api/platform-theme', {
+      //   method: 'PATCH',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(platformTheme),
+      // })
 
-      const data = await response.json()
+      // const data = await response.json()
 
-      if (data.success) {
-        applyThemeToDocument(data.data)
-        setSuccess('Platform appearance saved successfully')
-        setTimeout(() => setSuccess(null), 3000)
-      } else {
-        setError(data.error || 'Failed to save platform appearance')
-      }
+      // if (data.success) {
+      //   applyThemeToDocument(data.data)
+      //   setSuccess('Platform appearance saved successfully')
+      //   setTimeout(() => setSuccess(null), 3000)
+      // } else {
+      //   setError(data.error || 'Failed to save platform appearance')
+      // }
     } catch {
       setError('Failed to save platform appearance')
     } finally {
-      setThemeLoading(false)
+      setLoading(false)
     }
   }
 
   const handleResetPlatformTheme = async () => {
     if (!confirm('Are you sure you want to reset to default appearance?')) return
 
-    setThemeLoading(true)
+    setLoading(true)
     setError(null)
     setSuccess(null)
 
     try {
-      const response = await fetch('/api/platform-theme', {
-        method: 'DELETE',
-      })
+      // const response = await fetch('/api/platform-theme', {
+      //   method: 'DELETE',
+      // })
 
-      const data = await response.json()
+      // const data = await response.json()
 
-      if (data.success) {
-        setPlatformTheme(data.data)
-        applyThemeToDocument(data.data)
-        setSuccess('Platform appearance reset to default')
-        setTimeout(() => setSuccess(null), 3000)
-      } else {
-        setError(data.error || 'Failed to reset platform appearance')
-      }
+      // if (data.success) {
+      //   setPlatformTheme(data.data)
+      //   applyThemeToDocument(data.data)
+      //   setSuccess('Platform appearance reset to default')
+      //   setTimeout(() => setSuccess(null), 3000)
+      // } else {
+      //   setError(data.error || 'Failed to reset platform appearance')
+      // }
     } catch {
       setError('Failed to reset platform appearance')
     } finally {
-      setThemeLoading(false)
+      setLoading(false)
     }
   }
 

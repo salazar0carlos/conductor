@@ -159,7 +159,7 @@ export async function GET(request: NextRequest) {
     }, {} as Record<string, number>)
 
     const commonErrors = Object.entries(errorCounts)
-      .map(([error, count]) => ({ error, count }))
+      .map(([error, count]) => ({ error, count: count as number }))
       .sort((a, b) => b.count - a.count)
       .slice(0, 5)
 
@@ -191,10 +191,11 @@ export async function GET(request: NextRequest) {
     }, {} as Record<string, { total: number; completed: number }>)
 
     Object.entries(agentTypeSuccess).forEach(([type, stats]) => {
-      if (stats.total > 5 && stats.completed / stats.total > 0.8) {
+      const s = stats as { total: number; completed: number }
+      if (s.total > 5 && s.completed / s.total > 0.8) {
         successPatterns.push({
           pattern: `${type} agents perform well`,
-          impact: `${Math.round((stats.completed / stats.total) * 100)}% success rate across ${stats.total} tasks`
+          impact: `${Math.round((s.completed / s.total) * 100)}% success rate across ${s.total} tasks`
         })
       }
     })

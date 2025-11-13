@@ -399,7 +399,7 @@ export default function SchedulerPage() {
             </div>
             <div className="p-6 max-h-[calc(100vh-200px)] overflow-y-auto">
               <JobForm
-                initialData={editingJob || undefined}
+                initialData={(editingJob as any) || undefined}
                 onSubmit={editingJob ? handleUpdateJob : handleCreateJob}
                 onCancel={() => {
                   setShowJobForm(false)

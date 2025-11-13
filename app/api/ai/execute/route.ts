@@ -35,7 +35,7 @@ const ExecutionRequestSchema = z.object({
     .optional(),
   user_id: z.string().optional(),
   project_id: z.string().optional(),
-  metadata: z.record(z.unknown()).optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
 })
 
 /**
@@ -54,13 +54,13 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           error: 'Invalid request',
-          details: validationResult.error.errors,
+          details: validationResult.error.issues,
         },
         { status: 400 }
       )
     }
 
-    const executionRequest: AIExecutionRequest = validationResult.data
+    const executionRequest = validationResult.data
 
     // Ensure either prompt or messages is provided
     if (!executionRequest.prompt && !executionRequest.messages) {

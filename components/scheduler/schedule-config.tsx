@@ -263,6 +263,7 @@ export function ScheduleConfigComponent({ value, onChange, timezone = 'UTC' }: S
               onChange={(e) =>
                 updateConfig({
                   recurring_pattern: {
+                    frequency: config.recurring_pattern?.frequency || 'daily',
                     ...config.recurring_pattern,
                     time: e.target.value,
                   },
@@ -291,6 +292,7 @@ export function ScheduleConfigComponent({ value, onChange, timezone = 'UTC' }: S
                           : [...current, day.value].sort()
                         updateConfig({
                           recurring_pattern: {
+                            frequency: config.recurring_pattern?.frequency || 'daily',
                             ...config.recurring_pattern,
                             days_of_week: updated,
                           },
@@ -322,6 +324,7 @@ export function ScheduleConfigComponent({ value, onChange, timezone = 'UTC' }: S
                 onChange={(e) =>
                   updateConfig({
                     recurring_pattern: {
+                      frequency: config.recurring_pattern?.frequency || 'daily',
                       ...config.recurring_pattern,
                       day_of_month: parseInt(e.target.value) || 1,
                     },

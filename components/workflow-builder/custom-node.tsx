@@ -17,7 +17,7 @@ interface CustomNodeData {
   config: Record<string, any>;
 }
 
-export const CustomNode = memo(({ id, data, selected }: NodeProps<CustomNodeData>) => {
+export const CustomNode = memo(({ id, data, selected }: any) => {
   const { selectNode, deleteNode, duplicateNode, nodeExecutions } = useWorkflowStore();
   const execution = nodeExecutions.get(id);
 

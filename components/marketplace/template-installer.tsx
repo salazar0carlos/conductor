@@ -165,8 +165,10 @@ export function TemplateInstaller({ template, isOpen, onClose, onSuccess }: Temp
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={resetInstaller} title={`Install ${template.name}`}>
-      <div className="space-y-6">
+    <Modal isOpen={isOpen} onClose={resetInstaller}>
+      <div className="p-6">
+        <h2 className="text-2xl font-bold mb-6">Install {template.name}</h2>
+        <div className="space-y-6">
         {!installResult ? (
           <>
             {hasSteps ? (
@@ -386,6 +388,7 @@ export function TemplateInstaller({ template, isOpen, onClose, onSuccess }: Temp
             )}
           </div>
         )}
+        </div>
       </div>
     </Modal>
   )

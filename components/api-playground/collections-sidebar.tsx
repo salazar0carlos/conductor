@@ -252,7 +252,7 @@ function CollectionItem({
       <div className="flex items-center gap-2 p-2 bg-muted/30">
         <Button
           variant="ghost"
-          size="icon"
+          size="sm"
           className="h-6 w-6"
           onClick={() => setIsExpanded(!isExpanded)}
         >
@@ -272,7 +272,7 @@ function CollectionItem({
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-6 w-6">
+            <Button variant="ghost" size="sm" className="h-6 w-6">
               <MoreVertical className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
@@ -350,7 +350,7 @@ function RequestItem({
       <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
         <Button
           variant="ghost"
-          size="icon"
+          size="sm"
           className="h-6 w-6"
           onClick={(e) => {
             e.stopPropagation();
@@ -363,7 +363,7 @@ function RequestItem({
         </Button>
         <Button
           variant="ghost"
-          size="icon"
+          size="sm"
           className="h-6 w-6"
           onClick={(e) => {
             e.stopPropagation();

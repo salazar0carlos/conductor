@@ -235,7 +235,7 @@ export function EnvironmentsManager() {
                         {variable.secret && (
                           <Button
                             variant="ghost"
-                            size="icon"
+                            size="sm"
                             className="absolute right-0 top-0 h-full"
                             onClick={() => toggleShowSecret(variable.id)}
                           >
@@ -250,7 +250,7 @@ export function EnvironmentsManager() {
                       <div className="flex justify-center">
                         <Button
                           variant="ghost"
-                          size="icon"
+                          size="sm"
                           onClick={() =>
                             handleUpdateVariable(index, 'secret', !variable.secret)
                           }
@@ -262,7 +262,7 @@ export function EnvironmentsManager() {
                       </div>
                       <Button
                         variant="ghost"
-                        size="icon"
+                        size="sm"
                         onClick={() => handleRemoveVariable(index)}
                       >
                         <Trash2 className="h-4 w-4" />

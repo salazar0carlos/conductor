@@ -62,16 +62,16 @@ export async function GET(request: Request) {
 
     // Calculate aggregated metrics
     const totalRequests = logs.length
-    const totalTokens = logs.reduce((sum, log) => sum + log.total_tokens, 0)
+    const totalTokens = logs.reduce((sum: number, log: any) => sum + (log.total_tokens || 0), 0)
     const totalCost = logs.reduce(
-      (sum, log) => sum + Number(log.cost_usd),
+      (sum: number, log: any) => sum + Number(log.cost_usd || 0),
       0
     )
-    const successfulRequests = logs.filter((log) => log.status === 'success')
+    const successfulRequests = logs.filter((log: any) => log.status === 'success')
       .length
     const totalDuration = logs
-      .filter((log) => log.duration_ms)
-      .reduce((sum, log) => sum + (log.duration_ms || 0), 0)
+      .filter((log: any) => log.duration_ms)
+      .reduce((sum: number, log: any) => sum + (log.duration_ms || 0), 0)
 
     // By provider
     const byProvider = Object.values(
@@ -113,7 +113,7 @@ export async function GET(request: Request) {
 
     // By task type
     const byTaskType = Object.values(
-      logs.reduce((acc: any, log) => {
+      logs.reduce((acc: any, log: any) => {
         const taskType = log.task_type || 'unknown'
         if (!acc[taskType]) {
           acc[taskType] = {
@@ -147,7 +147,7 @@ export async function GET(request: Request) {
 
     // Timeline
     const timeline = Object.values(
-      logs.reduce((acc: any, log) => {
+      logs.reduce((acc: any, log: any) => {
         const date = log.created_at.split('T')[0]
         if (!acc[date]) {
           acc[date] = {
@@ -171,10 +171,10 @@ export async function GET(request: Request) {
       average_cost_per_request:
         totalRequests > 0 ? totalCost / totalRequests : 0,
       average_response_time_ms:
-        successfulRequests.length > 0
-          ? totalDuration / successfulRequests.length
+        successfulRequests > 0
+          ? totalDuration / successfulRequests
           : 0,
-      success_rate: totalRequests > 0 ? successfulRequests.length / totalRequests : 0,
+      success_rate: totalRequests > 0 ? successfulRequests / totalRequests : 0,
       by_provider: byProvider as any,
       by_model: byModel as any,
       by_task_type: byTaskType as any,

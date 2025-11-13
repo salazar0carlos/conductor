@@ -173,8 +173,7 @@ export function SQLEditor({ onExecute, schema = [], isExecuting = false, lastRes
     if (!activeTab) return;
     try {
       const formatted = format(activeTab.query, {
-        language: 'postgresql',
-        indent: '  '
+        language: 'postgresql'
       });
       setTabs(prev =>
         prev.map(tab =>

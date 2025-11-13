@@ -86,7 +86,7 @@ export class ComplianceManager {
 
     return {
       success: true,
-      logs_anonymized: data?.length || 0,
+      logs_anonymized: (data as any)?.length || 0,
       anonymized_at: new Date().toISOString(),
     }
   }

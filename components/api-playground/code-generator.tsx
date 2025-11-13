@@ -59,18 +59,13 @@ export function CodeGenerator() {
         <div className="flex items-center gap-2">
           <Select
             value={selectedLanguage}
-            onValueChange={(value) => setSelectedLanguage(value as CodeLanguage)}
+            onChange={(e) => setSelectedLanguage(e.target.value as CodeLanguage)}
           >
-            <SelectTrigger className="w-48">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {snippets.map((snippet) => (
-                <SelectItem key={snippet.language} value={snippet.language}>
-                  {snippet.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
+            {snippets.map((snippet) => (
+              <SelectItem key={snippet.language} value={snippet.language}>
+                {snippet.label}
+              </SelectItem>
+            ))}
           </Select>
 
           <Button variant="outline" onClick={handleCopy}>

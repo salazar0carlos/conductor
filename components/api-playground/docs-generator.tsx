@@ -225,7 +225,7 @@ export function DocsGenerator() {
                   <Label>Public Documentation</Label>
                   <Button
                     variant="ghost"
-                    size="icon"
+                    size="sm"
                     onClick={() =>
                       setDocsConfig({
                         ...docsConfig,

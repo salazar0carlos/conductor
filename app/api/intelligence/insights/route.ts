@@ -93,11 +93,12 @@ export async function GET(request: NextRequest) {
 
     const topPerformers = Object.entries(agentTaskCounts)
       .map(([agentId, stats]) => {
-        const agent = agents.find(a => a.id === agentId)
+        const s = stats as { completed: number; total: number }
+        const agent = agents.find((a: any) => a.id === agentId)
         return {
           id: agentId,
           name: agent?.name || 'Unknown Agent',
-          score: stats.total > 0 ? Math.round((stats.completed / stats.total) * 100) : 0
+          score: s.total > 0 ? Math.round((s.completed / s.total) * 100) : 0
         }
       })
       .sort((a, b) => b.score - a.score)

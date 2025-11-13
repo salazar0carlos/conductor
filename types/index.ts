@@ -551,7 +551,7 @@ export interface UpdateAIModelPreferenceRequest {
 
 export interface AIExecutionRequest {
   task_type: string
-  prompt: string
+  prompt?: string
   messages?: Array<{ role: string; content: string }>
   model_id?: string // Optional: override auto-selection
   parameters?: {

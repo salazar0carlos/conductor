@@ -242,7 +242,7 @@ function KeyValueEditor({ items, onUpdate, onAdd, onRemove }: KeyValueEditorProp
           />
           <Button
             variant="ghost"
-            size="icon"
+            size="sm"
             onClick={() => onRemove(index)}
           >
             <Trash2 className="h-4 w-4" />
@@ -267,7 +267,7 @@ interface BodyEditorProps {
 function BodyEditor({ body, onTypeChange, onContentChange }: BodyEditorProps) {
   return (
     <div className="space-y-4">
-      <Select value={body.type} onValueChange={onTypeChange}>
+      <Select value={body.type} onValueChange={(value) => onTypeChange(value as any)}>
         <SelectTrigger className="w-48">
           <SelectValue />
         </SelectTrigger>
@@ -320,7 +320,7 @@ function AuthEditor({ auth, onTypeChange, onUpdate }: AuthEditorProps) {
     <div className="space-y-4">
       <div>
         <Label>Auth Type</Label>
-        <Select value={auth.type} onValueChange={onTypeChange} className="mt-2">
+        <Select value={auth.type} onValueChange={(value) => onTypeChange(value as any)} className="mt-2">
           <SelectTrigger>
             <SelectValue />
           </SelectTrigger>
@@ -348,7 +348,7 @@ function AuthEditor({ auth, onTypeChange, onUpdate }: AuthEditorProps) {
             />
             <Button
               variant="ghost"
-              size="icon"
+              size="sm"
               className="absolute right-0 top-0"
               onClick={() => setShowSecret(!showSecret)}
             >
@@ -423,9 +423,9 @@ function AuthEditor({ auth, onTypeChange, onUpdate }: AuthEditorProps) {
             <Label>Add To</Label>
             <Select
               value={auth.apiKey?.addTo || 'header'}
-              onValueChange={(value: 'header' | 'query') =>
+              onValueChange={(value) =>
                 onUpdate({
-                  apiKey: { ...auth.apiKey, addTo: value },
+                  apiKey: { ...auth.apiKey, addTo: value as 'header' | 'query' },
                 })
               }
             >

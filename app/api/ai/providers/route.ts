@@ -42,15 +42,21 @@ export async function GET(request: Request) {
 
     // Get stats for each provider
     const providersWithStats: AIProviderStats[] = await Promise.all(
-      providers.map(async (provider) => {
+      (providers || []).map(async (provider: any) => {
         // Get provider config
-        const { data: config } = await supabase
+        let configQuery = supabase
           .from('ai_provider_configs')
           .select('*')
           .eq('provider_id', provider.id)
-          .eq('user_id', userId || null)
-          .eq('project_id', projectId || null)
-          .single()
+
+        if (userId) {
+          configQuery = configQuery.eq('user_id', userId)
+        }
+        if (projectId) {
+          configQuery = configQuery.eq('project_id', projectId)
+        }
+
+        const { data: config } = await configQuery.single()
 
         // Get health status
         const { data: health } = await supabase
@@ -68,10 +74,10 @@ export async function GET(request: Request) {
           .gte('created_at', today)
 
         const todayStats = todayUsage?.reduce(
-          (acc, log) => ({
+          (acc, log: any) => ({
             requests: acc.requests + 1,
-            tokens: acc.tokens + log.total_tokens,
-            cost_usd: acc.cost_usd + Number(log.cost_usd),
+            tokens: acc.tokens + (log.total_tokens || 0),
+            cost_usd: acc.cost_usd + Number(log.cost_usd || 0),
           }),
           { requests: 0, tokens: 0, cost_usd: 0 }
         ) || { requests: 0, tokens: 0, cost_usd: 0 }
@@ -86,10 +92,10 @@ export async function GET(request: Request) {
           .gte('created_at', monthStart.toISOString())
 
         const monthStats = monthUsage?.reduce(
-          (acc, log) => ({
+          (acc, log: any) => ({
             requests: acc.requests + 1,
-            tokens: acc.tokens + log.total_tokens,
-            cost_usd: acc.cost_usd + Number(log.cost_usd),
+            tokens: acc.tokens + (log.total_tokens || 0),
+            cost_usd: acc.cost_usd + Number(log.cost_usd || 0),
           }),
           { requests: 0, tokens: 0, cost_usd: 0 }
         ) || { requests: 0, tokens: 0, cost_usd: 0 }
@@ -192,20 +198,23 @@ export async function POST(request: Request) {
     const apiKeyEncrypted = api_key
 
     // Upsert provider config
+    const configData: any = {
+      provider_id,
+      api_key_encrypted: apiKeyEncrypted,
+      is_enabled,
+      priority,
+      default_parameters,
+      metadata,
+    }
+
+    if (user_id) configData.user_id = user_id
+    if (project_id) configData.project_id = project_id
+    if (daily_budget_usd) configData.daily_budget_usd = daily_budget_usd
+    if (monthly_budget_usd) configData.monthly_budget_usd = monthly_budget_usd
+
     const { data, error } = await supabase
       .from('ai_provider_configs')
-      .upsert({
-        provider_id,
-        user_id: user_id || null,
-        project_id: project_id || null,
-        api_key_encrypted: apiKeyEncrypted,
-        is_enabled,
-        priority,
-        daily_budget_usd: daily_budget_usd || null,
-        monthly_budget_usd: monthly_budget_usd || null,
-        default_parameters,
-        metadata,
-      })
+      .upsert(configData)
       .select()
       .single()
 

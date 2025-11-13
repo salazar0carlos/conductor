@@ -108,7 +108,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
         demo_url: body.demo_url,
         status: body.status,
         visibility: body.visibility,
-        ...(body.status === 'published' && !existing.published_at ? { published_at: new Date().toISOString() } : {})
+        ...(body.status === 'published' && !(existing as any).published_at ? { published_at: new Date().toISOString() } : {})
       })
       .eq('id', id)
       .select()

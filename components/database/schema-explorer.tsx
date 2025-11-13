@@ -265,12 +265,11 @@ export function SchemaExplorer({ onSelectTable, onQuickAction }: SchemaExplorerP
                                   {column.column_name}
                                 </span>
                                 {isPrimaryKey && (
-                                  <Key className="w-3 h-3 text-yellow-500 flex-shrink-0" title="Primary Key" />
+                                  <Key className="w-3 h-3 text-yellow-500 flex-shrink-0" />
                                 )}
                                 {foreignKey && (
                                   <LinkIcon
                                     className="w-3 h-3 text-blue-500 flex-shrink-0"
-                                    title={`Foreign key to ${foreignKey.foreign_table_name}.${foreignKey.foreign_column_name}`}
                                   />
                                 )}
                               </div>

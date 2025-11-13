@@ -86,7 +86,7 @@ async function handleAutoTag(supabase: any, file: any, userId: string) {
   // Update file with tags
   const { data, error } = await supabase
     .from('files')
-    .update({ tags: [...new Set([...file.tags, ...tags])] })
+    .update({ tags: Array.from(new Set([...file.tags, ...tags])) })
     .eq('id', file.id)
     .select()
     .single()
