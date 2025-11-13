@@ -415,7 +415,7 @@ export function AddIntegrationModal({ open, onOpenChange, onSuccess }: AddIntegr
             <DialogHeader>
               <DialogTitle>Add Integration</DialogTitle>
               <DialogDescription>
-                Connect external services to enhance Conductor's capabilities
+                Connect external services to enhance Conductor&apos;s capabilities
               </DialogDescription>
             </DialogHeader>
 
@@ -512,7 +512,7 @@ export function AddIntegrationModal({ open, onOpenChange, onSuccess }: AddIntegr
                   <div className="text-center py-8">
                     <Github className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
                     <p className="text-sm text-muted-foreground mb-4">
-                      You'll be redirected to GitHub to authorize Conductor
+                      You&apos;ll be redirected to GitHub to authorize Conductor
                     </p>
                     <Button type="submit" disabled={loading} className="gap-2">
                       {loading ? (
