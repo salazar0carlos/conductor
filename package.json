@@ -11,7 +11,9 @@
     "seed": "tsx scripts/seed-test-data.ts",
     "worker": "tsx workers/start-worker.ts",
     "test:subscription": "tsx scripts/test-subscription-enforcement.ts",
-    "validate": "tsx scripts/validate-build.ts"
+    "validate": "tsx scripts/validate-build.ts",
+    "setup": "bash scripts/setup-git-hooks.sh",
+    "postinstall": "bash scripts/setup-git-hooks.sh 2>/dev/null || true"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.68.0",
