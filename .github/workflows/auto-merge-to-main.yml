@@ -44,3 +44,8 @@ jobs:
 
           # Push to main
           git push origin main
+
+      - name: Delete merged branch
+        run: |
+          echo "Deleting branch ${{ github.ref_name }}"
+          git push origin --delete ${{ github.ref_name }}

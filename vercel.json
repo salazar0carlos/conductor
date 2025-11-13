@@ -1,0 +1,14 @@
+{
+  "git": {
+    "deploymentEnabled": {
+      "main": true
+    }
+  },
+  "github": {
+    "autoAlias": true,
+    "autoJobCancelation": true,
+    "silent": false
+  },
+  "buildCommand": "npm run build",
+  "installCommand": "npm install"
+}
