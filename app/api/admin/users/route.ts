@@ -5,6 +5,9 @@ import { requireAdmin, createAuditLog } from '@/lib/auth/admin-middleware'
 import { createUserProfileSchema } from '@/lib/validation/schemas'
 import type { CreateUserProfileRequest } from '@/types'
 
+// Force dynamic rendering (prevent static generation at build time)
+export const dynamic = 'force-dynamic'
+
 /**
  * GET /api/admin/users
  * List all user profiles (admin only)

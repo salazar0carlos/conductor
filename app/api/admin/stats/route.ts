@@ -3,6 +3,9 @@ import { createClient } from '@/lib/supabase/server'
 import { apiSuccess, handleApiError } from '@/lib/utils/api-helpers'
 import { requireAdmin } from '@/lib/auth/admin-middleware'
 
+// Force dynamic rendering (prevent static generation at build time)
+export const dynamic = 'force-dynamic'
+
 /**
  * GET /api/admin/stats
  * Get admin dashboard statistics (admin only)

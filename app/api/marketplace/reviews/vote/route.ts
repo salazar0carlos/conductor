@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 
+// Force dynamic rendering (prevent static generation at build time)
+export const dynamic = 'force-dynamic'
+
 // POST /api/marketplace/reviews/vote - Vote on a review
 export async function POST(request: NextRequest) {
   try {

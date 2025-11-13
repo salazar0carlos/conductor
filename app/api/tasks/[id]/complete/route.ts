@@ -4,6 +4,9 @@ import { apiSuccess, apiError, handleApiError } from '@/lib/utils/api-helpers'
 import { completeTaskSchema } from '@/lib/validation/schemas'
 import { onTaskComplete } from '@/lib/jobs/background-jobs'
 
+// Force dynamic rendering (prevent static generation at build time)
+export const dynamic = 'force-dynamic'
+
 export async function POST(
   request: NextRequest,
   { params }: { params: { id: string } }

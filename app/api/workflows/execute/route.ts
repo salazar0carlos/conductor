@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Node, Edge } from '@xyflow/react';
 
+// Force dynamic rendering (prevent static generation at build time)
+export const dynamic = 'force-dynamic'
+
 interface ExecutionContext {
   nodeOutputs: Map<string, any>;
   variables: Map<string, any>;

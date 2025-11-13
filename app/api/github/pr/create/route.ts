@@ -3,6 +3,9 @@ import { createClient } from '@/lib/supabase/server'
 import { apiSuccess, apiError, handleApiError } from '@/lib/utils/api-helpers'
 import { z } from 'zod'
 
+// Force dynamic rendering (prevent static generation at build time)
+export const dynamic = 'force-dynamic'
+
 const createPRSchema = z.object({
   task_id: z.string().uuid(),
   title: z.string(),

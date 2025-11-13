@@ -2,6 +2,9 @@ import { createClient } from '@/lib/supabase/server'
 import { apiSuccess, handleApiError } from '@/lib/utils/api-helpers'
 import type { DashboardStats } from '@/types'
 
+// Force dynamic rendering (prevent static generation at build time)
+export const dynamic = 'force-dynamic'
+
 export async function GET() {
   try {
     const supabase = await createClient()

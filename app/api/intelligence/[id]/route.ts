@@ -3,6 +3,9 @@ import { createClient } from '@/lib/supabase/server'
 import { apiSuccess, apiError, handleApiError } from '@/lib/utils/api-helpers'
 import type { UpdateAnalysisRequest } from '@/types'
 
+// Force dynamic rendering (prevent static generation at build time)
+export const dynamic = 'force-dynamic'
+
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }

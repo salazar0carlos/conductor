@@ -4,6 +4,9 @@ import { apiSuccess, apiError, handleApiError } from '@/lib/utils/api-helpers'
 import { generateApiKey } from '@/lib/auth/api-keys'
 import { createApiKeySchema } from '@/lib/validation/schemas'
 
+// Force dynamic rendering (prevent static generation at build time)
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: NextRequest) {
   try {
     const supabase = await createClient()

@@ -8,6 +8,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateDeploymentChecklist } from '@/lib/ai/orchestrator-agent';
 
+// Force dynamic rendering (prevent static generation at build time)
+export const dynamic = 'force-dynamic'
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }

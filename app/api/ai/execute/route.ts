@@ -8,6 +8,9 @@ import { modelRouter } from '@/lib/ai/model-router'
 import type { AIExecutionRequest } from '@/types'
 import { z } from 'zod'
 
+// Force dynamic rendering (prevent static generation at build time)
+export const dynamic = 'force-dynamic'
+
 /**
  * Request validation schema
  */

@@ -9,6 +9,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { assignTaskToAgent } from '@/lib/ai/orchestrator-agent';
 import { createClient } from '@/lib/supabase/server';
 
+// Force dynamic rendering (prevent static generation at build time)
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();

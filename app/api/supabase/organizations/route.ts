@@ -1,6 +1,9 @@
 import { NextRequest } from 'next/server'
 import { apiSuccess, apiError, handleApiError } from '@/lib/utils/api-helpers'
 
+// Force dynamic rendering (prevent static generation at build time)
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: NextRequest) {
   try {
     // Get Supabase Management API token from env

@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 
+// Force dynamic rendering (prevent static generation at build time)
+export const dynamic = 'force-dynamic'
+
 // Dangerous SQL keywords that require confirmation
 const DANGEROUS_KEYWORDS = ['DELETE', 'DROP', 'TRUNCATE', 'ALTER', 'UPDATE'];
 const DDL_KEYWORDS = ['CREATE', 'ALTER', 'DROP'];

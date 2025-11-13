@@ -4,6 +4,9 @@ import { apiSuccess, apiError, handleApiError } from '@/lib/utils/api-helpers'
 import { getFileType } from '@/lib/utils/file-utils'
 import { v4 as uuidv4 } from 'uuid'
 
+// Force dynamic rendering (prevent static generation at build time)
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: NextRequest) {
   try {
     const supabase = await createClient()

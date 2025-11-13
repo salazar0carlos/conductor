@@ -8,6 +8,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { decomposeTaskIntoWorkflow } from '@/lib/ai/orchestrator-agent';
 
+// Force dynamic rendering (prevent static generation at build time)
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();

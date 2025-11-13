@@ -1,6 +1,9 @@
 import { NextRequest } from 'next/server'
 import { apiSuccess, apiError } from '@/lib/utils/api-helpers'
 
+// Force dynamic rendering (prevent static generation at build time)
+export const dynamic = 'force-dynamic'
+
 export async function PATCH(
   request: NextRequest,
   { params }: { params: { id: string } }

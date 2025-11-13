@@ -5,11 +5,13 @@
     "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
 
     // Prevent common anti-patterns that cause build failures
+    // Note: This is a WARNING, not an error, because it catches false positives
+    // The prebuild validation script (scripts/validate-build.ts) is the real enforcer
     "no-restricted-syntax": [
-      "error",
+      "warn",
       {
         "selector": "VariableDeclaration[kind='const'] > VariableDeclarator[id.name!=/getSupabaseClient|createSupabaseClient/] > CallExpression[callee.name='createClient']",
-        "message": "Module-level Supabase client initialization is not allowed. Use a factory function or getSupabaseClient() method to create clients at runtime."
+        "message": "Possible module-level Supabase client initialization. Ensure this is inside a function, not at module scope."
       }
     ]
   }

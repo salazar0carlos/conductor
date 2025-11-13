@@ -3,6 +3,9 @@ import { createClient } from '@/lib/supabase/server';
 import { LOGO_MODELS, LogoGenerationRequest, GeneratedLogo } from '@/lib/ai/logo-models';
 import { z } from 'zod';
 
+// Force dynamic rendering (prevent static generation at build time)
+export const dynamic = 'force-dynamic'
+
 const requestSchema = z.object({
   model: z.enum(['dalle-3', 'midjourney', 'stable-diffusion-xl', 'ideogram', 'leonardo']),
   prompt: z.string().min(1),

@@ -219,7 +219,7 @@ function validateBuild(): void {
   }
 
   // Print errors grouped by file
-  for (const [file, fileErrors] of errorsByFile) {
+  Array.from(errorsByFile.entries()).forEach(([file, fileErrors]) => {
     const relPath = file.replace(process.cwd() + '/', '')
     console.log(`📄 ${relPath}`)
 
@@ -228,7 +228,7 @@ function validateBuild(): void {
       console.log(`  ${icon} Line ${error.line}: ${error.message}`)
     }
     console.log()
-  }
+  })
 
   console.log(`\n📊 Summary:`)
   console.log(`  ❌ ${errorCount} errors`)

@@ -7,6 +7,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { convertAllApprovedSuggestions } from '@/lib/ai/feedback-loop';
 
+// Force dynamic rendering (prevent static generation at build time)
+export const dynamic = 'force-dynamic'
+
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }

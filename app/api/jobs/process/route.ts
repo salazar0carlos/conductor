@@ -2,6 +2,9 @@ import { NextRequest } from 'next/server'
 import { apiSuccess, apiError, handleApiError } from '@/lib/utils/api-helpers'
 import { processPendingJobs } from '@/lib/jobs/background-jobs'
 
+// Force dynamic rendering (prevent static generation at build time)
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: NextRequest) {
   try {
     // Verify this is an internal request (in production, use a secret token)

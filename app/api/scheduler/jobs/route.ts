@@ -3,6 +3,9 @@ import { v4 as uuidv4 } from 'uuid'
 import { parseExpression } from 'cron-parser'
 import { addMinutes, addHours, addDays } from 'date-fns'
 
+// Force dynamic rendering (prevent static generation at build time)
+export const dynamic = 'force-dynamic'
+
 // Mock database - In production, use Supabase or your database
 const mockJobs: any[] = [
   {

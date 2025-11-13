@@ -5,6 +5,9 @@ import { requireAdmin, createAuditLog } from '@/lib/auth/admin-middleware'
 import { updateSystemSettingSchema } from '@/lib/validation/schemas'
 import type { UpdateSystemSettingRequest } from '@/types'
 
+// Force dynamic rendering (prevent static generation at build time)
+export const dynamic = 'force-dynamic'
+
 /**
  * GET /api/admin/settings/[key]
  * Get a single system setting by key (admin only)

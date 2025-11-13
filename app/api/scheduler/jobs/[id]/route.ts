@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+// Force dynamic rendering (prevent static generation at build time)
+export const dynamic = 'force-dynamic'
+
 // Mock database - shared with main route
 // In production, this would be imported from a shared data layer
 const getMockJobs = () => {
