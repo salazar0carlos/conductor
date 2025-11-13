@@ -9,7 +9,10 @@
     "lint": "next lint",
     "seed": "tsx scripts/seed-test-data.ts",
     "worker": "tsx workers/start-worker.ts",
-    "test:subscription": "tsx scripts/test-subscription-enforcement.ts"
+    "test:subscription": "tsx scripts/test-subscription-enforcement.ts",
+    "session:validate": "tsx scripts/validate-session-id.ts",
+    "session:update": "tsx scripts/update-session-id.ts",
+    "setup:hooks": "tsx scripts/setup-hooks.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.68.0",
