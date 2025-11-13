@@ -191,7 +191,7 @@ export default function JobsPage() {
             <p className="text-neutral-400">Monitor and manage background job execution</p>
           </div>
           <Button
-            variant="outline"
+            variant="secondary"
             onClick={fetchJobs}
             disabled={refreshing}
             className="gap-2"

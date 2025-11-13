@@ -1,7 +1,7 @@
 import { ButtonHTMLAttributes, CSSProperties } from 'react'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'danger' | 'ghost'
+  variant?: 'primary' | 'secondary' | 'danger' | 'ghost' | 'outline'
   size?: 'sm' | 'md' | 'lg'
 }
 
@@ -17,7 +17,8 @@ export function Button({
     primary: 'transition-colors',
     secondary: 'transition-colors border',
     danger: 'transition-colors',
-    ghost: 'transition-colors'
+    ghost: 'transition-colors',
+    outline: 'transition-colors border'
   }
 
   const sizes = {
@@ -48,6 +49,12 @@ export function Button({
     ghost: {
       backgroundColor: 'transparent',
       color: 'var(--conductor-body-color)',
+      borderRadius: 'var(--conductor-button-radius)',
+    },
+    outline: {
+      backgroundColor: 'transparent',
+      color: 'var(--conductor-body-color)',
+      borderColor: 'var(--conductor-button-secondary-border)',
       borderRadius: 'var(--conductor-button-radius)',
     }
   }
