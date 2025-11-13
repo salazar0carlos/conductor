@@ -119,10 +119,12 @@ export interface AuditLogFilter {
 }
 
 export class AuditLogger {
-  private supabase
-
-  constructor() {
-    this.supabase = createClient(
+  /**
+   * Get Supabase client - created on demand to avoid build-time env var access
+   * IMPORTANT: Never initialize Supabase at module or constructor level!
+   */
+  private getSupabaseClient() {
+    return createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
     )
@@ -133,7 +135,8 @@ export class AuditLogger {
    */
   async log(entry: AuditLogEntry): Promise<void> {
     try {
-      const { error } = await this.supabase
+      const supabase = this.getSupabaseClient()
+      const { error } = await supabase
         .from('audit_logs')
         .insert({
           event_category: entry.event_category,
@@ -339,7 +342,8 @@ export class AuditLogger {
    * Query audit logs with filters
    */
   async query(filter: AuditLogFilter = {}) {
-    let query = this.supabase
+    const supabase = this.getSupabaseClient()
+    let query = supabase
       .from('audit_logs_enriched')
       .select('*', { count: 'exact' })
 
@@ -413,18 +417,19 @@ export class AuditLogger {
    * Get analytics for dashboard
    */
   async getAnalytics(days: number = 7) {
+    const supabase = this.getSupabaseClient()
     const startDate = new Date()
     startDate.setDate(startDate.getDate() - days)
 
     // Get aggregated data
-    const { data: aggregations } = await this.supabase
+    const { data: aggregations } = await supabase
       .from('audit_log_aggregations')
       .select('*')
       .gte('aggregation_date', startDate.toISOString().split('T')[0])
       .order('aggregation_date', { ascending: true })
 
     // Get top users
-    const { data: topUsers } = await this.supabase
+    const { data: topUsers } = await supabase
       .from('audit_logs')
       .select('user_id, user_email, user_name')
       .gte('created_at', startDate.toISOString())
@@ -444,7 +449,7 @@ export class AuditLogger {
       .slice(0, 10)
 
     // Get event distribution
-    const { data: eventDistribution } = await this.supabase
+    const { data: eventDistribution } = await supabase
       .from('audit_logs')
       .select('event_category')
       .gte('created_at', startDate.toISOString())
@@ -468,7 +473,8 @@ export class AuditLogger {
    * Get security alerts
    */
   async getSecurityAlerts(status?: 'open' | 'investigating' | 'resolved' | 'false_positive') {
-    let query = this.supabase
+    const supabase = this.getSupabaseClient()
+    let query = supabase
       .from('audit_security_alerts')
       .select('*')
       .order('created_at', { ascending: false })
@@ -503,7 +509,8 @@ export class AuditLogger {
       metadata?: Record<string, any>
     }
   ) {
-    const { data, error } = await this.supabase
+    const supabase = this.getSupabaseClient()
+    const { data, error } = await supabase
       .from('audit_security_alerts')
       .insert({
         alert_type,

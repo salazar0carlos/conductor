@@ -4,12 +4,14 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "tsx scripts/validate-build.ts",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "seed": "tsx scripts/seed-test-data.ts",
     "worker": "tsx workers/start-worker.ts",
-    "test:subscription": "tsx scripts/test-subscription-enforcement.ts"
+    "test:subscription": "tsx scripts/test-subscription-enforcement.ts",
+    "validate": "tsx scripts/validate-build.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.68.0",

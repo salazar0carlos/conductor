@@ -7,10 +7,12 @@ import { getAuditLogger } from './logger'
 import { createClient } from '@supabase/supabase-js'
 
 export class ComplianceManager {
-  private supabase
-
-  constructor() {
-    this.supabase = createClient(
+  /**
+   * Get Supabase client - created on demand to avoid build-time env var access
+   * IMPORTANT: Never initialize Supabase at module or constructor level!
+   */
+  private getSupabaseClient() {
+    return createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
     )
@@ -71,7 +73,8 @@ export class ComplianceManager {
     )
 
     // Anonymize user data in audit logs
-    const { data, error } = await this.supabase
+    const supabase = this.getSupabaseClient()
+    const { data, error } = await supabase
       .from('audit_logs')
       .update({
         user_email: '[REDACTED]',
@@ -279,7 +282,8 @@ export class ComplianceManager {
     total_checked: number
     tampered_logs: string[]
   }> {
-    const { data: logs } = await this.supabase
+    const supabase = this.getSupabaseClient()
+    const { data: logs } = await supabase
       .from('audit_logs')
       .select('id, checksum, previous_checksum, event_category, event_type, user_id, resource_type, resource_id, created_at, old_values, new_values')
       .order('created_at', { ascending: false })
@@ -318,9 +322,10 @@ export class ComplianceManager {
    */
   async applyRetentionPolicies() {
     const logger = getAuditLogger()
+    const supabase = this.getSupabaseClient()
 
     // Get logs that have expired
-    const { data: expiredLogs } = await this.supabase
+    const { data: expiredLogs } = await supabase
       .from('audit_logs')
       .select('id, event_category, retention_policy')
       .lt('expires_at', new Date().toISOString())
@@ -334,7 +339,7 @@ export class ComplianceManager {
     }
 
     // Archive logs (move to cold storage in production)
-    const { error: archiveError } = await this.supabase
+    const { error: archiveError } = await supabase
       .from('audit_logs')
       .update({
         is_archived: true,
@@ -406,7 +411,8 @@ export class ComplianceManager {
     ).length
 
     // Save report to database
-    const { data: report } = await this.supabase
+    const supabase = this.getSupabaseClient()
+    const { data: report } = await supabase
       .from('audit_compliance_reports')
       .insert({
         report_type: reportType,
