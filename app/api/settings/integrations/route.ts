@@ -53,13 +53,19 @@ export async function POST(request: NextRequest) {
       return apiError('Missing required fields: integration_type, integration_name');
     }
 
+    // Trim and validate integration name
+    const integrationName = body.integration_name.trim();
+    if (!integrationName) {
+      return apiError('Integration name cannot be empty');
+    }
+
     const { data, error } = await supabase
       .from('user_integrations')
       .insert([
         {
           user_id: user.id,
           integration_type: body.integration_type,
-          integration_name: body.integration_name,
+          integration_name: integrationName,
           api_key: body.api_key,
           oauth_token: body.oauth_token,
           oauth_refresh_token: body.oauth_refresh_token,
@@ -72,7 +78,16 @@ export async function POST(request: NextRequest) {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+      // Check for unique constraint violation
+      if (error.code === '23505' || error.message?.includes('duplicate key')) {
+        return apiError(
+          `An integration with the name "${integrationName}" already exists. Please choose a different name.`,
+          409
+        );
+      }
+      throw error;
+    }
 
     // Log activity (optional - don't fail if logging fails)
     try {

@@ -375,19 +375,24 @@ export function AddIntegrationModal({ open, onOpenChange, onSuccess }: AddIntegr
         return
       }
 
+      // Validate required name field
+      if (!formData.name?.trim()) {
+        toast.error('Please enter a name for this integration')
+        return
+      }
+
+      // Build config object without api_key and name
+      const { api_key, name, ...configFields } = formData
+
       // Handle API key based integrations
       const response = await fetch('/api/settings/integrations', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           integration_type: selectedIntegration.type,
-          integration_name: formData.name || selectedIntegration.name,
-          api_key: formData.api_key,
-          config: {
-            ...formData,
-            api_key: undefined, // Don't duplicate in config
-            name: undefined
-          }
+          integration_name: name,
+          api_key: api_key,
+          config: configFields
         })
       })
 
@@ -533,15 +538,19 @@ export function AddIntegrationModal({ open, onOpenChange, onSuccess }: AddIntegr
                 <>
                   {/* Integration Name */}
                   <div className="space-y-2">
-                    <Label htmlFor="name">Integration Name</Label>
+                    <Label htmlFor="name">
+                      Integration Name
+                      <span className="text-destructive ml-1">*</span>
+                    </Label>
                     <Input
                       id="name"
                       value={formData.name || ''}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       placeholder={`My ${selectedIntegration.name} Integration`}
+                      required
                     />
                     <p className="text-xs text-muted-foreground">
-                      Give this integration a memorable name
+                      Give this integration a unique name (required)
                     </p>
                   </div>
 
