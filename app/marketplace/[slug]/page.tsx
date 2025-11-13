@@ -175,7 +175,7 @@ export default function TemplateDetailsPage() {
         <div className="container mx-auto px-4 py-8">
           <div className="text-center py-12">
             <h2 className="text-2xl font-bold text-white mb-2">Template not found</h2>
-            <p className="text-neutral-400 mb-6">The template you're looking for doesn't exist.</p>
+            <p className="text-neutral-400 mb-6">The template you&apos;re looking for doesn&apos;t exist.</p>
             <Link href="/marketplace">
               <Button>Browse Templates</Button>
             </Link>

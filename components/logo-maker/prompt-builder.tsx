@@ -259,7 +259,7 @@ export function PromptBuilder({
               className="min-h-[80px] resize-none"
             />
             <p className="mt-2 text-xs text-neutral-500">
-              Specify elements you don't want in your logo.
+              Specify elements you don&apos;t want in your logo.
             </p>
           </div>
         )}
