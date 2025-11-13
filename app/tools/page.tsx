@@ -102,7 +102,7 @@ export default function ToolsPage() {
             More Tools Coming Soon
           </h2>
           <p style={{ color: 'var(--conductor-muted-color)' }}>
-            We're continuously adding new developer tools and AI capabilities. Check back regularly for updates.
+            We&apos;re continuously adding new developer tools and AI capabilities. Check back regularly for updates.
           </p>
         </div>
       </div>

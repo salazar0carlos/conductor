@@ -231,7 +231,7 @@ export default function MyTemplatesPage() {
                 {createdTemplates.length === 0 ? (
                   <div className="text-center py-12 border border-neutral-800 rounded-lg">
                     <Package className="w-12 h-12 text-neutral-600 mx-auto mb-4" />
-                    <p className="text-neutral-400 mb-4">You haven't created any templates yet</p>
+                    <p className="text-neutral-400 mb-4">You haven&apos;t created any templates yet</p>
                     <Link href="/marketplace/create">
                       <Button>Create Your First Template</Button>
                     </Link>
@@ -309,7 +309,7 @@ export default function MyTemplatesPage() {
                 {installedTemplates.length === 0 ? (
                   <div className="text-center py-12 border border-neutral-800 rounded-lg">
                     <Download className="w-12 h-12 text-neutral-600 mx-auto mb-4" />
-                    <p className="text-neutral-400 mb-4">You haven't installed any templates yet</p>
+                    <p className="text-neutral-400 mb-4">You haven&apos;t installed any templates yet</p>
                     <Link href="/marketplace">
                       <Button>Browse Templates</Button>
                     </Link>
@@ -337,7 +337,7 @@ export default function MyTemplatesPage() {
                 {favoriteTemplates.length === 0 ? (
                   <div className="text-center py-12 border border-neutral-800 rounded-lg">
                     <Star className="w-12 h-12 text-neutral-600 mx-auto mb-4" />
-                    <p className="text-neutral-400 mb-4">You haven't favorited any templates yet</p>
+                    <p className="text-neutral-400 mb-4">You haven&apos;t favorited any templates yet</p>
                     <Link href="/marketplace">
                       <Button>Browse Templates</Button>
                     </Link>
