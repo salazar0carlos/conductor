@@ -6,6 +6,7 @@ import { Nav } from '@/components/ui/nav'
 import { Button } from '@/components/ui/button'
 import { Palette, Plus, Search, Sparkles, Eye } from 'lucide-react'
 import { getAllTemplates, type DesignTemplate } from '@/lib/design-system'
+import { DesignTrendAgentChat } from '@/components/design-trend-agent-chat'
 
 export default function DesignTemplatesPage() {
   const router = useRouter()
@@ -701,6 +702,16 @@ export default function DesignTemplatesPage() {
           </div>
         </div>
       )}
+
+      {/* Design Trend Agent Chat */}
+      <DesignTrendAgentChat
+        templateId={previewTemplate?.id}
+        currentTemplate={previewTemplate || undefined}
+        onApplyModifications={(modifications) => {
+          console.log('Applying modifications:', modifications)
+          // TODO: Apply modifications to the template
+        }}
+      />
     </div>
   )
 }
