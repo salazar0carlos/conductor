@@ -74,13 +74,18 @@ export async function POST(request: NextRequest) {
 
     if (error) throw error;
 
-    // Log activity
-    await supabase.rpc('log_user_activity', {
-      p_user_id: user.id,
-      p_activity_type: 'integration_added',
-      p_description: `Added ${body.integration_type} integration: ${body.integration_name}`,
-      p_metadata: { integration_id: data.id, integration_type: body.integration_type },
-    });
+    // Log activity (optional - don't fail if logging fails)
+    try {
+      await supabase.rpc('log_user_activity', {
+        p_user_id: user.id,
+        p_activity_type: 'integration_added',
+        p_description: `Added ${body.integration_type} integration: ${body.integration_name}`,
+        p_metadata: { integration_id: data.id, integration_type: body.integration_type },
+      });
+    } catch (logError) {
+      console.error('Failed to log activity:', logError);
+      // Continue anyway - logging is optional
+    }
 
     return apiSuccess(data, 201);
   } catch (error) {
@@ -127,14 +132,19 @@ export async function DELETE(request: NextRequest) {
 
     if (error) throw error;
 
-    // Log activity
+    // Log activity (optional - don't fail if logging fails)
     if (integration) {
-      await supabase.rpc('log_user_activity', {
-        p_user_id: user.id,
-        p_activity_type: 'integration_removed',
-        p_description: `Removed ${integration.integration_type} integration: ${integration.integration_name}`,
-        p_metadata: { integration_id: integrationId },
-      });
+      try {
+        await supabase.rpc('log_user_activity', {
+          p_user_id: user.id,
+          p_activity_type: 'integration_removed',
+          p_description: `Removed ${integration.integration_type} integration: ${integration.integration_name}`,
+          p_metadata: { integration_id: integrationId },
+        });
+      } catch (logError) {
+        console.error('Failed to log activity:', logError);
+        // Continue anyway - logging is optional
+      }
     }
 
     return apiSuccess({ message: 'Integration removed successfully' });
