@@ -5,6 +5,7 @@ import { Nav } from '@/components/ui/nav'
 import { Button } from '@/components/ui/button'
 import { FontSelector } from '@/components/font-selector'
 import { VisualSlider } from '@/components/visual-slider'
+import { AddIntegrationModal } from '@/components/integrations/add-integration-modal'
 import { Settings, User, Palette, Bell, Lock, Code, Loader2, Trash2, Plus, Paintbrush, RefreshCw } from 'lucide-react'
 import { PlatformTheme, defaultPlatformTheme, applyThemeToDocument } from '@/lib/platform-theme'
 
@@ -46,6 +47,7 @@ export default function SettingsPage() {
 
   const [integrations, setIntegrations] = useState<Integration[]>([])
   const [loadingIntegrations, setLoadingIntegrations] = useState(false)
+  const [showAddIntegrationModal, setShowAddIntegrationModal] = useState(false)
 
   const [platformTheme, setPlatformTheme] = useState<PlatformTheme>(defaultPlatformTheme)
   const [themeLoading, setThemeLoading] = useState(false)
@@ -962,7 +964,7 @@ export default function SettingsPage() {
                       Manage external service connections
                     </p>
                   </div>
-                  <Button className="gap-2">
+                  <Button className="gap-2" onClick={() => setShowAddIntegrationModal(true)}>
                     <Plus className="w-4 h-4" />
                     Add Integration
                   </Button>
@@ -979,7 +981,7 @@ export default function SettingsPage() {
                     <p className="text-sm text-neutral-400 mb-4">
                       Connect external services to enhance your workflow
                     </p>
-                    <Button className="gap-2">
+                    <Button className="gap-2" onClick={() => setShowAddIntegrationModal(true)}>
                       <Plus className="w-4 h-4" />
                       Add Integration
                     </Button>
@@ -1160,6 +1162,13 @@ export default function SettingsPage() {
           </div>
         </div>
       </main>
+
+      {/* Add Integration Modal */}
+      <AddIntegrationModal
+        open={showAddIntegrationModal}
+        onOpenChange={setShowAddIntegrationModal}
+        onSuccess={fetchIntegrations}
+      />
     </div>
   )
 }
