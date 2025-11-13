@@ -8,16 +8,19 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import type { Database, AIProviderStats } from '@/types'
 
-const supabase = createClient<Database>(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+function getSupabaseClient() {
+  return createClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+}
 
 /**
  * GET /api/ai/providers
  * List all providers with statistics
  */
 export async function GET(request: Request) {
+  const supabase = getSupabaseClient()
   try {
     const { searchParams } = new URL(request.url)
     const category = searchParams.get('category')
@@ -171,6 +174,7 @@ export async function GET(request: Request) {
  * Create or update provider configuration
  */
 export async function POST(request: Request) {
+  const supabase = getSupabaseClient()
   try {
     const body = await request.json()
     const {

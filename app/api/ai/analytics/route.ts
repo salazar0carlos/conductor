@@ -7,16 +7,19 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import type { Database, AIUsageAnalytics } from '@/types'
 
-const supabase = createClient<Database>(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+function getSupabaseClient() {
+  return createClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+}
 
 /**
  * GET /api/ai/analytics
  * Get usage analytics with various aggregations
  */
 export async function GET(request: Request) {
+  const supabase = getSupabaseClient()
   try {
     const { searchParams } = new URL(request.url)
     const userId = searchParams.get('user_id')

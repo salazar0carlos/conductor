@@ -23,12 +23,6 @@ import {
   type AIProviderMessage,
 } from './providers/base-provider'
 
-// Supabase client
-const supabase = createClient<Database>(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
-
 /**
  * Router configuration
  */
@@ -60,6 +54,16 @@ export class AIModelRouter {
   constructor(config?: Partial<RouterConfig>) {
     this.config = { ...DEFAULT_CONFIG, ...config }
     this.responseCache = new Map()
+  }
+
+  /**
+   * Get Supabase client instance
+   */
+  private getSupabaseClient() {
+    return createClient<Database>(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    )
   }
 
   /**
@@ -361,6 +365,7 @@ export class AIModelRouter {
     provider: AIProvider,
     config: AIProviderConfig
   ): Promise<void> {
+    const supabase = this.getSupabaseClient()
     // Estimate token usage (rough estimate)
     const estimatedInputTokens = this.estimateTokens(
       request.prompt || request.messages?.map((m) => m.content).join(' ') || ''
@@ -412,6 +417,7 @@ export class AIModelRouter {
     cost: number,
     providerId: string
   ): Promise<void> {
+    const supabase = this.getSupabaseClient()
     const today = new Date().toISOString().split('T')[0]
     const monthStart = new Date()
     monthStart.setDate(1)
@@ -438,6 +444,7 @@ export class AIModelRouter {
     wasFallback: boolean,
     errorMessage?: string
   ): Promise<void> {
+    const supabase = this.getSupabaseClient()
     try {
       await supabase.from('ai_usage_logs').insert({
         user_id: request.user_id || null,
@@ -465,6 +472,7 @@ export class AIModelRouter {
    * Check provider health
    */
   private async checkProviderHealth(providerId: string): Promise<boolean> {
+    const supabase = this.getSupabaseClient()
     const { data } = await supabase
       .from('ai_provider_health')
       .select('*')
@@ -485,6 +493,7 @@ export class AIModelRouter {
     success: boolean,
     error?: Error
   ): Promise<void> {
+    const supabase = this.getSupabaseClient()
     const { data: health } = await supabase
       .from('ai_provider_health')
       .select('*')
@@ -527,6 +536,7 @@ export class AIModelRouter {
    * Helper: Get model by ID
    */
   private async getModel(modelId: string): Promise<AIModel> {
+    const supabase = this.getSupabaseClient()
     const { data, error } = await supabase
       .from('ai_models')
       .select('*')
@@ -544,6 +554,7 @@ export class AIModelRouter {
    * Helper: Get provider by ID
    */
   private async getProvider(providerId: string): Promise<AIProvider> {
+    const supabase = this.getSupabaseClient()
     const { data, error } = await supabase
       .from('ai_providers')
       .select('*')
@@ -565,6 +576,7 @@ export class AIModelRouter {
     userId?: string,
     projectId?: string
   ): Promise<AIProviderConfig> {
+    const supabase = this.getSupabaseClient()
     let query = supabase
       .from('ai_provider_configs')
       .select('*')
@@ -595,6 +607,7 @@ export class AIModelRouter {
     userId?: string,
     projectId?: string
   ): Promise<AIModelPreference | null> {
+    const supabase = this.getSupabaseClient()
     let query = supabase
       .from('ai_model_preferences')
       .select('*')
@@ -623,6 +636,7 @@ export class AIModelRouter {
     provider: AIProvider
     config: AIProviderConfig
   }> {
+    const supabase = this.getSupabaseClient()
     // Get all active text models
     const { data: models } = await supabase
       .from('ai_models')
