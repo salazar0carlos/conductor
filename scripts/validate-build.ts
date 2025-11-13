@@ -173,6 +173,35 @@ function scanFile(filePath: string): void {
 }
 
 /**
+ * Check that all API routes have dynamic export
+ * This prevents Next.js from trying to statically generate them at build time
+ */
+function checkApiRoutes(files: string[]): void {
+  const apiRoutes = files.filter(f => f.includes('/app/api/') && f.endsWith('/route.ts'))
+
+  for (const file of apiRoutes) {
+    try {
+      const content = readFileSync(file, 'utf-8')
+
+      // Check if file has the required dynamic export
+      const hasDynamicExport = /export\s+const\s+dynamic\s*=\s*['"]force-dynamic['"]/.test(content)
+
+      if (!hasDynamicExport) {
+        errors.push({
+          file,
+          line: 1,
+          pattern: 'missing-dynamic-export',
+          message: 'API route missing "export const dynamic = \'force-dynamic\'". This prevents Next.js static generation errors.',
+          severity: 'error',
+        })
+      }
+    } catch (err) {
+      // Ignore files we can't read
+    }
+  }
+}
+
+/**
  * Main validation function
  */
 function validateBuild(): void {
@@ -193,6 +222,9 @@ function validateBuild(): void {
   for (const file of files) {
     scanFile(file)
   }
+
+  // Special check: API routes must have dynamic export
+  checkApiRoutes(files)
 
   const duration = Date.now() - startTime
 
