@@ -118,3 +118,19 @@ export const DialogDescription = forwardRef<HTMLParagraphElement, DialogDescript
 )
 
 DialogDescription.displayName = 'DialogDescription'
+
+type DialogFooterProps = HTMLAttributes<HTMLDivElement>
+
+export const DialogFooter = forwardRef<HTMLDivElement, DialogFooterProps>(
+  ({ className = '', ...props }, ref) => {
+    return (
+      <div
+        ref={ref}
+        className={`mt-6 flex items-center justify-end gap-3 ${className}`}
+        {...props}
+      />
+    )
+  }
+)
+
+DialogFooter.displayName = 'DialogFooter'

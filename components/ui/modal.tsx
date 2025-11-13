@@ -10,7 +10,7 @@ interface ModalProps {
   fullHeight?: boolean
 }
 
-export function Dialog({ isOpen, onClose, children, maxWidth = '600px', fullHeight = false }: ModalProps) {
+export function Modal({ isOpen, onClose, children, maxWidth = '600px', fullHeight = false }: ModalProps) {
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden'
@@ -60,3 +60,6 @@ export function Dialog({ isOpen, onClose, children, maxWidth = '600px', fullHeig
     </div>
   )
 }
+
+// Alias for backwards compatibility
+export const Dialog = Modal
