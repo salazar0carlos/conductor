@@ -13,6 +13,7 @@ export default function DesignTemplatesPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const [previewTemplate, setPreviewTemplate] = useState<DesignTemplate | null>(null)
+  const [modifiedTemplate, setModifiedTemplate] = useState<Partial<DesignTemplate> | null>(null)
 
   const templates = getAllTemplates()
   const categories = ['all', 'minimal', 'bold', 'glassmorphic', 'landing', 'enterprise']
@@ -27,6 +28,56 @@ export default function DesignTemplatesPage() {
 
     return matchesSearch && matchesCategory
   })
+
+  // Apply modifications to template
+  const handleApplyModifications = (modifications: any) => {
+    if (!previewTemplate) return
+
+    // Deep merge modifications into the template
+    const updatedTemplate = { ...previewTemplate }
+
+    // Apply theme modifications
+    if (modifications.theme) {
+      if (modifications.theme.light) {
+        updatedTemplate.theme.light = {
+          ...updatedTemplate.theme.light,
+          ...modifications.theme.light,
+        }
+      }
+      if (modifications.theme.dark) {
+        updatedTemplate.theme.dark = {
+          ...updatedTemplate.theme.dark,
+          ...modifications.theme.dark,
+        }
+      }
+      if (modifications.theme.typography) {
+        updatedTemplate.theme.typography = {
+          ...updatedTemplate.theme.typography,
+          ...modifications.theme.typography,
+        }
+      }
+      if (modifications.theme.spacing) {
+        updatedTemplate.theme.spacing = {
+          ...updatedTemplate.theme.spacing,
+          ...modifications.theme.spacing,
+        }
+      }
+    }
+
+    // Apply component-level modifications
+    if (modifications.components) {
+      updatedTemplate.components = {
+        ...updatedTemplate.components,
+        ...modifications.components,
+      }
+    }
+
+    // Update both preview and modified template states
+    setPreviewTemplate(updatedTemplate)
+    setModifiedTemplate(modifications)
+
+    console.log('Successfully applied modifications:', modifications)
+  }
 
   return (
     <div className="min-h-screen bg-neutral-950">
@@ -707,10 +758,7 @@ export default function DesignTemplatesPage() {
       <DesignTrendAgentChat
         templateId={previewTemplate?.id}
         currentTemplate={previewTemplate || undefined}
-        onApplyModifications={(modifications) => {
-          console.log('Applying modifications:', modifications)
-          // TODO: Apply modifications to the template
-        }}
+        onApplyModifications={handleApplyModifications}
       />
     </div>
   )

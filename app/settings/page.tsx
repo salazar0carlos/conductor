@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react'
 import { Nav } from '@/components/ui/nav'
 import { Button } from '@/components/ui/button'
+import { FontSelector } from '@/components/font-selector'
+import { VisualSlider } from '@/components/visual-slider'
 import { Settings, User, Palette, Bell, Lock, Code, Loader2, Trash2, Plus, Paintbrush, RefreshCw } from 'lucide-react'
 import { PlatformTheme, defaultPlatformTheme, applyThemeToDocument } from '@/lib/platform-theme'
 
@@ -369,46 +371,61 @@ export default function SettingsPage() {
                   <div className="grid md:grid-cols-2 gap-4">
                     {Object.entries(platformTheme.typography).map(([key, value]) => (
                       <div key={key}>
-                        <label className="block text-sm font-medium text-white mb-2 capitalize">
-                          {key.replace(/([A-Z])/g, ' $1')}
-                        </label>
-                        {key.includes('Color') ? (
-                          <div className="flex gap-2">
-                            <input
-                              type="color"
-                              value={value}
-                              onChange={(e) =>
-                                setPlatformTheme({
-                                  ...platformTheme,
-                                  typography: { ...platformTheme.typography, [key]: e.target.value },
-                                })
-                              }
-                              className="w-12 h-10 rounded border border-neutral-600"
-                            />
-                            <input
-                              type="text"
-                              value={value}
-                              onChange={(e) =>
-                                setPlatformTheme({
-                                  ...platformTheme,
-                                  typography: { ...platformTheme.typography, [key]: e.target.value },
-                                })
-                              }
-                              className="flex-1 px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
-                            />
-                          </div>
-                        ) : (
-                          <input
-                            type="text"
+                        {key === 'titleFont' || key === 'bodyFont' ? (
+                          <FontSelector
+                            label={key.replace(/([A-Z])/g, ' $1')}
                             value={value}
-                            onChange={(e) =>
+                            onChange={(newValue) =>
                               setPlatformTheme({
                                 ...platformTheme,
-                                typography: { ...platformTheme.typography, [key]: e.target.value },
+                                typography: { ...platformTheme.typography, [key]: newValue },
                               })
                             }
-                            className="w-full px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
                           />
+                        ) : (
+                          <>
+                            <label className="block text-sm font-medium text-white mb-2 capitalize">
+                              {key.replace(/([A-Z])/g, ' $1')}
+                            </label>
+                            {key.includes('Color') ? (
+                              <div className="flex gap-2">
+                                <input
+                                  type="color"
+                                  value={value}
+                                  onChange={(e) =>
+                                    setPlatformTheme({
+                                      ...platformTheme,
+                                      typography: { ...platformTheme.typography, [key]: e.target.value },
+                                    })
+                                  }
+                                  className="w-12 h-10 rounded border border-neutral-600"
+                                />
+                                <input
+                                  type="text"
+                                  value={value}
+                                  onChange={(e) =>
+                                    setPlatformTheme({
+                                      ...platformTheme,
+                                      typography: { ...platformTheme.typography, [key]: e.target.value },
+                                    })
+                                  }
+                                  className="flex-1 px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
+                                />
+                              </div>
+                            ) : (
+                              <input
+                                type="text"
+                                value={value}
+                                onChange={(e) =>
+                                  setPlatformTheme({
+                                    ...platformTheme,
+                                    typography: { ...platformTheme.typography, [key]: e.target.value },
+                                  })
+                                }
+                                className="w-full px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
+                              />
+                            )}
+                          </>
                         )}
                       </div>
                     ))}
@@ -465,46 +482,81 @@ export default function SettingsPage() {
                   <div className="grid md:grid-cols-2 gap-4">
                     {Object.entries(platformTheme.buttons).map(([key, value]) => (
                       <div key={key}>
-                        <label className="block text-sm font-medium text-white mb-2 capitalize">
-                          {key.replace(/([A-Z])/g, ' $1')}
-                        </label>
-                        {key.includes('Bg') || key.includes('Text') || key.includes('Border') || key.includes('Color') ? (
-                          <div className="flex gap-2">
-                            <input
-                              type="color"
-                              value={value}
-                              onChange={(e) =>
-                                setPlatformTheme({
-                                  ...platformTheme,
-                                  buttons: { ...platformTheme.buttons, [key]: e.target.value },
-                                })
-                              }
-                              className="w-12 h-10 rounded border border-neutral-600"
-                            />
-                            <input
-                              type="text"
-                              value={value}
-                              onChange={(e) =>
-                                setPlatformTheme({
-                                  ...platformTheme,
-                                  buttons: { ...platformTheme.buttons, [key]: e.target.value },
-                                })
-                              }
-                              className="flex-1 px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
-                            />
-                          </div>
-                        ) : (
-                          <input
-                            type="text"
+                        {key === 'borderRadius' ? (
+                          <VisualSlider
+                            label={key.replace(/([A-Z])/g, ' $1')}
                             value={value}
-                            onChange={(e) =>
+                            onChange={(newValue) =>
                               setPlatformTheme({
                                 ...platformTheme,
-                                buttons: { ...platformTheme.buttons, [key]: e.target.value },
+                                buttons: { ...platformTheme.buttons, [key]: newValue },
                               })
                             }
-                            className="w-full px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
+                            min={0}
+                            max={2}
+                            step={0.125}
+                            unit="rem"
+                            helpText="0rem = sharp corners, 2rem = very rounded"
                           />
+                        ) : key === 'borderWidth' ? (
+                          <VisualSlider
+                            label={key.replace(/([A-Z])/g, ' $1')}
+                            value={value}
+                            onChange={(newValue) =>
+                              setPlatformTheme({
+                                ...platformTheme,
+                                buttons: { ...platformTheme.buttons, [key]: newValue },
+                              })
+                            }
+                            min={0}
+                            max={4}
+                            step={1}
+                            unit="px"
+                          />
+                        ) : (
+                          <>
+                            <label className="block text-sm font-medium text-white mb-2 capitalize">
+                              {key.replace(/([A-Z])/g, ' $1')}
+                            </label>
+                            {key.includes('Bg') || key.includes('Text') || key.includes('Border') || key.includes('Color') ? (
+                              <div className="flex gap-2">
+                                <input
+                                  type="color"
+                                  value={value}
+                                  onChange={(e) =>
+                                    setPlatformTheme({
+                                      ...platformTheme,
+                                      buttons: { ...platformTheme.buttons, [key]: e.target.value },
+                                    })
+                                  }
+                                  className="w-12 h-10 rounded border border-neutral-600"
+                                />
+                                <input
+                                  type="text"
+                                  value={value}
+                                  onChange={(e) =>
+                                    setPlatformTheme({
+                                      ...platformTheme,
+                                      buttons: { ...platformTheme.buttons, [key]: e.target.value },
+                                    })
+                                  }
+                                  className="flex-1 px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
+                                />
+                              </div>
+                            ) : (
+                              <input
+                                type="text"
+                                value={value}
+                                onChange={(e) =>
+                                  setPlatformTheme({
+                                    ...platformTheme,
+                                    buttons: { ...platformTheme.buttons, [key]: e.target.value },
+                                  })
+                                }
+                                className="w-full px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
+                              />
+                            )}
+                          </>
                         )}
                       </div>
                     ))}
@@ -520,46 +572,97 @@ export default function SettingsPage() {
                   <div className="grid md:grid-cols-2 gap-4">
                     {Object.entries(platformTheme.cards).map(([key, value]) => (
                       <div key={key}>
-                        <label className="block text-sm font-medium text-white mb-2 capitalize">
-                          {key.replace(/([A-Z])/g, ' $1')}
-                        </label>
-                        {key.includes('Color') || key === 'background' || key === 'border' ? (
-                          <div className="flex gap-2">
-                            <input
-                              type="color"
-                              value={value}
-                              onChange={(e) =>
-                                setPlatformTheme({
-                                  ...platformTheme,
-                                  cards: { ...platformTheme.cards, [key]: e.target.value },
-                                })
-                              }
-                              className="w-12 h-10 rounded border border-neutral-600"
-                            />
-                            <input
-                              type="text"
-                              value={value}
-                              onChange={(e) =>
-                                setPlatformTheme({
-                                  ...platformTheme,
-                                  cards: { ...platformTheme.cards, [key]: e.target.value },
-                                })
-                              }
-                              className="flex-1 px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
-                            />
-                          </div>
-                        ) : (
-                          <input
-                            type="text"
+                        {key === 'borderRadius' ? (
+                          <VisualSlider
+                            label={key.replace(/([A-Z])/g, ' $1')}
                             value={value}
-                            onChange={(e) =>
+                            onChange={(newValue) =>
                               setPlatformTheme({
                                 ...platformTheme,
-                                cards: { ...platformTheme.cards, [key]: e.target.value },
+                                cards: { ...platformTheme.cards, [key]: newValue },
                               })
                             }
-                            className="w-full px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
+                            min={0}
+                            max={2}
+                            step={0.125}
+                            unit="rem"
+                            helpText="0rem = sharp, 2rem = very rounded"
                           />
+                        ) : key === 'borderWidth' ? (
+                          <VisualSlider
+                            label={key.replace(/([A-Z])/g, ' $1')}
+                            value={value}
+                            onChange={(newValue) =>
+                              setPlatformTheme({
+                                ...platformTheme,
+                                cards: { ...platformTheme.cards, [key]: newValue },
+                              })
+                            }
+                            min={0}
+                            max={4}
+                            step={1}
+                            unit="px"
+                          />
+                        ) : key === 'padding' ? (
+                          <VisualSlider
+                            label={key.replace(/([A-Z])/g, ' $1')}
+                            value={value}
+                            onChange={(newValue) =>
+                              setPlatformTheme({
+                                ...platformTheme,
+                                cards: { ...platformTheme.cards, [key]: newValue },
+                              })
+                            }
+                            min={0.5}
+                            max={4}
+                            step={0.25}
+                            unit="rem"
+                            helpText="Card inner spacing"
+                          />
+                        ) : (
+                          <>
+                            <label className="block text-sm font-medium text-white mb-2 capitalize">
+                              {key.replace(/([A-Z])/g, ' $1')}
+                            </label>
+                            {key.includes('Color') || key === 'background' || key === 'border' ? (
+                              <div className="flex gap-2">
+                                <input
+                                  type="color"
+                                  value={value}
+                                  onChange={(e) =>
+                                    setPlatformTheme({
+                                      ...platformTheme,
+                                      cards: { ...platformTheme.cards, [key]: e.target.value },
+                                    })
+                                  }
+                                  className="w-12 h-10 rounded border border-neutral-600"
+                                />
+                                <input
+                                  type="text"
+                                  value={value}
+                                  onChange={(e) =>
+                                    setPlatformTheme({
+                                      ...platformTheme,
+                                      cards: { ...platformTheme.cards, [key]: e.target.value },
+                                    })
+                                  }
+                                  className="flex-1 px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
+                                />
+                              </div>
+                            ) : (
+                              <input
+                                type="text"
+                                value={value}
+                                onChange={(e) =>
+                                  setPlatformTheme({
+                                    ...platformTheme,
+                                    cards: { ...platformTheme.cards, [key]: e.target.value },
+                                  })
+                                }
+                                className="w-full px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
+                              />
+                            )}
+                          </>
                         )}
                       </div>
                     ))}
@@ -575,46 +678,80 @@ export default function SettingsPage() {
                   <div className="grid md:grid-cols-2 gap-4">
                     {Object.entries(platformTheme.inputs).map(([key, value]) => (
                       <div key={key}>
-                        <label className="block text-sm font-medium text-white mb-2 capitalize">
-                          {key.replace(/([A-Z])/g, ' $1')}
-                        </label>
-                        {key.includes('Color') || key === 'background' || key === 'border' || key === 'text' || key === 'placeholder' || key.includes('Border') ? (
-                          <div className="flex gap-2">
-                            <input
-                              type="color"
-                              value={value.startsWith('0 ') ? '#3b82f6' : value}
-                              onChange={(e) =>
-                                setPlatformTheme({
-                                  ...platformTheme,
-                                  inputs: { ...platformTheme.inputs, [key]: e.target.value },
-                                })
-                              }
-                              className="w-12 h-10 rounded border border-neutral-600"
-                            />
-                            <input
-                              type="text"
-                              value={value}
-                              onChange={(e) =>
-                                setPlatformTheme({
-                                  ...platformTheme,
-                                  inputs: { ...platformTheme.inputs, [key]: e.target.value },
-                                })
-                              }
-                              className="flex-1 px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
-                            />
-                          </div>
-                        ) : (
-                          <input
-                            type="text"
+                        {key === 'borderRadius' ? (
+                          <VisualSlider
+                            label={key.replace(/([A-Z])/g, ' $1')}
                             value={value}
-                            onChange={(e) =>
+                            onChange={(newValue) =>
                               setPlatformTheme({
                                 ...platformTheme,
-                                inputs: { ...platformTheme.inputs, [key]: e.target.value },
+                                inputs: { ...platformTheme.inputs, [key]: newValue },
                               })
                             }
-                            className="w-full px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
+                            min={0}
+                            max={1.5}
+                            step={0.125}
+                            unit="rem"
                           />
+                        ) : key === 'borderWidth' ? (
+                          <VisualSlider
+                            label={key.replace(/([A-Z])/g, ' $1')}
+                            value={value}
+                            onChange={(newValue) =>
+                              setPlatformTheme({
+                                ...platformTheme,
+                                inputs: { ...platformTheme.inputs, [key]: newValue },
+                              })
+                            }
+                            min={0}
+                            max={4}
+                            step={1}
+                            unit="px"
+                          />
+                        ) : (
+                          <>
+                            <label className="block text-sm font-medium text-white mb-2 capitalize">
+                              {key.replace(/([A-Z])/g, ' $1')}
+                            </label>
+                            {key.includes('Color') || key === 'background' || key === 'border' || key === 'text' || key === 'placeholder' || key.includes('Border') ? (
+                              <div className="flex gap-2">
+                                <input
+                                  type="color"
+                                  value={value.startsWith('0 ') ? '#3b82f6' : value}
+                                  onChange={(e) =>
+                                    setPlatformTheme({
+                                      ...platformTheme,
+                                      inputs: { ...platformTheme.inputs, [key]: e.target.value },
+                                    })
+                                  }
+                                  className="w-12 h-10 rounded border border-neutral-600"
+                                />
+                                <input
+                                  type="text"
+                                  value={value}
+                                  onChange={(e) =>
+                                    setPlatformTheme({
+                                      ...platformTheme,
+                                      inputs: { ...platformTheme.inputs, [key]: e.target.value },
+                                    })
+                                  }
+                                  className="flex-1 px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
+                                />
+                              </div>
+                            ) : (
+                              <input
+                                type="text"
+                                value={value}
+                                onChange={(e) =>
+                                  setPlatformTheme({
+                                    ...platformTheme,
+                                    inputs: { ...platformTheme.inputs, [key]: e.target.value },
+                                  })
+                                }
+                                className="w-full px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
+                              />
+                            )}
+                          </>
                         )}
                       </div>
                     ))}
@@ -713,46 +850,82 @@ export default function SettingsPage() {
                   <div className="grid md:grid-cols-2 gap-4">
                     {Object.entries(platformTheme.layout).map(([key, value]) => (
                       <div key={key}>
-                        <label className="block text-sm font-medium text-white mb-2 capitalize">
-                          {key.replace(/([A-Z])/g, ' $1')}
-                        </label>
-                        {key.includes('Color') || key === 'pageBackground' ? (
-                          <div className="flex gap-2">
-                            <input
-                              type="color"
-                              value={value}
-                              onChange={(e) =>
-                                setPlatformTheme({
-                                  ...platformTheme,
-                                  layout: { ...platformTheme.layout, [key]: e.target.value },
-                                })
-                              }
-                              className="w-12 h-10 rounded border border-neutral-600"
-                            />
-                            <input
-                              type="text"
-                              value={value}
-                              onChange={(e) =>
-                                setPlatformTheme({
-                                  ...platformTheme,
-                                  layout: { ...platformTheme.layout, [key]: e.target.value },
-                                })
-                              }
-                              className="flex-1 px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
-                            />
-                          </div>
-                        ) : (
-                          <input
-                            type="text"
+                        {key === 'borderRadius' ? (
+                          <VisualSlider
+                            label={key.replace(/([A-Z])/g, ' $1')}
                             value={value}
-                            onChange={(e) =>
+                            onChange={(newValue) =>
                               setPlatformTheme({
                                 ...platformTheme,
-                                layout: { ...platformTheme.layout, [key]: e.target.value },
+                                layout: { ...platformTheme.layout, [key]: newValue },
                               })
                             }
-                            className="w-full px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
+                            min={0}
+                            max={2}
+                            step={0.125}
+                            unit="rem"
+                            helpText="Default border radius for components"
                           />
+                        ) : key === 'spacing' ? (
+                          <VisualSlider
+                            label={key.replace(/([A-Z])/g, ' $1')}
+                            value={value}
+                            onChange={(newValue) =>
+                              setPlatformTheme({
+                                ...platformTheme,
+                                layout: { ...platformTheme.layout, [key]: newValue },
+                              })
+                            }
+                            min={0.5}
+                            max={4}
+                            step={0.25}
+                            unit="rem"
+                            helpText="Default spacing between elements"
+                          />
+                        ) : (
+                          <>
+                            <label className="block text-sm font-medium text-white mb-2 capitalize">
+                              {key.replace(/([A-Z])/g, ' $1')}
+                            </label>
+                            {key.includes('Color') || key === 'pageBackground' ? (
+                              <div className="flex gap-2">
+                                <input
+                                  type="color"
+                                  value={value}
+                                  onChange={(e) =>
+                                    setPlatformTheme({
+                                      ...platformTheme,
+                                      layout: { ...platformTheme.layout, [key]: e.target.value },
+                                    })
+                                  }
+                                  className="w-12 h-10 rounded border border-neutral-600"
+                                />
+                                <input
+                                  type="text"
+                                  value={value}
+                                  onChange={(e) =>
+                                    setPlatformTheme({
+                                      ...platformTheme,
+                                      layout: { ...platformTheme.layout, [key]: e.target.value },
+                                    })
+                                  }
+                                  className="flex-1 px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
+                                />
+                              </div>
+                            ) : (
+                              <input
+                                type="text"
+                                value={value}
+                                onChange={(e) =>
+                                  setPlatformTheme({
+                                    ...platformTheme,
+                                    layout: { ...platformTheme.layout, [key]: e.target.value },
+                                  })
+                                }
+                                className="w-full px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
+                              />
+                            )}
+                          </>
                         )}
                       </div>
                     ))}
