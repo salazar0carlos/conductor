@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Nav from '@/components/ui/nav'
 import { FileItem, Folder, StorageStats, AssetCollection } from '@/types/file-manager'
 import { FileBrowser } from '@/components/file-manager/file-browser'
 import { UploadZone } from '@/components/file-manager/upload-zone'
@@ -16,9 +17,7 @@ import {
   Sparkles,
   BarChart3,
   Palette,
-  Layout,
   Upload,
-  Search
 } from 'lucide-react'
 import { toast } from 'sonner'
 
@@ -267,14 +266,15 @@ export default function FileManagerPage() {
   }
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen bg-neutral-950">
+      <Nav />
       {/* Header */}
-      <div className="border-b p-4">
+      <div className="border-b border-neutral-800 p-4 bg-neutral-900">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-3xl font-bold mb-2">File Manager</h1>
-              <p className="text-sm opacity-75">
+              <h1 className="text-3xl font-bold text-white mb-2">File Manager</h1>
+              <p className="text-sm text-neutral-400">
                 Manage your files, assets, and media library
               </p>
             </div>
@@ -284,11 +284,16 @@ export default function FileManagerPage() {
                 variant="outline"
                 size="sm"
                 onClick={handleCreateFolder}
+                className="border-neutral-700 text-neutral-300 hover:bg-neutral-800"
               >
                 <FolderPlus size={16} />
                 New Folder
               </Button>
-              <Button size="sm" onClick={() => setShowUpload(true)}>
+              <Button
+                size="sm"
+                onClick={() => setShowUpload(true)}
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+              >
                 <Upload size={16} />
                 Upload
               </Button>
@@ -298,21 +303,21 @@ export default function FileManagerPage() {
           {/* Stats Bar */}
           {stats && (
             <div className="flex gap-4 text-sm">
-              <div className="flex items-center gap-2 px-3 py-2 rounded-lg" style={{ backgroundColor: 'var(--conductor-button-secondary-bg)' }}>
-                <Files size={16} />
-                <span className="font-medium">{stats.file_count} files</span>
+              <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-neutral-800 border border-neutral-700">
+                <Files size={16} className="text-neutral-400" />
+                <span className="font-medium text-white">{stats.file_count} files</span>
               </div>
-              <div className="flex items-center gap-2 px-3 py-2 rounded-lg" style={{ backgroundColor: 'var(--conductor-button-secondary-bg)' }}>
-                <FolderPlus size={16} />
-                <span className="font-medium">{stats.folder_count} folders</span>
+              <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-neutral-800 border border-neutral-700">
+                <FolderPlus size={16} className="text-neutral-400" />
+                <span className="font-medium text-white">{stats.folder_count} folders</span>
               </div>
-              <div className="flex items-center gap-2 px-3 py-2 rounded-lg" style={{ backgroundColor: 'var(--conductor-button-secondary-bg)' }}>
-                <BarChart3 size={16} />
-                <span className="font-medium">{formatFileSize(stats.used_storage)} used</span>
+              <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-neutral-800 border border-neutral-700">
+                <BarChart3 size={16} className="text-neutral-400" />
+                <span className="font-medium text-white">{formatFileSize(stats.used_storage)} used</span>
               </div>
-              <div className="flex items-center gap-2 px-3 py-2 rounded-lg" style={{ backgroundColor: 'var(--conductor-button-secondary-bg)' }}>
-                <Sparkles size={16} />
-                <span className="font-medium">{stats.recent_uploads} recent uploads</span>
+              <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-neutral-800 border border-neutral-700">
+                <Sparkles size={16} className="text-neutral-400" />
+                <span className="font-medium text-white">{stats.recent_uploads} recent uploads</span>
               </div>
             </div>
           )}
@@ -322,13 +327,10 @@ export default function FileManagerPage() {
             <button
               onClick={() => setViewMode('files')}
               className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
-                viewMode === 'files' ? 'opacity-100' : 'opacity-50'
+                viewMode === 'files'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-neutral-800 text-neutral-400 hover:text-white border border-neutral-700'
               }`}
-              style={{
-                backgroundColor: viewMode === 'files'
-                  ? 'var(--conductor-button-primary-bg)'
-                  : 'var(--conductor-button-secondary-bg)'
-              }}
             >
               <Files size={16} />
               Files
@@ -336,13 +338,10 @@ export default function FileManagerPage() {
             <button
               onClick={() => setViewMode('assets')}
               className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
-                viewMode === 'assets' ? 'opacity-100' : 'opacity-50'
+                viewMode === 'assets'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-neutral-800 text-neutral-400 hover:text-white border border-neutral-700'
               }`}
-              style={{
-                backgroundColor: viewMode === 'assets'
-                  ? 'var(--conductor-button-primary-bg)'
-                  : 'var(--conductor-button-secondary-bg)'
-              }}
             >
               <Palette size={16} />
               Asset Library
@@ -350,13 +349,10 @@ export default function FileManagerPage() {
             <button
               onClick={() => setViewMode('analytics')}
               className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
-                viewMode === 'analytics' ? 'opacity-100' : 'opacity-50'
+                viewMode === 'analytics'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-neutral-800 text-neutral-400 hover:text-white border border-neutral-700'
               }`}
-              style={{
-                backgroundColor: viewMode === 'analytics'
-                  ? 'var(--conductor-button-primary-bg)'
-                  : 'var(--conductor-button-secondary-bg)'
-              }}
             >
               <BarChart3 size={16} />
               Analytics
@@ -394,18 +390,17 @@ export default function FileManagerPage() {
 
           {viewMode === 'analytics' && stats && (
             <div className="p-6">
-              <h2 className="text-2xl font-bold mb-6">Storage Analytics</h2>
+              <h2 className="text-2xl font-bold text-white mb-6">Storage Analytics</h2>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
                 {Object.entries(stats.storage_by_type).map(([type, size]) => (
                   <div
                     key={type}
-                    className="p-4 rounded-lg border"
-                    style={{ borderColor: 'var(--conductor-button-secondary-border)' }}
+                    className="p-4 rounded-lg border border-neutral-800 bg-neutral-900/50"
                   >
-                    <div className="text-sm opacity-75 mb-1">{type}</div>
-                    <div className="text-2xl font-bold">{formatFileSize(size)}</div>
-                    <div className="text-xs opacity-50 mt-1">
+                    <div className="text-sm text-neutral-400 mb-1">{type}</div>
+                    <div className="text-2xl font-bold text-white">{formatFileSize(size)}</div>
+                    <div className="text-xs text-neutral-500 mt-1">
                       {Math.round((size / stats.total_storage) * 100)}% of total
                     </div>
                   </div>
@@ -414,7 +409,7 @@ export default function FileManagerPage() {
 
               {stats.trending_files.length > 0 && (
                 <div>
-                  <h3 className="text-xl font-bold mb-4">Recent Files</h3>
+                  <h3 className="text-xl font-bold text-white mb-4">Recent Files</h3>
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                     {stats.trending_files.map((file) => (
                       <div
@@ -423,8 +418,7 @@ export default function FileManagerPage() {
                         className="cursor-pointer group"
                       >
                         <div
-                          className="aspect-square rounded-lg border-2 relative overflow-hidden transition-transform hover:scale-105"
-                          style={{ borderColor: 'var(--conductor-button-secondary-border)' }}
+                          className="aspect-square rounded-lg border-2 border-neutral-800 relative overflow-hidden transition-transform hover:scale-105"
                         >
                           {file.thumbnail_url ? (
                             <img
@@ -433,12 +427,12 @@ export default function FileManagerPage() {
                               className="w-full h-full object-cover"
                             />
                           ) : (
-                            <div className="w-full h-full flex items-center justify-center text-4xl">
+                            <div className="w-full h-full flex items-center justify-center text-4xl bg-neutral-900">
                               📄
                             </div>
                           )}
                         </div>
-                        <div className="mt-2 text-sm font-medium truncate">{file.name}</div>
+                        <div className="mt-2 text-sm font-medium text-white truncate">{file.name}</div>
                       </div>
                     ))}
                   </div>

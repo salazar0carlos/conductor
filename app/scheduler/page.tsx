@@ -7,12 +7,13 @@ import {
   List,
   Activity,
   RefreshCw,
-  Settings,
   TrendingUp,
   Clock,
   CheckCircle,
   XCircle,
 } from 'lucide-react'
+import { DashboardLayout, ContentSection } from '@/components/layouts'
+import { StatCard } from '@/components/ui/stat-card'
 import { ScheduledJob, JobExecution } from '@/types'
 import { JobList } from '@/components/scheduler/job-list'
 import { JobForm } from '@/components/scheduler/job-form'
@@ -199,136 +200,52 @@ export default function SchedulerPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <RefreshCw className="w-8 h-8 animate-spin text-blue-600" />
-      </div>
+      <DashboardLayout>
+        <div className="flex items-center justify-center py-12">
+          <RefreshCw className="w-8 h-8 animate-spin text-blue-500" />
+        </div>
+      </DashboardLayout>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">Job Scheduler</h1>
-              <p className="text-gray-600 mt-1">
-                Manage and monitor scheduled jobs with advanced cron capabilities
-              </p>
-            </div>
-            <button
-              onClick={() => {
-                setEditingJob(null)
-                setShowJobForm(true)
-              }}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
-            >
-              <Plus className="w-5 h-5" />
-              Create Job
-            </button>
-          </div>
-        </div>
-      </div>
-
+    <DashboardLayout
+      title="Job Scheduler"
+      subtitle="Manage and monitor scheduled jobs with advanced cron capabilities"
+      headerActions={
+        <button
+          onClick={() => {
+            setEditingJob(null)
+            setShowJobForm(true)
+          }}
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+        >
+          <Plus className="w-5 h-5" />
+          Create Job
+        </button>
+      }
+    >
       {/* Stats Dashboard */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
-          <div className="bg-white p-6 rounded-lg border border-gray-200">
-            <div className="flex items-center gap-3">
-              <div className="p-3 bg-blue-100 rounded-lg">
-                <Clock className="w-6 h-6 text-blue-600" />
-              </div>
-              <div>
-                <div className="text-sm text-gray-600">Total Jobs</div>
-                <div className="text-2xl font-bold text-gray-900">
-                  {stats.totalJobs}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white p-6 rounded-lg border border-gray-200">
-            <div className="flex items-center gap-3">
-              <div className="p-3 bg-green-100 rounded-lg">
-                <Activity className="w-6 h-6 text-green-600" />
-              </div>
-              <div>
-                <div className="text-sm text-gray-600">Active</div>
-                <div className="text-2xl font-bold text-green-600">
-                  {stats.activeJobs}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white p-6 rounded-lg border border-gray-200">
-            <div className="flex items-center gap-3">
-              <div className="p-3 bg-purple-100 rounded-lg">
-                <TrendingUp className="w-6 h-6 text-purple-600" />
-              </div>
-              <div>
-                <div className="text-sm text-gray-600">Executions</div>
-                <div className="text-2xl font-bold text-gray-900">
-                  {stats.totalExecutions}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white p-6 rounded-lg border border-gray-200">
-            <div className="flex items-center gap-3">
-              <div className="p-3 bg-green-100 rounded-lg">
-                <CheckCircle className="w-6 h-6 text-green-600" />
-              </div>
-              <div>
-                <div className="text-sm text-gray-600">Successful</div>
-                <div className="text-2xl font-bold text-green-600">
-                  {stats.successfulExecutions}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white p-6 rounded-lg border border-gray-200">
-            <div className="flex items-center gap-3">
-              <div className="p-3 bg-red-100 rounded-lg">
-                <XCircle className="w-6 h-6 text-red-600" />
-              </div>
-              <div>
-                <div className="text-sm text-gray-600">Failed</div>
-                <div className="text-2xl font-bold text-red-600">
-                  {stats.failedExecutions}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white p-6 rounded-lg border border-gray-200">
-            <div className="flex items-center gap-3">
-              <div className="p-3 bg-blue-100 rounded-lg">
-                <TrendingUp className="w-6 h-6 text-blue-600" />
-              </div>
-              <div>
-                <div className="text-sm text-gray-600">Success Rate</div>
-                <div className="text-2xl font-bold text-blue-600">
-                  {stats.successRate}%
-                </div>
-              </div>
-            </div>
-          </div>
+      <div className="mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          <StatCard label="Total Jobs" value={stats.totalJobs} />
+          <StatCard label="Active" value={stats.activeJobs} variant="success" />
+          <StatCard label="Executions" value={stats.totalExecutions} variant="primary" />
+          <StatCard label="Successful" value={stats.successfulExecutions} variant="success" />
+          <StatCard label="Failed" value={stats.failedExecutions} variant="error" />
+          <StatCard label="Success Rate" value={`${stats.successRate}%`} variant="primary" />
         </div>
       </div>
 
       {/* View Mode Tabs */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <div className="flex gap-2 border-b border-gray-200">
+      <div className="mb-6">
+        <div className="flex gap-2 border-b border-neutral-800">
           <button
             onClick={() => setViewMode('list')}
             className={`px-4 py-2 font-medium border-b-2 transition-colors flex items-center gap-2 ${
               viewMode === 'list'
-                ? 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
+                ? 'border-blue-500 text-blue-400'
+                : 'border-transparent text-neutral-400 hover:text-neutral-300'
             }`}
           >
             <List className="w-4 h-4" />
@@ -338,8 +255,8 @@ export default function SchedulerPage() {
             onClick={() => setViewMode('calendar')}
             className={`px-4 py-2 font-medium border-b-2 transition-colors flex items-center gap-2 ${
               viewMode === 'calendar'
-                ? 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
+                ? 'border-blue-500 text-blue-400'
+                : 'border-transparent text-neutral-400 hover:text-neutral-300'
             }`}
           >
             <Calendar className="w-4 h-4" />
@@ -349,8 +266,8 @@ export default function SchedulerPage() {
             onClick={() => setViewMode('logs')}
             className={`px-4 py-2 font-medium border-b-2 transition-colors flex items-center gap-2 ${
               viewMode === 'logs'
-                ? 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
+                ? 'border-blue-500 text-blue-400'
+                : 'border-transparent text-neutral-400 hover:text-neutral-300'
             }`}
           >
             <Activity className="w-4 h-4" />
@@ -360,7 +277,7 @@ export default function SchedulerPage() {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <ContentSection>
         {viewMode === 'list' && (
           <JobList
             jobs={jobs}
@@ -386,14 +303,14 @@ export default function SchedulerPage() {
         {viewMode === 'logs' && (
           <ExecutionLog executions={executions} onRefresh={fetchExecutions} />
         )}
-      </div>
+      </ContentSection>
 
       {/* Job Form Modal */}
       {showJobForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center overflow-y-auto z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full my-8">
-            <div className="p-6 border-b border-gray-200">
-              <h2 className="text-2xl font-bold text-gray-900">
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-start justify-center overflow-y-auto z-50 p-4">
+          <div className="bg-neutral-900 border border-neutral-800 rounded-lg shadow-xl max-w-4xl w-full my-8">
+            <div className="p-6 border-b border-neutral-800">
+              <h2 className="text-2xl font-bold text-white">
                 {editingJob ? 'Edit Job' : 'Create New Job'}
               </h2>
             </div>
@@ -411,6 +328,6 @@ export default function SchedulerPage() {
           </div>
         </div>
       )}
-    </div>
+    </DashboardLayout>
   )
 }

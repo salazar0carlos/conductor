@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Nav from '@/components/ui/nav';
 import { SQLEditor } from '@/components/database/sql-editor';
 import { SchemaExplorer } from '@/components/database/schema-explorer';
 import { ResultsTable } from '@/components/database/results-table';
@@ -174,18 +175,19 @@ ORDER BY ordinal_position;`;
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gray-100 dark:bg-gray-950">
+    <div className="flex flex-col h-screen bg-neutral-950">
+      <Nav />
       {/* Header */}
-      <div className="flex items-center justify-between px-6 py-4 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+      <div className="flex items-center justify-between px-6 py-4 bg-neutral-900 border-b border-neutral-800">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-blue-600 rounded-lg">
             <Database className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+            <h1 className="text-2xl font-bold text-white">
               SQL Editor
             </h1>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-sm text-neutral-400">
               Query and manage your Supabase database
             </p>
           </div>
@@ -193,13 +195,13 @@ ORDER BY ordinal_position;`;
 
         <div className="flex items-center gap-2">
           {/* Mode Toggle */}
-          <div className="flex items-center gap-1 bg-gray-200 dark:bg-gray-800 rounded-lg p-1">
+          <div className="flex items-center gap-1 bg-neutral-800 rounded-lg p-1">
             <button
               onClick={() => setActiveMode('editor')}
               className={`px-4 py-2 rounded transition-colors text-sm font-medium ${
                 activeMode === 'editor'
-                  ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
-                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                  ? 'bg-neutral-700 text-white shadow-sm'
+                  : 'text-neutral-400 hover:text-white'
               }`}
             >
               SQL Editor
@@ -208,8 +210,8 @@ ORDER BY ordinal_position;`;
               onClick={() => setActiveMode('builder')}
               className={`px-4 py-2 rounded transition-colors text-sm font-medium ${
                 activeMode === 'builder'
-                  ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
-                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                  ? 'bg-neutral-700 text-white shadow-sm'
+                  : 'text-neutral-400 hover:text-white'
               }`}
             >
               <span className="flex items-center gap-2">
@@ -222,25 +224,25 @@ ORDER BY ordinal_position;`;
           {/* Panel Toggles */}
           <button
             onClick={() => setShowLeftPanel(!showLeftPanel)}
-            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+            className="p-2 hover:bg-neutral-800 rounded-lg transition-colors"
             title={showLeftPanel ? 'Hide schema' : 'Show schema'}
           >
             {showLeftPanel ? (
-              <PanelLeftClose className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+              <PanelLeftClose className="w-5 h-5 text-neutral-400" />
             ) : (
-              <PanelLeftOpen className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+              <PanelLeftOpen className="w-5 h-5 text-neutral-400" />
             )}
           </button>
 
           <button
             onClick={() => setShowRightPanel(!showRightPanel)}
-            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+            className="p-2 hover:bg-neutral-800 rounded-lg transition-colors"
             title={showRightPanel ? 'Hide history' : 'Show history'}
           >
             {showRightPanel ? (
-              <PanelRightClose className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+              <PanelRightClose className="w-5 h-5 text-neutral-400" />
             ) : (
-              <PanelRightOpen className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+              <PanelRightOpen className="w-5 h-5 text-neutral-400" />
             )}
           </button>
         </div>
