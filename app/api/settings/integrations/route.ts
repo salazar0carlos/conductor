@@ -89,6 +89,33 @@ export async function POST(request: NextRequest) {
           409
         );
       }
+
+      // Check for RLS policy violations (CRITICAL ERROR)
+      if (error.code === '42501' || error.message?.includes('row-level security') || error.message?.includes('permission denied')) {
+        return apiError(
+          'Database security policies not configured. Please contact support or run the RLS migration.',
+          500
+        );
+      }
+
+      // Check for foreign key constraint violations
+      if (error.code === '23503') {
+        return apiError('Invalid user reference. Please try logging out and back in.', 400);
+      }
+
+      // Check for validation errors
+      if (error.code === '23514' || error.message?.includes('check constraint')) {
+        return apiError('Invalid integration type or configuration. Please check your inputs.', 400);
+      }
+
+      // Generic error with detailed message for debugging
+      console.error('Integration save error:', {
+        code: error.code,
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+      });
+
       throw error;
     }
 
