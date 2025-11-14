@@ -11,6 +11,16 @@ export async function createClient() {
     supabaseUrl,
     supabaseAnonKey,
     {
+      auth: {
+        // Enable automatic token refresh
+        autoRefreshToken: true,
+        // Persist session to cookies
+        persistSession: true,
+        // Detect session in URL (for OAuth callbacks)
+        detectSessionInUrl: true,
+        // Flow type for authentication
+        flowType: 'pkce',
+      },
       cookies: {
         getAll() {
           return cookieStore.getAll()

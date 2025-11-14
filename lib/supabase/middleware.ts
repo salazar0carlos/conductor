@@ -10,6 +10,16 @@ export async function updateSession(request: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
+      auth: {
+        // Enable automatic token refresh
+        autoRefreshToken: true,
+        // Persist session to cookies
+        persistSession: true,
+        // Detect session in URL (for OAuth callbacks)
+        detectSessionInUrl: true,
+        // Flow type for authentication
+        flowType: 'pkce',
+      },
       cookies: {
         getAll() {
           return request.cookies.getAll()
@@ -30,6 +40,10 @@ export async function updateSession(request: NextRequest) {
   )
 
   // Refreshing the auth token
+  // First, try to refresh the session if it exists
+  await supabase.auth.getSession()
+
+  // Get the user after session refresh
   const {
     data: { user }
   } = await supabase.auth.getUser()

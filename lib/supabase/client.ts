@@ -6,6 +6,18 @@ export function createClient() {
 
   return createBrowserClient(
     supabaseUrl,
-    supabaseAnonKey
+    supabaseAnonKey,
+    {
+      auth: {
+        // Enable automatic token refresh
+        autoRefreshToken: true,
+        // Persist session to local storage
+        persistSession: true,
+        // Detect session in URL (for OAuth callbacks)
+        detectSessionInUrl: true,
+        // Flow type for authentication
+        flowType: 'pkce',
+      },
+    }
   )
 }

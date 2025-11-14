@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { User, Session } from '@supabase/supabase-js'
 import { createClient } from '@/lib/supabase/client'
+import { useSessionRefresh } from './use-session-refresh'
 
 interface AuthContextType {
   user: User | null
@@ -19,6 +20,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
   const supabase = createClient()
+
+  // Enable automatic session refresh based on user activity
+  useSessionRefresh()
 
   useEffect(() => {
     // Get initial session
@@ -37,7 +41,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(false)
     })
 
-    return () => subscription.unsubscribe()
+    // Set up periodic session refresh (every 5 minutes)
+    // This ensures the session stays alive even if the user doesn't navigate
+    const refreshInterval = setInterval(async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (session) {
+        // Trigger a refresh of the session
+        await supabase.auth.refreshSession()
+      }
+    }, 5 * 60 * 1000) // 5 minutes
+
+    return () => {
+      subscription.unsubscribe()
+      clearInterval(refreshInterval)
+    }
   }, [supabase.auth])
 
   const signInWithGitHub = async () => {
