@@ -1,14 +1,20 @@
 /**
- * Orchestrator Agent
+ * Orchestrator Agent (with Layer 7 Deployment Safeguards)
  *
  * The "Project Manager" of the system - decomposes high-level tasks into
  * detailed workflows, assigns tasks to specialist agents, monitors progress,
  * and ensures quality gates are met.
+ *
+ * DEPLOYMENT SAFEGUARDS (Layer 7):
+ * - Validates all code changes before task completion
+ * - Blocks deployment if validation fails
+ * - Ensures AI-generated code meets quality standards
  */
 
 import Anthropic from '@anthropic-ai/sdk';
 import { createClient } from '@/lib/supabase/server';
 import { NEXTJS_FULLSTACK_TEMPLATE } from '../workflows/templates/nextjs-fullstack';
+import { execSync } from 'child_process';
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!,
@@ -52,6 +58,195 @@ interface AgentAssignmentResult {
   reasoning: string;
   estimated_duration_hours: number;
   backup_agent_ids?: string[]; // For redundancy
+}
+
+/**
+ * DEPLOYMENT SAFEGUARDS (Layer 7)
+ * ================================
+ */
+
+interface ValidationResult {
+  passed: boolean;
+  errors: string[];
+  warnings: string[];
+  duration: number;
+}
+
+/**
+ * Runs comprehensive build validation before allowing task completion
+ * This prevents AI agents from completing tasks with broken code
+ */
+export async function validateCodeChanges(): Promise<ValidationResult> {
+  const startTime = Date.now();
+  const errors: string[] = [];
+  const warnings: string[] = [];
+
+  console.log('🔍 Running deployment safeguard validation...');
+
+  try {
+    // Step 1: Validate Supabase patterns
+    try {
+      execSync('npm run validate', { stdio: 'pipe', encoding: 'utf-8' });
+    } catch (error: any) {
+      errors.push('Supabase pattern validation failed');
+    }
+
+    // Step 2: TypeScript compilation
+    try {
+      execSync('npx tsc --noEmit', { stdio: 'pipe', encoding: 'utf-8' });
+    } catch (error: any) {
+      errors.push('TypeScript compilation failed');
+    }
+
+    // Step 3: ESLint validation
+    try {
+      execSync('npm run lint', { stdio: 'pipe', encoding: 'utf-8' });
+    } catch (error: any) {
+      errors.push('ESLint validation failed');
+    }
+
+    // Step 4: Run comprehensive build verification
+    try {
+      execSync('tsx scripts/verify-build.ts', { stdio: 'pipe', encoding: 'utf-8' });
+    } catch (error: any) {
+      errors.push('Build verification failed');
+    }
+
+    const duration = Date.now() - startTime;
+
+    if (errors.length > 0) {
+      console.log('❌ Validation failed:', errors.join(', '));
+      return {
+        passed: false,
+        errors,
+        warnings,
+        duration,
+      };
+    }
+
+    console.log('✅ Validation passed');
+    return {
+      passed: true,
+      errors: [],
+      warnings,
+      duration,
+    };
+  } catch (error) {
+    const duration = Date.now() - startTime;
+    return {
+      passed: false,
+      errors: ['Validation process crashed: ' + String(error)],
+      warnings,
+      duration,
+    };
+  }
+}
+
+/**
+ * Validates that a task can be completed safely
+ * Blocks completion if code quality standards are not met
+ */
+export async function validateTaskCompletion(taskId: string): Promise<{
+  canComplete: boolean;
+  reason?: string;
+  validationResults?: ValidationResult;
+}> {
+  const supabase = await createClient();
+
+  // Get task details
+  const { data: task } = await supabase
+    .from('tasks')
+    .select('*')
+    .eq('id', taskId)
+    .single();
+
+  if (!task) {
+    return {
+      canComplete: false,
+      reason: 'Task not found',
+    };
+  }
+
+  // For code generation tasks, run validation
+  if (
+    task.type === 'code_generation' ||
+    task.type === 'implementation' ||
+    task.type === 'refactoring' ||
+    task.type === 'api_implementation'
+  ) {
+    console.log(`🔍 Validating code changes for task: ${task.title}`);
+
+    const validationResults = await validateCodeChanges();
+
+    if (!validationResults.passed) {
+      // Record validation failure
+      await supabase.from('task_validations').insert({
+        task_id: taskId,
+        validation_type: 'deployment_safeguard',
+        passed: false,
+        errors: validationResults.errors,
+        warnings: validationResults.warnings,
+        duration_ms: validationResults.duration,
+      });
+
+      return {
+        canComplete: false,
+        reason: `Code validation failed: ${validationResults.errors.join(', ')}`,
+        validationResults,
+      };
+    }
+
+    // Record validation success
+    await supabase.from('task_validations').insert({
+      task_id: taskId,
+      validation_type: 'deployment_safeguard',
+      passed: true,
+      errors: [],
+      warnings: validationResults.warnings,
+      duration_ms: validationResults.duration,
+    });
+  }
+
+  return {
+    canComplete: true,
+    validationResults: undefined,
+  };
+}
+
+/**
+ * Enforces quality gates with automated code validation
+ */
+export async function enforceQualityGate(
+  workflowInstanceId: string,
+  gateName: string
+): Promise<{ passed: boolean; errors: string[] }> {
+  const errors: string[] = [];
+
+  // For deployment gates, run full validation
+  if (
+    gateName.includes('deploy') ||
+    gateName.includes('production') ||
+    gateName.includes('release')
+  ) {
+    console.log(`🔍 Enforcing deployment quality gate: ${gateName}`);
+
+    const validationResults = await validateCodeChanges();
+
+    if (!validationResults.passed) {
+      errors.push(...validationResults.errors);
+      return { passed: false, errors };
+    }
+
+    // Additional check: Ensure full build succeeds
+    try {
+      execSync('npm run build', { stdio: 'pipe', encoding: 'utf-8' });
+    } catch (error) {
+      errors.push('Full build failed');
+      return { passed: false, errors };
+    }
+  }
+
+  return { passed: true, errors: [] };
 }
 
 /**

@@ -4,15 +4,78 @@
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
 
+    // Layer 2: Real-time feedback in editor
     // Prevent common anti-patterns that cause build failures
-    // Note: This is a WARNING, not an error, because it catches false positives
-    // The prebuild validation script (scripts/validate-build.ts) is the real enforcer
     "no-restricted-syntax": [
       "warn",
       {
         "selector": "VariableDeclaration[kind='const'] > VariableDeclarator[id.name!=/getSupabaseClient|createSupabaseClient/] > CallExpression[callee.name='createClient']",
-        "message": "Possible module-level Supabase client initialization. Ensure this is inside a function, not at module scope."
+        "message": "⚠️ Possible module-level Supabase client initialization. Ensure this is inside a function, not at module scope."
+      },
+      {
+        "selector": "ClassDeclaration > ClassBody > MethodDefinition[kind='constructor'] :matches(CallExpression[callee.name='createClient'])",
+        "message": "❌ Do not initialize Supabase client in constructor. Use a getSupabaseClient() method instead."
+      },
+      {
+        "selector": "Program > VariableDeclaration[kind='const'] > VariableDeclarator > MemberExpression[object.object.name='process'][object.property.name='env']",
+        "message": "⚠️ Module-level environment variable access. Consider accessing env vars at runtime only."
       }
-    ]
-  }
+    ],
+
+    // Enforce async/await best practices
+    "require-await": "warn",
+    "no-async-promise-executor": "error",
+    "no-await-in-loop": "warn",
+
+    // Prevent common Next.js mistakes
+    "no-console": ["warn", { "allow": ["warn", "error", "info"] }],
+
+    // Type safety
+    "@typescript-eslint/no-floating-promises": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
+
+    // Import/Export consistency
+    "no-duplicate-imports": "error",
+
+    // Prevent build-time errors
+    "no-restricted-globals": [
+      "error",
+      {
+        "name": "process",
+        "message": "Use process.env carefully - ensure variables are available at build time"
+      }
+    ],
+
+    // Next.js specific rules
+    "@next/next/no-html-link-for-pages": "error",
+    "@next/next/no-img-element": "warn",
+    "@next/next/no-sync-scripts": "error"
+  },
+  "overrides": [
+    {
+      "files": ["app/api/**/*.ts"],
+      "rules": {
+        "no-restricted-syntax": [
+          "error",
+          {
+            "selector": "Program:not(:has(ExportNamedDeclaration[declaration.declarations.0.id.name='dynamic']))",
+            "message": "❌ API routes must export 'export const dynamic = \"force-dynamic\"' to prevent static generation errors"
+          }
+        ]
+      }
+    },
+    {
+      "files": ["lib/supabase/client.ts", "lib/supabase/server.ts"],
+      "rules": {
+        "no-restricted-syntax": "off"
+      }
+    },
+    {
+      "files": ["scripts/**/*.ts"],
+      "rules": {
+        "no-console": "off",
+        "no-restricted-globals": "off"
+      }
+    }
+  ]
 }

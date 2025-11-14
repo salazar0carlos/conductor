@@ -1,7 +1,8 @@
 {
   "git": {
     "deploymentEnabled": {
-      "claude/incomplete-description-011CV5EqLsNpgqQ42rfXspUV": true
+      "claude/incomplete-description-011CV5EqLsNpgqQ42rfXspUV": true,
+      "claude/eight-layer-protection-013uA97ouh4jzsAKr8BKXA1D": true
     }
   },
   "github": {
@@ -9,6 +10,6 @@
     "autoJobCancelation": true,
     "silent": false
   },
-  "buildCommand": "npm run build",
-  "installCommand": "npm install"
+  "buildCommand": "tsx scripts/verify-build.ts && npm run build",
+  "installCommand": "npm ci --legacy-peer-deps"
 }

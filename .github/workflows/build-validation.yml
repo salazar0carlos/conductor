@@ -1,16 +1,18 @@
 name: Build Validation
 
-# Run on all pull requests and pushes to main branches
+# Layer 5: Run on ALL branches to prevent bypassing validation
+# This catches errors before they reach Vercel
 on:
   pull_request:
     branches: ['**']
   push:
-    branches: ['main', 'master', 'develop']
+    branches: ['**']  # Changed from specific branches to ALL branches
 
 jobs:
   validate:
-    name: Validate Build Patterns
+    name: Validate Build Patterns (Layer 5)
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - name: Checkout code
@@ -25,14 +27,21 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run build validation
-        run: npm run validate
+      - name: Run comprehensive build verification
+        run: tsx scripts/verify-build.ts
 
-      - name: Run TypeScript check
-        run: npx tsc --noEmit
+      - name: Run full build test
+        run: npm run build
+        env:
+          NODE_ENV: production
 
-      - name: Run ESLint
-        run: npm run lint
+      - name: Verify build artifacts
+        run: |
+          if [ ! -f .next/BUILD_ID ]; then
+            echo "❌ BUILD_ID not generated!"
+            exit 1
+          fi
+          echo "✅ Build artifacts verified"
 
   comment-on-failure:
     name: Comment on PR if validation fails
