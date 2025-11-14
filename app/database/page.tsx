@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Nav from '@/components/ui/nav';
+import { Nav } from '@/components/ui/nav';
 import { SQLEditor } from '@/components/database/sql-editor';
 import { SchemaExplorer } from '@/components/database/schema-explorer';
 import { ResultsTable } from '@/components/database/results-table';

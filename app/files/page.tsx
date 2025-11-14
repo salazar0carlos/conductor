@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Nav from '@/components/ui/nav'
+import { Nav } from '@/components/ui/nav'
 import { FileItem, Folder, StorageStats, AssetCollection } from '@/types/file-manager'
 import { FileBrowser } from '@/components/file-manager/file-browser'
 import { UploadZone } from '@/components/file-manager/upload-zone'

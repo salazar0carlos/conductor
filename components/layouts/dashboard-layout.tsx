@@ -1,7 +1,7 @@
 'use client';
 
 import React, { ReactNode } from 'react';
-import Nav from '@/components/ui/nav';
+import { Nav } from '@/components/ui/nav';
 
 interface DashboardLayoutProps {
   children: ReactNode;
