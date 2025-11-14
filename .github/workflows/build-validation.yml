@@ -28,7 +28,7 @@ jobs:
         run: npm ci
 
       - name: Run comprehensive build verification
-        run: tsx scripts/verify-build.ts
+        run: npx tsx scripts/verify-build.ts
 
       - name: Run full build test
         run: npm run build
