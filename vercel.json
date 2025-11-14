@@ -10,6 +10,6 @@
     "autoJobCancelation": true,
     "silent": false
   },
-  "buildCommand": "tsx scripts/verify-build.ts && npm run build",
+  "buildCommand": "npx tsx scripts/verify-build.ts && npm run build",
   "installCommand": "npm ci --legacy-peer-deps"
 }
