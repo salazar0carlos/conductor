@@ -1,13 +1,3 @@
 {
-  "git": {
-    "deploymentEnabled": {
-      "claude/session-timeout-issue-01NUQ8Mxqf6EZ5aMSAayr9Jq": true
-    }
-  },
-  "github": {
-    "autoAlias": true,
-    "autoJobCancelation": true,
-    "silent": false
-  },
   "installCommand": "npm ci --legacy-peer-deps"
 }
