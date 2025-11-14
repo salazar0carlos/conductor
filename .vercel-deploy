@@ -1,0 +1,9 @@
+# Deployment Trigger
+Last deployment: 2025-11-14 03:09:46 UTC
+Branch: claude/session-timeout-issue-01NUQ8Mxqf6EZ5aMSAayr9Jq
+Timestamp: 1763093786
+
+## Fixes Included
+- Session timeout resolution (Supabase auto-refresh)
+- Simplified build process (removed blocking validation)
+- Minimal vercel.json configuration
