@@ -4,6 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:docker": "bash scripts/dev-start.sh",
+    "dev:stop": "bash scripts/dev-stop.sh",
+    "dev:logs": "bash scripts/dev-logs.sh",
+    "dev:restart": "bash scripts/dev-restart.sh",
+    "dev:shell": "bash scripts/dev-shell.sh",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
