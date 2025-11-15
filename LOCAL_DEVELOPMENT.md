@@ -5,6 +5,13 @@
 **Problem:** Claude Code session branches break Vercel deployments every time
 **Solution:** Develop locally in Docker, only deploy to production when ready
 
+## Port Configuration
+
+**Docker development:** `http://localhost:3001` (this setup)
+**VS Code development:** `http://localhost:3000` (if running separately)
+
+This separation lets you run both Claude Code Web (Docker) and Claude Code in VS Code simultaneously without conflicts.
+
 ---
 
 ## Quick Start (5 Minutes)
@@ -32,7 +39,7 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-key
 npm run dev:docker
 ```
 
-That's it! The app will be available at **http://localhost:3000**
+That's it! The app will be available at **http://localhost:3001**
 
 ---
 
@@ -45,7 +52,7 @@ npm run dev:docker
 - Builds Docker image (first time only)
 - Starts development server
 - Enables hot reload
-- Opens port 3000
+- Opens port 3001
 
 ### View Logs
 ```bash
@@ -102,8 +109,9 @@ conductor/
 - **.next** → Stays in container (build artifacts)
 
 ### Port Mapping
-- **Host:3000** → **Container:3000**
-- Access at: http://localhost:3000
+- **Host:3001** → **Container:3000**
+- Access at: http://localhost:3001
+- Note: Container runs on 3000 internally, exposed as 3001 on your machine
 
 ---
 
@@ -120,7 +128,7 @@ conductor/
 **✅ NEW (Works):**
 1. Start Docker dev: `npm run dev:docker`
 2. Work with Claude Code Web on any branch
-3. Preview instantly at localhost:3000
+3. Preview instantly at localhost:3001
 4. When ready: `npm run deploy` (to production branch)
 5. Vercel deploys from stable production branch 🎉
 
@@ -136,10 +144,10 @@ When working with Claude Code Web:
 2. **Ask Claude to make changes**
    - Claude edits files in your repo
    - Docker auto-reloads the changes
-   - Preview at localhost:3000
+   - Preview at localhost:3001
 
 3. **View changes in browser**
-   - http://localhost:3000
+   - http://localhost:3001
    - Changes appear automatically
    - No deployment needed
 
@@ -396,7 +404,7 @@ npm run dev:docker
 
 **Preview your work:**
 ```
-http://localhost:3000
+http://localhost:3001
 ```
 
 **Deploy to production:**

@@ -53,7 +53,8 @@ docker-compose -f docker-compose.dev.yml ps
 
 echo ""
 echo "🌐 Application available at:"
-echo "   http://localhost:3000"
+echo "   http://localhost:3001  (Docker dev)"
+echo "   http://localhost:3000  (VS Code dev - if running)"
 echo ""
 echo "📝 Useful commands:"
 echo "   View logs:       npm run dev:logs"
